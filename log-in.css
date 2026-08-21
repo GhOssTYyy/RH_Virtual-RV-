@@ -1,99 +1,150 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
-* {
-    font-family: "Rubik", sans-serif;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    box-sizing: border-box;
+/* ===== VARIÁVEIS ===== */
+:root {
+    /* Tema Claro (padrão) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f2f5;
+    --bg-form: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --border-color: #d1d5db;
+    --input-bg: #f8f9fa;
+    --input-text: #1a1a2e;
+    --button-bg: #4a6cf7;
+    --button-hover: #3a5cd5;
+    --button-text: #ffffff;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --link-color: #4a6cf7;
+    --link-hover: #3a5cd5;
+    --checkbox-accent: #4a6cf7;
 }
 
+/* Tema Escuro */
+[data-theme="dark"] {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #1a1a2e;
+    --bg-form: #16213e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0b8;
+    --border-color: #2a2a4a;
+    --input-bg: #1a1a3e;
+    --input-text: #e0e0e0;
+    --button-bg: #6c8cff;
+    --button-hover: #5a7ae8;
+    --button-text: #ffffff;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --link-color: #6c8cff;
+    --link-hover: #7a9aff;
+    --checkbox-accent: #6c8cff;
+}
+
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== BODY ===== */
 body {
+    background: var(--bg-secondary);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url(.//img/Fundo.jpeg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Configuração Geral */
+/* ===== CONTAINER ===== */
 .container {
-    background: transparent;
-    width: 420px;
-    padding: 30px 40px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    color: #fff;
-    backdrop-filter: blur(120px);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
-                rgba(0, 0, 0, 0.12) 0px -12px 30px, 
-                rgba(0, 0, 0, 0.12) 0px 4px 6px, 
-                rgba(0, 0, 0, 0.17) 0px 12px 13px, 
-                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    background: var(--bg-form);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 420px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* ===== FORM ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== BOTÃO DE TEMA ===== */
+#dark-mode-button {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: transform 0.3s ease;
+    filter: var(--icon-filter);
+}
+
+#dark-mode-button:hover {
+    transform: scale(1.1);
+}
+
+/* ===== TÍTULO ===== */
 #title {
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 32px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
 }
 
-/* Configurações visuais dos inputs */
+/* ===== INPUTS ===== */
 .input-box {
     position: relative;
-    margin-bottom: 10px;
+    width: 100%;
 }
 
 .input-box input {
     width: 100%;
-    outline: none;
-    padding: 18px 45px 18px 20px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 16px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    font-size: 15px;
     transition: all 0.3s ease;
+    outline: none;
 }
 
 .input-box input:focus {
-    border-color: #fff;
-    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--button-bg);
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
 }
 
-.input-box input::placeholder {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
+/* Ícone do olho da senha */
 #password-eye {
-    cursor: pointer;
     position: absolute;
-    right: 18px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    opacity: 0.7;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.6;
     transition: opacity 0.3s ease;
-    filter: brightness(0) invert(1); 
 }
 
 #password-eye:hover {
     opacity: 1;
 }
 
+/* ===== REMEMBER ===== */
 .remember {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0 25px;
     font-size: 14px;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
 }
 
 .remember label {
@@ -106,52 +157,79 @@ body {
 .remember input[type="checkbox"] {
     width: 16px;
     height: 16px;
+    accent-color: var(--checkbox-accent);
     cursor: pointer;
-    accent-color: #fff;
 }
 
 .remember a {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--link-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .remember a:hover {
-    color: #fff;
+    color: var(--link-hover);
     text-decoration: underline;
 }
 
-/* Botão de Login */
+/* ===== BOTÃO LOGIN ===== */
 .login {
     width: 100%;
-    height: 45px;
+    padding: 14px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    background: #fff;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.register-link {
-    text-align: center;
-    font-size: 14px;
-}
-
-.register-link p {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.register-link a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
     transition: all 0.3s ease;
 }
 
-.register-link a:hover {
-    text-decoration: underline;
-    color: #f0f0f0;
+.login:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
 }
 
+.login:active {
+    transform: translateY(0);
+}
+
+/* ===== REGISTER LINK ===== */
+.register-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.register-link a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 480px) {
+    .container {
+        padding: 24px 20px;
+        margin: 20px;
+    }
+    
+    #title {
+        font-size: 24px;
+    }
+    
+    .remember {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

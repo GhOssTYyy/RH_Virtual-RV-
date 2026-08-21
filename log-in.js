@@ -1,6 +1,9 @@
 const password_eye = document.getElementById("password-eye")
 const password_content = document.getElementById("password-content")
 const go_to_sign_html = document.getElementById("go-to-sign-html")
+const dark_mode_button = document.getElementById("dark-mode-button")
+
+let page_is_on_dark_mode = false
 
 //Deixar a senha visivel e mudar o ícone do olho.
 password_eye.addEventListener("click", function(){
@@ -18,6 +21,19 @@ password_eye.addEventListener("click", function(){
     }
 
 
+})
+
+dark_mode_button.addEventListener("click", function(){
+
+    if (page_is_on_dark_mode === false) {
+        document.documentElement.setAttribute("data-theme","dark")
+        dark_mode_button.src = "icons/dark_mode_icon.svg"
+        page_is_on_dark_mode = true
+    } else {
+        document.documentElement.removeAttribute("data-theme")
+        dark_mode_button.src = "icons/light_mode_icon.svg"
+        page_is_on_dark_mode = false
+    }
 })
 
 //Trocar para a página de registro de conta.
