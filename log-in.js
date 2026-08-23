@@ -2,6 +2,7 @@ const password_eye = document.getElementById("password-eye")
 const password_content = document.getElementById("password-content")
 const go_to_sign_html = document.getElementById("go-to-sign-html")
 const dark_mode_button = document.getElementById("dark-mode-button")
+const login_button = document.getElementById("login-button")
 
 let page_is_on_dark_mode = false
 
@@ -40,5 +41,12 @@ dark_mode_button.addEventListener("click", function(){
 go_to_sign_html.addEventListener("click", function(){
 
     go_to_sign_html.href = "sign-in_page.html"
+
+})
+
+//Botão de login redireciona para a página principal
+login_button.addEventListener("click", function(){
+
+    window.location.href = "main_page.html"
 
 })

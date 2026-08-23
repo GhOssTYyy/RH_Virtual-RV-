@@ -1,4 +1,4 @@
-/* ===== VARIÁVEIS ===== */
+/* Tema padrão do css, ao iniciar.*/
 :root {
     /* Tema Claro (padrão) */
     --bg-primary: #ffffff;
@@ -37,7 +37,6 @@
     --checkbox-accent: #6c8cff;
 }
 
-/* ===== RESET ===== */
 * {
     margin: 0;
     padding: 0;
@@ -45,7 +44,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ===== BODY ===== */
 body {
     background: var(--bg-secondary);
     display: flex;
@@ -55,7 +53,6 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ===== CONTAINER ===== */
 .container {
     background: var(--bg-form);
     padding: 40px;
@@ -66,14 +63,13 @@ body {
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ===== FORM ===== */
 form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* ===== BOTÃO DE TEMA ===== */
+/*Botão de tema */
 #dark-mode-button {
     width: 32px;
     height: 32px;
@@ -87,7 +83,6 @@ form {
     transform: scale(1.1);
 }
 
-/* ===== TÍTULO ===== */
 #title {
     text-align: center;
     font-size: 28px;
@@ -97,7 +92,6 @@ form {
     transition: color 0.3s ease;
 }
 
-/* ===== INPUTS ===== */
 .input-box {
     position: relative;
     width: 100%;
@@ -120,7 +114,6 @@ form {
     box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
 }
 
-/* Ícone do olho da senha */
 #password-eye {
     position: absolute;
     right: 16px;
@@ -137,7 +130,6 @@ form {
     opacity: 1;
 }
 
-/* ===== REMEMBER ===== */
 .remember {
     display: flex;
     justify-content: space-between;
@@ -172,7 +164,7 @@ form {
     text-decoration: underline;
 }
 
-/* ===== BOTÃO LOGIN ===== */
+/* Botão de Login */
 .login {
     width: 100%;
     padding: 14px;
@@ -196,7 +188,6 @@ form {
     transform: translateY(0);
 }
 
-/* ===== REGISTER LINK ===== */
 .register-link {
     text-align: center;
     font-size: 14px;
@@ -216,7 +207,7 @@ form {
     text-decoration: underline;
 }
 
-/* ===== RESPONSIVIDADE ===== */
+/* Responsividade */
 @media (max-width: 480px) {
     .container {
         padding: 24px 20px;
