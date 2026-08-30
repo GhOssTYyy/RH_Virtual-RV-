@@ -43,7 +43,6 @@ function convert_minutes_to_hours(minutes){
 function get_actual_hours(){
 
     const actual_hour = new Date()
-    const 
 }
 
 function discover_the_period_of_clock_in(){
