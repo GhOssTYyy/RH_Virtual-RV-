@@ -42,15 +42,6 @@ function convert_minutes_to_hours(minutes){
 
 
 
-function get_actual_hours(){
-
-    const actual_hour = new Date()
-
-    return actual_hour
-}
-
-
-
 function get_actual_minutes(){
     
     const actual_minute = new Date()
@@ -77,52 +68,16 @@ function discover_actual_clock_in_period(){
 
     const extra_hours = exit + times_of_clock_in.tolerance.extra_hours
 
-    if (actual_time_in_minutes < start_entry_tolerance) {
-
-        return "muito_cedo"
-    }
+    if (actual_time_in_minutes < start_entry_tolerance) return "muito_cedo";
+    if (actual_time_in_minutes <= entry_arrive_late_tolerance) return "periodo_entrada";
+    if (actual_time_in_minutes < begin_dinner) return "trabalhando_manha";
+    if (actual_time_in_minutes === begin_dinner) return "periodo_almoco";
+    if (actual_time_in_minutes < ending_dinner) return "em_almoco";
+    if (actual_time_in_minutes === ending_dinner) return "periodo_volta";
+    if (actual_time_in_minutes < exit) return "trabalhando_tarde";
+    if (actual_time_in_minutes <= extra_hours) return "periodo_saida";
     
-    if (actual_time_in_minutes >= start_entry_tolerance && 
-        actual_time_in_minutes <= entry_arrive_late_tolerance) {
-
-        return "periodo_entrada"
-    }
-    
-    if (actual_time_in_minutes > entry_arrive_late_tolerance && 
-        actual_time_in_minutes < begin_dinner) {
-
-        return "trabalhando_manha"
-    }
-    
-    if (actual_time_in_minutes === begin_dinner) {
-
-        return "periodo_almoco"
-    }
-    
-    if (actual_time_in_minutes > begin_dinner && 
-        actual_time_in_minutes < ending_dinner) {
-
-        return "em_almoco"
-    }
-    
-    if (actual_time_in_minutes === ending_dinner) {
-
-        return "periodo_volta"
-    }
-    
-    if (actual_time_in_minutes > ending_dinner && 
-        actual_time_in_minutes < exit) {
-
-        return "trabalhando_tarde"
-    }
-    
-    if (actual_time_in_minutes >= exit && 
-        actual_time_in_minutes <= extra_hours) {
-
-        return "periodo_saida"
-    }
-    
-    return "fora_expediente"
+    return "fora_expediente";
 }
 
 
@@ -135,50 +90,52 @@ function update_to_display(){
     const button_text = document.getElementById("button-text")
 
 
-    if (actual_period === "muito_cedo") {
-        button_text.textContent = "Muito cedo"
-        clock_in_register.disabled = true
-    }
-
-    if (actual_period === "periodo_entrada") {
-        button_text.textContent = "Registrar Entrada"
-        clock_in_register.disabled = false
-    }
-
-    if (actual_period === "trabalhando_manha") {
-        button_text.textContent = "Trabalhando"
-        clock_in_register.disabled = true
-    }
-
-    if (actual_period === "periodo_almoco") {
-        button_text.textContent = "Iniciar Almoço"
-        clock_in_register.disabled = false
-    }
-
-    if (actual_period === "em_almoco") {
-        button_text.textContent = "Em Almoço"
-        clock_in_register.disabled = true
-    }
-
-    if (actual_period === "periodo_volta") {
-        button_text.textContent = "Voltar do Almoço"
-        clock_in_register.disabled = false
-    }
-
-    if (actual_period === "trabalhando_tarde") {
-        button_text.textContent = "Trabalhando"
-        clock_in_register.disabled = true
-    }
-
-    if (actual_period === "periodo_saida") {
-        button_text.textContent = "Registrar Saída"
-        clock_in_register.disabled = false
-    }
-
-    if (actual_period === "fora_expediente") {
-        button_text.textContent = "Fora do Expediente"
-        clock_in_register.disabled = true
-    }
+    switch (actual_period) {
+    case "muito_cedo":
+        button_text.textContent = "Muito cedo";
+        clock_in_register.disabled = true;
+        break;
+    
+    case "periodo_entrada":
+        button_text.textContent = "Registrar Entrada";
+        clock_in_register.disabled = false;
+        break;
+    
+    case "trabalhando_manha":
+    case "trabalhando_tarde":
+        button_text.textContent = "Trabalhando";
+        clock_in_register.disabled = true;
+        break;
+    
+    case "periodo_almoco":
+        button_text.textContent = "Iniciar Almoço";
+        clock_in_register.disabled = false;
+        break;
+    
+    case "em_almoco":
+        button_text.textContent = "Em Almoço";
+        clock_in_register.disabled = true;
+        break;
+    
+    case "periodo_volta":
+        button_text.textContent = "Voltar do Almoço";
+        clock_in_register.disabled = false;
+        break;
+    
+    case "periodo_saida":
+        button_text.textContent = "Registrar Saída";
+        clock_in_register.disabled = false;
+        break;
+    
+    case "fora_expediente":
+        button_text.textContent = "Fora do Expediente";
+        clock_in_register.disabled = true;
+        break;
+    
+    default:
+        button_text.textContent = "Carregando...";
+        clock_in_register.disabled = true;
+}
 }
 
 
@@ -187,4 +144,4 @@ document.addEventListener("DOMContentLoaded", function(){
     update_to_display()
 })
 
-setInterval(update_to_display, 1000)
+setInterval(update_to_display, 30000)
