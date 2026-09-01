@@ -69,13 +69,113 @@ function discover_actual_clock_in_period(){
     const start_entry_tolerance = entry - times_of_clock_in.tolerance.start_entry_tolerance
     const entry_arrive_late_tolerance = entry + times_of_clock_in.tolerance.entry_arrive_late
 
-/*  const janela_almoco_inicio = begin_dinner - times_of_clock_in.tolerance.start_dinner_tolerance
-    const janela_almoco_fim = begin_dinner + times_of_clock_in.tolerance.dinner_arrive_late
 
-    const janela_volta_inicio = ending_dinner - times_of_clock_in.tolerance.start_return_tolerance
-    const janela_volta_fim = ending_dinner + times_of_clock_in.tolerance.return_arrive_late
-
-    const janela_saida_inicio = exit - times_of_clock_in.tolerance.start_exit_tolerance */
     const extra_hours = exit + times_of_clock_in.tolerance.extra_hours
+
+        if (actual_time_in_minutes < start_entry_tolerance) {
+
+        return "muito_cedo"
+    }
+    
+    if (actual_time_in_minutes >= start_entry_tolerance && 
+        actual_time_in_minutes <= entry_arrive_late_tolerance) {
+
+        return "periodo_entrada"
+    }
+    
+    if (actual_time_in_minutes > entry_arrive_late_tolerance && 
+        actual_time_in_minutes < begin_dinner) {
+
+        return "trabalhando_manha"
+    }
+    
+    if (actual_time_in_minutes === begin_dinner) {
+
+        return "periodo_almoco"
+    }
+    
+    if (actual_time_in_minutes > begin_dinner && 
+        actual_time_in_minutes < ending_dinner) {
+
+        return "em_almoco"
+    }
+    
+    if (actual_time_in_minutes === ending_dinner) {
+
+        return "periodo_volta"
+    }
+    
+    if (actual_time_in_minutes > ending_dinner && 
+        actual_time_in_minutes < exit) {
+
+        return "trabalhando_tarde"
+    }
+    
+    if (actual_time_in_minutes >= exit && 
+        actual_time_in_minutes <= extra_hours) {
+
+        return "periodo_saida"
+    }
+    
+    return "fora_expediente"
 }
 
+function update_to_display(){
+
+    const actual_period = discover_actual_clock_in_period()
+
+    const clock_in_register = document.getElementById("clock-in-register")
+    const button_text = document.getElementById("button-text")
+
+
+    if (actual_period === "muito_cedo") {
+        button_text.textContent = "Muito cedo"
+        clock_in_register.disabled = true
+    }
+
+    if (actual_period === "periodo_entrada") {
+        button_text.textContent = "Registrar Entrada"
+        clock_in_register.disabled = false
+    }
+
+    if (actual_period === "trabalhando_manha") {
+        button_text.textContent = "Trabalhando"
+        clock_in_register.disabled = true
+    }
+
+    if (actual_period === "periodo_almoco") {
+        button_text.textContent = "Iniciar Almoço"
+        clock_in_register.disabled = false
+    }
+
+    if (actual_period === "em_almoco") {
+        button_text.textContent = "Em Almoço"
+        clock_in_register.disabled = true
+    }
+
+    if (actual_period === "periodo_volta") {
+        button_text.textContent = "Voltar do Almoço"
+        clock_in_register.disabled = false
+    }
+
+    if (actual_period === "trabalhando_tarde") {
+        button_text.textContent = "Trabalhando"
+        clock_in_register.disabled = true
+    }
+
+    if (actual_period === "periodo_saida") {
+        button_text.textContent = "Registrar Saída"
+        clock_in_register.disabled = false
+    }
+
+    if (actual_period === "fora_expediente") {
+        button_text.textContent = "Fora do Expediente"
+        clock_in_register.disabled = true
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    update_to_display()
+})
+
+setInterval(update_to_display, 1000)
