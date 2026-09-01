@@ -16,6 +16,8 @@ const times_of_clock_in = {
     }
 }
 
+
+
 function convert_time_to_minutes(time){
 
     const split_time = time.split(":")
@@ -47,12 +49,15 @@ function get_actual_hours(){
     return actual_hour
 }
 
+
+
 function get_actual_minutes(){
     
     const actual_minute = new Date()
 
     return actual_minute.getHours() * 60 + actual_minute.getMinutes()
 }
+
 
 
 function discover_actual_clock_in_period(){
@@ -72,7 +77,7 @@ function discover_actual_clock_in_period(){
 
     const extra_hours = exit + times_of_clock_in.tolerance.extra_hours
 
-        if (actual_time_in_minutes < start_entry_tolerance) {
+    if (actual_time_in_minutes < start_entry_tolerance) {
 
         return "muito_cedo"
     }
@@ -119,6 +124,8 @@ function discover_actual_clock_in_period(){
     
     return "fora_expediente"
 }
+
+
 
 function update_to_display(){
 
@@ -173,6 +180,8 @@ function update_to_display(){
         clock_in_register.disabled = true
     }
 }
+
+
 
 document.addEventListener("DOMContentLoaded", function(){
     update_to_display()
