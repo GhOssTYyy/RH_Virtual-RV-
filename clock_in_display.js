@@ -2,6 +2,8 @@ const clock_in_register = document.getElementById("clock-in-register")
 const actual_time_screen = document.getElementById("actual-time-screen")
 const actual_date_screen = document.getElementById("actual-date-screen")
 const clock_in_message = document.getElementById("clock-in-message")
+const actual_week_day_screen = document.getElementById("actual-week-day-screen")
+
 
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -24,6 +26,14 @@ document.addEventListener("DOMContentLoaded", function(){
     const date_element = document.createElement("output")
     date_element.textContent = actual_date
     actual_date_screen.append(date_element)
+
+
+    //Exibição do dia da semana usando as informações da função register_the_week_date()
+    const actual_week_date = register_the_week_date()
+
+    const week_date_element = document.createElement("output")
+    week_date_element.textContent = actual_week_date
+    actual_week_day_screen.append(week_date_element)
 })
 
 
@@ -47,6 +57,7 @@ clock_in_register.addEventListener("click", function(){
 
 
 function register_the_clock() {
+
     const actual_time = new Date()
     const time_formated = actual_time.toLocaleTimeString([],{
         hour :"2-digit",
@@ -56,10 +67,20 @@ function register_the_clock() {
     return time_formated
 }
 
+
 function register_the_date() {
+
     const actual_date = new Date()
     const date_formated = actual_date.toLocaleDateString()
 
     return date_formated
+}
+
+
+function register_the_week_date() {
+    const actual_week_date = new Date()
+    const day_of_the_week_formated = actual_week_date.toLocaleDateString("pt-BR", {weekday: "long"})
+
+    return day_of_the_week_formated
 }
 
