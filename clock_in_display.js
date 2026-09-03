@@ -1,8 +1,18 @@
+
 const clock_in_register = document.getElementById("clock-in-register")
 const actual_time_screen = document.getElementById("actual-time-screen")
 const actual_date_screen = document.getElementById("actual-date-screen")
 const clock_in_message = document.getElementById("clock-in-message")
 const actual_week_day_screen = document.getElementById("actual-week-day-screen")
+
+const entry_clock_in_register = document.getElementById("entry-clock-in-register")
+const begin_dinner_clock_in_register = document.getElementById("begin-dinner-clock-in-register")
+const ending_dinner_clock_in_register = document.getElementById("ending-dinner-clock-in-register")
+const exit_clock_in_register = document.getElementById("exit-clock-in-register")
+
+
+import {discover_actual_clock_in_period } from "./clock_in_verification.js"
+
 
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -38,11 +48,36 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 
+let entry_registered = false
+let begin_dinner_registered = false
+
+
+
 //Ao apertar o botão o ponto é registrado
 clock_in_register.addEventListener("click", function(){
 
-    const date_clock_in = register_the_clock()
-    const message_base = `O seu ponto foi registrado ás ${date_clock_in}`
+    const actual_time_formated_hours = register_the_clock()
+    const actual_period = discover_actual_clock_in_period()
+
+    if (actual_period === "periodo_entrada" && entry_registered === false){
+
+        const time_element = document.createElement("output")
+        time_element.textContent = actual_time_formated_hours
+        entry_clock_in_register.append(time_element)
+
+        entry_registered = true
+    }
+
+    if (actual_period === "periodo_almoço" && begin_dinner_registered === false){
+
+        const time_element = document.createElement("output")
+        time_element.textContent = actual_time_formated_hours
+        begin_dinner_clock_in_register.append(time_element)
+
+        begin_dinner_registered = true
+    }
+
+    const message_base = `O seu ponto foi registrado ás ${actual_time_formated_hours}`
 
     if (clock_in_message.textContent === "") {
         const message_el = document.createElement("output")

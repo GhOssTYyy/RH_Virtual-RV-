@@ -141,7 +141,10 @@ function update_to_display(){
 
 
 document.addEventListener("DOMContentLoaded", function(){
+
     update_to_display()
 })
 
 setInterval(update_to_display, 30000)
+
+export {discover_actual_clock_in_period, }
