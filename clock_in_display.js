@@ -68,11 +68,11 @@ clock_in_register.addEventListener("click", function(){
         entry_registered = true
     }
 
-    if (actual_period === "periodo_almoço" && begin_dinner_registered === false){
+    if (actual_period === "periodo_almoco" && begin_dinner_registered === false){
 
-        const time_element = document.createElement("output")
-        time_element.textContent = actual_time_formated_hours
-        begin_dinner_clock_in_register.append(time_element)
+        const time_2_element = document.createElement("output")
+        time_2_element.textContent = actual_time_formated_hours
+        begin_dinner_clock_in_register.append(time_2_element)
 
         begin_dinner_registered = true
     }
