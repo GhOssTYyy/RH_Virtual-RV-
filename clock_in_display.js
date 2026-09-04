@@ -61,6 +61,8 @@ clock_in_register.addEventListener("click", function(){
 
     if (actual_period === "periodo_entrada" && entry_registered === false){
 
+        entry_clock_in_register.replaceChildren()
+
         const time_element = document.createElement("output")
         time_element.textContent = actual_time_formated_hours
         entry_clock_in_register.append(time_element)
@@ -69,6 +71,8 @@ clock_in_register.addEventListener("click", function(){
     }
 
     if (actual_period === "periodo_almoco" && begin_dinner_registered === false){
+
+        begin_dinner_clock_in_register.replaceChildren()
 
         const time_2_element = document.createElement("output")
         time_2_element.textContent = actual_time_formated_hours
@@ -79,6 +83,8 @@ clock_in_register.addEventListener("click", function(){
 
     if (actual_period === "periodo_volta" && ending_dinner_registered === false){
 
+        ending_dinner_clock_in_register.replaceChildren()
+
         const time_3_element = document.createElement("output")
         time_3_element.textContent = actual_time_formated_hours
         ending_dinner_clock_in_register.append(time_3_element)
@@ -87,6 +93,8 @@ clock_in_register.addEventListener("click", function(){
     }
 
     if (actual_period === "periodo_saida" && exit_registered === false){
+
+        exit_clock_in_register.replaceChildren()
 
         const time_4_element = document.createElement("output")
         time_4_element.textContent = actual_time_formated_hours
