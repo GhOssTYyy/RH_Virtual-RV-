@@ -51,8 +51,6 @@ document.addEventListener("DOMContentLoaded", function(){
 let entry_registered = false
 let begin_dinner_registered = false
 
-
-
 //Ao apertar o botão o ponto é registrado
 clock_in_register.addEventListener("click", function(){
 
@@ -68,13 +66,17 @@ clock_in_register.addEventListener("click", function(){
         entry_registered = true
     }
 
-    if (actual_period === "periodo_almoço" && begin_dinner_registered === false){
+    if (actual_period === "periodo_almoco" && begin_dinner_registered === false){
 
-        const time_element = document.createElement("output")
-        time_element.textContent = actual_time_formated_hours
-        begin_dinner_clock_in_register.append(time_element)
+        const time_2_element = document.createElement("output")
+        time_2_element.textContent = actual_time_formated_hours
+        begin_dinner_clock_in_register.append(time_2_element)
 
         begin_dinner_registered = true
+    }
+
+    if (actual_period === "periodo_almoco" && ){
+
     }
 
     const message_base = `O seu ponto foi registrado ás ${actual_time_formated_hours}`

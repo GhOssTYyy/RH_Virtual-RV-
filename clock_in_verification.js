@@ -12,6 +12,8 @@ const times_of_clock_in = {
 
         start_entry_tolerance : 60,
         entry_arrive_late : 10,
+        begin_dinner_tolerance : 10,
+        ending_dinner_tolerance : 10,
         extra_hours : 120
     }
 }
@@ -64,16 +66,16 @@ function discover_actual_clock_in_period(){
 
     const start_entry_tolerance = entry - times_of_clock_in.tolerance.start_entry_tolerance
     const entry_arrive_late_tolerance = entry + times_of_clock_in.tolerance.entry_arrive_late
-
-
     const extra_hours = exit + times_of_clock_in.tolerance.extra_hours
+    const begin_dinner_tolerance = begin_dinner + times_of_clock_in.tolerance.begin_dinner_tolerance
+    const ending_dinner_tolerance = ending_dinner + times_of_clock_in.tolerance.ending_dinner_tolerance
 
     if (actual_time_in_minutes < start_entry_tolerance) return "muito_cedo";
     if (actual_time_in_minutes <= entry_arrive_late_tolerance) return "periodo_entrada";
     if (actual_time_in_minutes < begin_dinner) return "trabalhando_manha";
-    if (actual_time_in_minutes === begin_dinner) return "periodo_almoco";
+    if (actual_time_in_minutes <= begin_dinner_tolerance) return "periodo_almoco";
     if (actual_time_in_minutes < ending_dinner) return "em_almoco";
-    if (actual_time_in_minutes === ending_dinner) return "periodo_volta";
+    if (actual_time_in_minutes <= ending_dinner_tolerance) return "periodo_volta";
     if (actual_time_in_minutes < exit) return "trabalhando_tarde";
     if (actual_time_in_minutes <= extra_hours) return "periodo_saida";
     
@@ -147,4 +149,4 @@ document.addEventListener("DOMContentLoaded", function(){
 
 setInterval(update_to_display, 30000)
 
-export {discover_actual_clock_in_period, }
+export {discover_actual_clock_in_period}
