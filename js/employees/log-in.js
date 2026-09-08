@@ -12,13 +12,13 @@ password_eye.addEventListener("click", function(){
     if (password_content.type === "password") {
 
         password_content.type = "text"
-        password_eye.src = "icons/eye_opened.svg"
+        password_eye.src = "assets/icons/eye_opened.svg"
 
 
     }else {
 
         password_content.type = "password"
-        password_eye.src = "icons/eye_closed.svg"
+        password_eye.src = "assets/icons/eye_closed.svg"
     }
 
 
@@ -28,11 +28,11 @@ dark_mode_button.addEventListener("click", function(){
 
     if (page_is_on_dark_mode === false) {
         document.documentElement.setAttribute("data-theme","dark")
-        dark_mode_button.src = "icons/dark_mode_icon.svg"
+        dark_mode_button.src = "assets/icons/dark_mode_icon.svg"
         page_is_on_dark_mode = true
     } else {
         document.documentElement.removeAttribute("data-theme")
-        dark_mode_button.src = "icons/light_mode_icon.svg"
+        dark_mode_button.src = "assets/icons/light_mode_icon.svg"
         page_is_on_dark_mode = false
     }
 })
@@ -47,6 +47,6 @@ go_to_sign_html.addEventListener("click", function(){
 //Botão de login redireciona para a página principal
 login_button.addEventListener("click", function(){
 
-    window.location.href = "main_page.html"
+    window.location.href = "pages/employees/main-page.html"
 
 })

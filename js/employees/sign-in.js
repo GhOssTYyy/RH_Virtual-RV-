@@ -16,12 +16,12 @@ function show_password(password_id, eye_id){
         if (password_content.type === "password") {
 
             password_content.type = "text"
-            password_eye.src = "icons/eye_opened.svg"
+            password_eye.src = "assets/icons/eye_opened.svg"
 
         }else {
 
             password_content.type = "password"
-            password_eye.src = "icons/eye_closed.svg"
+            password_eye.src = "assets/icons/eye_closed.svg"
         }
     })
 }
