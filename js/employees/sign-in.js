@@ -1,11 +1,11 @@
+import { auth } from "./fire_base_config.js"
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+
 const arrow_back_page = document.getElementById("arrow-back-page")
 const email_content = document.getElementById("email-content")
 const password_content_1 = document.getElementById("password-content-1")
 const password_content_2 = document.getElementById("password-content-2")
 const register_account = document.getElementById("register-account")
-
-import { auth } from "./fire_base_config.js"
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 arrow_back_page.addEventListener("click", function(){
 
