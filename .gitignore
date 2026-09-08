@@ -1,0 +1,13 @@
+#Firebase
+.env
+.env.local
+
+#Dependencies
+node_modules/
+
+#System
+.DS_Store
+Thumbs.db
+
+#Logs
+*.log
