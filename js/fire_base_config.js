@@ -3,12 +3,12 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 
 const firebaseConfig = {
-    apiKey: import.meta.env.FIREBASE_API_KEY,
-    authDomain: import.meta.env.FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.FIREBASE_APP_ID
+    apiKey:"AIzaSyDS-AfrZ6ORzH6dvEo5WP1Yjwz8PaeS0GA",
+    authDomain: "rh-virtual-rv.firebaseapp.com",
+    projectId: "rh-virtual-rv",
+    storageBucket: "rh-virtual-rv.firebasestorage.app" ,
+    messagingSenderId: "266794278171",
+    appId: "1:266794278171:web:acad7f4e27a73d78a387be"
 }
 
 const app = initializeApp(firebaseConfig)
