@@ -1,12 +1,12 @@
+import { auth } from "./fire_base_config.js"
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+
 const password_eye = document.getElementById("password-eye")
 const email_content = document.getElementById("email-content")
 const password_content = document.getElementById("password-content")
 const go_to_sign_html = document.getElementById("go-to-sign-html")
 const dark_mode_button = document.getElementById("dark-mode-button")
 const login_button = document.getElementById("login-button")
-
-import { auth } from "./fire_base_config.js"
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 let page_is_on_dark_mode = false
 
