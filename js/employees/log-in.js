@@ -21,7 +21,33 @@ const go_to_sign_html = document.getElementById("go-to-sign-html")
 const dark_mode_button = document.getElementById("dark-mode-button")
 const login_button = document.getElementById("login-button")
 
+
+const saved_local_storage_theme = localStorage.getItem("theme")
 let page_is_on_dark_mode = false
+
+if(saved_local_storage_theme === "dark"){
+    
+    document.documentElement.setAttribute("data-theme", "dark")
+    dark_mode_button.src = "assets/icons/dark_mode_icon.svg"
+    page_is_on_dark_mode = true
+}
+
+
+dark_mode_button.addEventListener("click", function(){
+
+    if (page_is_on_dark_mode === false) {
+        document.documentElement.setAttribute("data-theme","dark")
+        dark_mode_button.src = "assets/icons/dark_mode_icon.svg"
+        page_is_on_dark_mode = true
+        localStorage.setItem("theme", "dark")
+    } else {
+        document.documentElement.removeAttribute("data-theme")
+        dark_mode_button.src = "assets/icons/light_mode_icon.svg"
+        page_is_on_dark_mode = false
+        localStorage.setItem("theme", "light")
+    }
+})
+
 
 //Deixar a senha visivel e mudar o ícone do olho.
 password_eye.addEventListener("click", function(){
@@ -39,19 +65,6 @@ password_eye.addEventListener("click", function(){
     }
 
 
-})
-
-dark_mode_button.addEventListener("click", function(){
-
-    if (page_is_on_dark_mode === false) {
-        document.documentElement.setAttribute("data-theme","dark")
-        dark_mode_button.src = "assets/icons/dark_mode_icon.svg"
-        page_is_on_dark_mode = true
-    } else {
-        document.documentElement.removeAttribute("data-theme")
-        dark_mode_button.src = "assets/icons/light_mode_icon.svg"
-        page_is_on_dark_mode = false
-    }
 })
 
 //Trocar para a página de registro de conta.

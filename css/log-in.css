@@ -1,40 +1,45 @@
-/* Tema padrão do css, ao iniciar.*/
+/* ============================================
+   TEMA PADRÃO (CLARO)
+   ============================================ */
 :root {
-    /* Tema Claro (padrão) */
     --bg-primary: #ffffff;
-    --bg-secondary: #f0f2f5;
+    --bg-secondary: #ffffff;
     --bg-form: #ffffff;
-    --text-primary: #1a1a2e;
-    --text-secondary: #4a4a6a;
-    --border-color: #d1d5db;
-    --input-bg: #f8f9fa;
-    --input-text: #1a1a2e;
-    --button-bg: #4a6cf7;
-    --button-hover: #3a5cd5;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --border-color: #000000;
+    --input-bg: #ffffff;
+    --input-text: #000000;
+    --button-bg: #000000;
+    --button-hover: #333333;
     --button-text: #ffffff;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --link-color: #4a6cf7;
-    --link-hover: #3a5cd5;
-    --checkbox-accent: #4a6cf7;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --link-color: #000000;
+    --link-hover: #333333;
+    --checkbox-accent: #000000;
+    --icon-filter: none;
 }
 
-/* Tema Escuro */
+/* ============================================
+   TEMA ESCURO
+   ============================================ */
 [data-theme="dark"] {
     --bg-primary: #0a0a1a;
     --bg-secondary: #1a1a2e;
     --bg-form: #16213e;
-    --text-primary: #e0e0e0;
-    --text-secondary: #a0a0b8;
-    --border-color: #2a2a4a;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --border-color: #ffffff;
     --input-bg: #1a1a3e;
-    --input-text: #e0e0e0;
-    --button-bg: #6c8cff;
-    --button-hover: #5a7ae8;
-    --button-text: #ffffff;
+    --input-text: #ffffff;
+    --button-bg: #ffffff;
+    --button-hover: #e0e0e0;
+    --button-text: #000000;
     --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --link-color: #6c8cff;
-    --link-hover: #7a9aff;
-    --checkbox-accent: #6c8cff;
+    --link-color: #ffffff;
+    --link-hover: #e0e0e0;
+    --checkbox-accent: #ffffff;
+    --icon-filter: brightness(0) invert(1);
 }
 
 * {
@@ -61,6 +66,7 @@ body {
     width: 100%;
     max-width: 420px;
     transition: background 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid var(--border-color);
 }
 
 form {
@@ -111,7 +117,12 @@ form {
 
 .input-box input:focus {
     border-color: var(--button-bg);
-    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.input-box input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
 }
 
 #password-eye {
@@ -122,12 +133,13 @@ form {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    opacity: 0.6;
+    opacity: 1;
     transition: opacity 0.3s ease;
+    filter: var(--icon-filter);
 }
 
 #password-eye:hover {
-    opacity: 1;
+    opacity: 0.7;
 }
 
 .remember {
@@ -135,7 +147,8 @@ form {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
@@ -155,13 +168,13 @@ form {
 
 .remember a {
     color: var(--link-color);
-    text-decoration: none;
+    text-decoration: underline;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .remember a:hover {
     color: var(--link-hover);
-    text-decoration: underline;
 }
 
 /* Botão de Login */
@@ -173,7 +186,7 @@ form {
     border: none;
     border-radius: 10px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -181,7 +194,7 @@ form {
 .login:hover {
     background: var(--button-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .login:active {
@@ -191,20 +204,20 @@ form {
 .register-link {
     text-align: center;
     font-size: 14px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .register-link a {
     color: var(--link-color);
-    text-decoration: none;
-    font-weight: 600;
+    text-decoration: underline;
+    font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .register-link a:hover {
     color: var(--link-hover);
-    text-decoration: underline;
 }
 
 /* Responsividade */

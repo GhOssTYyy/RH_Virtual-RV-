@@ -20,6 +20,17 @@ const password_content_1 = document.getElementById("password-content-1")
 const password_content_2 = document.getElementById("password-content-2")
 const register_account = document.getElementById("register-account")
 
+
+const saved_local_storage_theme = localStorage.getItem("theme")
+let page_is_on_dark_mode = false
+
+if (saved_local_storage_theme === "dark"){
+
+    document.documentElement.setAttribute("data-theme", "dark")
+    page_is_on_dark_mode = true
+}
+
+
 arrow_back_page.addEventListener("click", function(){
 
     window.location.href = "index.html"

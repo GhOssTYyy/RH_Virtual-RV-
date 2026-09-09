@@ -1,128 +1,179 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+/* ============================================
+   TEMA PADRÃO (CLARO)
+   ============================================ */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --bg-form: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --border-color: #000000;
+    --input-bg: #ffffff;
+    --input-text: #000000;
+    --button-bg: #000000;
+    --button-hover: #333333;
+    --button-text: #ffffff;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --link-color: #000000;
+    --link-hover: #333333;
+    --checkbox-accent: #000000;
+    --icon-filter: none;
+}
+
+/* ============================================
+   TEMA ESCURO
+   ============================================ */
+[data-theme="dark"] {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #1a1a2e;
+    --bg-form: #16213e;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --border-color: #ffffff;
+    --input-bg: #1a1a3e;
+    --input-text: #ffffff;
+    --button-bg: #ffffff;
+    --button-hover: #e0e0e0;
+    --button-text: #000000;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --link-color: #ffffff;
+    --link-hover: #e0e0e0;
+    --checkbox-accent: #ffffff;
+    --icon-filter: brightness(0) invert(1);
+}
 
 * {
-    font-family: "Rubik", sans-serif;
     margin: 0;
     padding: 0;
-    border: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
+    background: var(--bg-secondary);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url(.//img/Fundo.jpeg);
-    background-size: cover;
-    background-position: center;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
-    background: transparent;
-    width: 420px;
-    padding: 30px 40px;
-    padding-right: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    color: #fff;
-    backdrop-filter: blur(120px);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
-                rgba(0, 0, 0, 0.12) 0px -12px 30px, 
-                rgba(0, 0, 0, 0.12) 0px 4px 6px, 
-                rgba(0, 0, 0, 0.17) 0px 12px 13px, 
-                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    background: var(--bg-form);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 420px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid var(--border-color);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Botões do topo */
+.top-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 #arrow-back-page {
+    width: 32px;
+    height: 32px;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-    filter: brightness(0) invert(1); 
-}
-#arrow-back-page:hover {
-    opacity: 1;  
+    transition: transform 0.3s ease;
+    filter: var(--icon-filter);
+    opacity: 1;
 }
 
+#arrow-back-page:hover {
+    transform: scale(1.1);
+    opacity: 0.7;
+}
+
+#dark-mode-button {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    filter: var(--icon-filter);
+}
+
+#dark-mode-button:hover {
+    transform: scale(1.1);
+}
+
+/* Título */
 #titulo {
     text-align: center;
-    margin: 0 0 20px 0;
-    font-size: 32px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
 }
 
-/* Configurações visuais dos inputs */
+/* Inputs */
 .input-box {
-    display: flex;
-    justify-content: center;
     position: relative;
     width: 100%;
 }
 
 .input-box input {
     width: 100%;
-    outline: none;
-    padding: 20px 45px 20px 20px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
-    margin: 5px 0;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 16px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    font-size: 15px;
     transition: all 0.3s ease;
+    outline: none;
 }
 
 .input-box input:focus {
-    border-color: #fff;
-    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--button-bg);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .input-box input::placeholder {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
+    opacity: 0.8;
 }
 
-.input-box i {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.input-box i:hover {
-    color: #fff;
-}
-
+/* Ícones dos olhos */
 .password-eye {
-    cursor: pointer;
     position: absolute;
-    right: 18px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    opacity: 0.7;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 1;
     transition: opacity 0.3s ease;
-    filter: brightness(0) invert(1); 
+    filter: var(--icon-filter);
 }
 
 .password-eye:hover {
-    opacity: 1;
+    opacity: 0.7;
 }
 
+/* Remember */
 .remember {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 0;
-    width: 100%;
     font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .remember label {
@@ -135,56 +186,79 @@ body {
 .remember input[type="checkbox"] {
     width: 16px;
     height: 16px;
+    accent-color: var(--checkbox-accent);
     cursor: pointer;
-    accent-color: #fff;
 }
 
 .remember a {
-    color: rgb(110, 105, 105);
-    text-decoration: none;
+    color: var(--link-color);
+    text-decoration: underline;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .remember a:hover {
-    color: #fff;
-    text-decoration: underline;
+    color: var(--link-hover);
 }
 
+/* Botão de Registro */
+.login {
+    width: 100%;
+    padding: 14px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.login:active {
+    transform: translateY(0);
+}
+
+/* Link para login */
 .register-link {
     text-align: center;
-    margin-top: 15px;
-    width: 100%;
     font-size: 14px;
-}
-
-.register-link p {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .register-link a {
-    color: rgb(110, 105, 105);
-    text-decoration: none;
-    font-weight: 600;
+    color: var(--link-color);
+    text-decoration: underline;
+    font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .register-link a:hover {
-    color: #fff;
-    text-decoration: underline;
+    color: var(--link-hover);
 }
 
-/* Botão de Login */
-.login {
-    height: 40px;
-    width: 100%;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    display: block;
-    margin: 20px 0;
-    background: #fff;
-    color: #333;
-    border: none;
+/* Responsividade */
+@media (max-width: 480px) {
+    .container {
+        padding: 24px 20px;
+        margin: 20px;
+    }
+    
+    #titulo {
+        font-size: 24px;
+    }
+    
+    .remember {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 }
-
