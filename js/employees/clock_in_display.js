@@ -168,7 +168,7 @@ function register_the_week_date() {
 
 
 async function save_the_clock_in_data_base(clock_in_register_type, time) {
-
+    
     const user = auth.currentUser
 
     if (!user){
