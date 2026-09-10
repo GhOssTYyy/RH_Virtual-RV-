@@ -1,3 +1,21 @@
+//Configuração Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDS-AfrZ6ORzH6dvEo5WP1Yjwz8PaeS0GA",
+    authDomain: "rh-virtual-rv.firebaseapp.com",
+    projectId: "rh-virtual-rv",
+    storageBucket: "rh-virtual-rv.firebasestorage.app",
+    messagingSenderId: "266794278171",
+    appId: "1:266794278171:web:acad7f4e27a73d78a387be"
+}
+
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
+const db = getFirestore(app)
+
 
 const clock_in_register = document.getElementById("clock-in-register")
 const actual_time_screen = document.getElementById("actual-time-screen")
@@ -67,6 +85,7 @@ clock_in_register.addEventListener("click", function(){
         time_element.textContent = actual_time_formated_hours
         entry_clock_in_register.append(time_element)
 
+        save_the_clock_in_data_base("entrada", actual_time_formated_hours)
         entry_registered = true
     }
 
@@ -78,6 +97,7 @@ clock_in_register.addEventListener("click", function(){
         time_2_element.textContent = actual_time_formated_hours
         begin_dinner_clock_in_register.append(time_2_element)
 
+        save_the_clock_in_data_base("inicio_almoco", actual_time_formated_hours)
         begin_dinner_registered = true
     }
 
@@ -89,6 +109,7 @@ clock_in_register.addEventListener("click", function(){
         time_3_element.textContent = actual_time_formated_hours
         ending_dinner_clock_in_register.append(time_3_element)
 
+        save_the_clock_in_data_base("fim_almoco", actual_time_formated_hours)
         ending_dinner_registered = true
     }
 
@@ -100,6 +121,7 @@ clock_in_register.addEventListener("click", function(){
         time_4_element.textContent = actual_time_formated_hours
         exit_clock_in_register.append(time_4_element)
 
+        save_the_clock_in_data_base("saida", actual_time_formated_hours)
         exit_registered = true
     }
 
@@ -114,7 +136,6 @@ clock_in_register.addEventListener("click", function(){
 
     }
 })
-
 
 
 function register_the_clock() {
@@ -145,3 +166,47 @@ function register_the_week_date() {
     return day_of_the_week_formated
 }
 
+
+async function save_the_clock_in_data_base(clock_in_register_type, time) {
+
+    const user = auth.currentUser
+
+    if (!user){
+        alert("Você precisa estar logado!")
+        return
+    }
+
+    const actual_date = register_the_date()
+    const actual_date_formated_to_id = actual_date.toISOString().split('T')[0]
+
+    const document_id_user = actual_date_formated_to_id + "_" + user.uid
+    const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
+    const verify_exist_document = await getDoc(document_reference)
+
+    try {
+
+        if (verify_exist_document.exists()) {
+
+            await updateDoc(document_reference, {
+
+                [clock_in_register_type] : time
+            })
+        } else {
+
+            await setDoc(document_reference, {
+
+                employee_id: user.uid,
+                employee_email: user.email,
+                date: actual_date_formated_to_id,
+
+                [clock_in_register_type] : time
+
+            })
+        }
+
+    } catch(error){
+        
+
+    }
+
+}
