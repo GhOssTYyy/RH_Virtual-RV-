@@ -72,7 +72,7 @@ let ending_dinner_registered = false
 let exit_registered = false
 
 //Ao apertar o botão o ponto é registrado
-clock_in_register.addEventListener("click", function(){
+clock_in_register.addEventListener("click", async function(){
 
     const actual_time_formated_hours = register_the_clock()
     const actual_period = discover_actual_clock_in_period()
@@ -85,7 +85,7 @@ clock_in_register.addEventListener("click", function(){
         time_element.textContent = actual_time_formated_hours
         entry_clock_in_register.append(time_element)
 
-        save_the_clock_in_data_base("entrada", actual_time_formated_hours)
+        await save_the_clock_in_data_base("entrada", actual_time_formated_hours)
         entry_registered = true
     }
 
@@ -97,7 +97,7 @@ clock_in_register.addEventListener("click", function(){
         time_2_element.textContent = actual_time_formated_hours
         begin_dinner_clock_in_register.append(time_2_element)
 
-        save_the_clock_in_data_base("inicio_almoco", actual_time_formated_hours)
+        await save_the_clock_in_data_base("inicio_almoco", actual_time_formated_hours)
         begin_dinner_registered = true
     }
 
@@ -109,7 +109,7 @@ clock_in_register.addEventListener("click", function(){
         time_3_element.textContent = actual_time_formated_hours
         ending_dinner_clock_in_register.append(time_3_element)
 
-        save_the_clock_in_data_base("fim_almoco", actual_time_formated_hours)
+        await save_the_clock_in_data_base("fim_almoco", actual_time_formated_hours)
         ending_dinner_registered = true
     }
 
@@ -121,7 +121,7 @@ clock_in_register.addEventListener("click", function(){
         time_4_element.textContent = actual_time_formated_hours
         exit_clock_in_register.append(time_4_element)
 
-        save_the_clock_in_data_base("saida", actual_time_formated_hours)
+        await save_the_clock_in_data_base("saida", actual_time_formated_hours)
         exit_registered = true
     }
 
@@ -176,8 +176,7 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
         return
     }
 
-    const actual_date = register_the_date()
-    const actual_date_formated_to_id = actual_date.toISOString().split('T')[0]
+    const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
 
     const document_id_user = actual_date_formated_to_id + "_" + user.uid
     const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
