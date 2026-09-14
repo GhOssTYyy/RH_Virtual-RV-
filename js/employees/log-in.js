@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyDS-AfrZ6ORzH6dvEo5WP1Yjwz8PaeS0GA",
@@ -85,6 +84,14 @@ login_button.addEventListener("click", async function(event) {
     try {
         const resultado = await signInWithEmailAndPassword(auth, email_input, password_input)
         const usuario = resultado.user
+
+        await usuario.reload()
+        if (!usuario.emailVerified){
+
+            alert("❌ Você precisa verificar seu e-mail antes de fazer login!")
+            await signOut(auth)
+            return
+        }
         
         console.log("✅ Logado:", usuario.email)
         window.location.href = "/pages/employees/main-page.html"

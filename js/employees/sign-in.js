@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyDS-AfrZ6ORzH6dvEo5WP1Yjwz8PaeS0GA",
@@ -78,19 +77,21 @@ register_account.addEventListener("click", async function(event){
 
         const register_result = await createUserWithEmailAndPassword(auth, email_input, password_input_1)
         const username = register_result.user
-         console.log("✅ Conta criada:", username.email)
-        alert("Conta criada com sucesso!")
-        window.location.href = "index.html"
-    } catch{
 
-    if (error.code === "auth/email-already-in-use") {
+        await sendEmailVerification(username)
+
+        alert("Conta criada com sucesso! Verifique seu e-mail (inclusive SPAM) antes de fazer login.")
+        window.location.href = "index.html"
+    } catch (error){
+
+        if (error.code === "auth/email-already-in-use") {
         alert("Este email já está cadastrado!")
-    } else if (error.code === "auth/weak-password") {
+        } else if (error.code === "auth/weak-password") {
         alert("Senha muito fraca!")
-    } else if (error.code === "auth/invalid-email") {
+        } else if (error.code === "auth/invalid-email") {
         alert("Email inválido!")
-    } else {
+        } else {
         alert("Erro: " + error.message)
-    }
-    }
+        }
+        }
 })
