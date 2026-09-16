@@ -163,6 +163,7 @@ clock_in_register.addEventListener("click", async function(){
 
         await save_the_clock_in_data_base("entrada", actual_time_formated_hours)
         localStorage.setItem("entry_saved", actual_time_formated_hours)
+
         entry_registered = true
         registered_something = true
     }
@@ -177,6 +178,7 @@ clock_in_register.addEventListener("click", async function(){
 
         await save_the_clock_in_data_base("inicio_almoco", actual_time_formated_hours)
         localStorage.setItem("beggin_dinner_saved", actual_time_formated_hours)
+
         begin_dinner_registered = true
         registered_something = true
     }
@@ -191,6 +193,7 @@ clock_in_register.addEventListener("click", async function(){
 
         await save_the_clock_in_data_base("fim_almoco", actual_time_formated_hours)
         localStorage.setItem("ending_dinner_saved", actual_time_formated_hours)
+
         ending_dinner_registered = true
         registered_something = true
     }
@@ -205,6 +208,7 @@ clock_in_register.addEventListener("click", async function(){
 
         await save_the_clock_in_data_base("saida", actual_time_formated_hours)
         localStorage.setItem("exit_saved", actual_time_formated_hours)
+
         exit_registered = true
         registered_something = true
 
@@ -218,8 +222,11 @@ clock_in_register.addEventListener("click", async function(){
             extra_hours_register.textContent = `Horas extras: + ${result.extra_hours}`
             localStorage.setItem("extra_hours_saved", result.extra_hours)
         } else {
-            extra_hours_register.textContent = `⚠️ Débito: ${result.extra_hours}`
+            extra_hours_register.textContent = `Débito: ${result.extra_hours}`
+            localStorage.setItem("extra_hours_saved", result.extra_hours)
         }
+
+        await save_the_extra_hours_and_total_worked_data_base(result)
         }
     }
 
@@ -257,6 +264,40 @@ function register_the_week_date() {
     const day_of_the_week_formated = actual_week_date.toLocaleDateString("pt-BR", {weekday: "long"})
 
     return day_of_the_week_formated
+}
+
+
+function calcule_extra_hours(){
+
+    const entry = localStorage.getItem("entry_saved")
+    const beggin_dinner = localStorage.getItem("beggin_dinner_saved")
+    const ending_dinner = localStorage.getItem("ending_dinner_saved")
+    const exit = localStorage.getItem("exit_saved")
+
+    if (!entry || !beggin_dinner || !ending_dinner || !exit) {
+
+        return null
+    }
+
+    const entry_registered_in_minutes = convert_time_to_minutes(entry)
+    const beggin_dinner_registered_in_minutes = convert_time_to_minutes(beggin_dinner)
+    const ending_dinner_registered_in_minutes = convert_time_to_minutes(ending_dinner)
+    const exit_registered_in_minutes = convert_time_to_minutes(exit)
+
+    const total_hours_at_work = exit_registered_in_minutes - entry_registered_in_minutes
+    const dinner_hours = ending_dinner_registered_in_minutes - beggin_dinner_registered_in_minutes
+    const total_hours_worked = total_hours_at_work - dinner_hours
+    const total_hours_of_work_base = 8 * 60
+    const extra_hours_calcule = total_hours_worked - total_hours_of_work_base
+
+    const result = {
+        hours_worked : convert_minutes_to_hours(total_hours_worked),
+        extra_hours : convert_minutes_to_hours(Math.abs(extra_hours_calcule)),
+        is_extra_hour : extra_hours_calcule > 0, 
+        extra_minutes : extra_hours_calcule
+    }
+
+    return result
 }
 
 
@@ -313,35 +354,25 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
 }
 
 
-function calcule_extra_hours(){
+async function save_the_extra_hours_and_total_worked_data_base(result) {
 
-    const entry = localStorage.getItem("entry_saved")
-    const beggin_dinner = localStorage.getItem("beggin_dinner_saved")
-    const ending_dinner = localStorage.getItem("ending_dinner_saved")
-    const exit = localStorage.getItem("exit_saved")
+    const user = auth.currentUser
 
-    if (!entry || !beggin_dinner || !ending_dinner || !exit) {
+    if (!user) return
 
-        return null
+    const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
+    const document_id_user = actual_date_formated_to_id + "_" + user.uid
+    const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
+
+    try {
+        
+        await updateDoc(document_reference, {
+
+            hours_worked : result.hours_worked,
+            extra_hours : result.extra_hours,
+            is_extra_hour : result.is_extra_hour
+        }) 
+    } catch(error){
+
     }
-
-    const entry_registered_in_minutes = convert_time_to_minutes(entry)
-    const beggin_dinner_registered_in_minutes = convert_time_to_minutes(beggin_dinner)
-    const ending_dinner_registered_in_minutes = convert_time_to_minutes(ending_dinner)
-    const exit_registered_in_minutes = convert_time_to_minutes(exit)
-
-    const total_hours_at_work = exit_registered_in_minutes - entry_registered_in_minutes
-    const dinner_hours = ending_dinner_registered_in_minutes - beggin_dinner_registered_in_minutes
-    const total_hours_worked = total_hours_at_work - dinner_hours
-    const total_hours_of_work_base = 8 * 60
-    const extra_hours_calcule = total_hours_worked - total_hours_of_work_base
-
-    const result = {
-        hours_worked : convert_minutes_to_hours(total_hours_worked),
-        extra_hours : convert_minutes_to_hours(Math.abs(extra_hours_calcule)),
-        is_extra_hour : extra_hours_calcule > 0, 
-        extra_minutes : extra_hours_calcule
-    }
-
-    return result
 }
