@@ -27,9 +27,10 @@ const entry_clock_in_register = document.getElementById("entry-clock-in-register
 const begin_dinner_clock_in_register = document.getElementById("begin-dinner-clock-in-register")
 const ending_dinner_clock_in_register = document.getElementById("ending-dinner-clock-in-register")
 const exit_clock_in_register = document.getElementById("exit-clock-in-register")
+const extra_hours_register = document.getElementById("extra-hours-register")
+const total_day_hours_register = document.getElementById("total-day-hours-register")
 
-
-import {discover_actual_clock_in_period } from "./clock_in_verification.js"
+import {discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
 let entry_registered = false
 let begin_dinner_registered = false
@@ -86,6 +87,9 @@ function verify_exist_clock_in_local_storage(){
         localStorage.removeItem("beggin_dinner_saved")
         localStorage.removeItem("ending_dinner_saved")
         localStorage.removeItem("exit_saved")
+
+        localStorage.removeItem("total_day_hours_saved")
+        localStorage.removeItem("extra_hours_saved")
  
 //Caso não, se você ainda está no mesmo dia, a função apenas acresentará os registros restantes sem sobscrever os já registrados.       
     } else {
@@ -93,27 +97,42 @@ function verify_exist_clock_in_local_storage(){
         
         const entry_saved = localStorage.getItem("entry_saved")
         if (entry_saved){
+
             entry_clock_in_register.textContent = entry_saved
             entry_registered = true
-
         }
         
         const beggin_dinner_saved = localStorage.getItem("beggin_dinner_saved")
         if (beggin_dinner_saved){
+
             begin_dinner_clock_in_register.textContent = beggin_dinner_saved
             begin_dinner_registered = true
         }
         
         const ending_dinner_saved = localStorage.getItem("ending_dinner_saved")
         if (ending_dinner_saved){
+
             ending_dinner_clock_in_register.textContent = ending_dinner_saved
             ending_dinner_registered = true
         }
         
         const exit_saved = localStorage.getItem("exit_saved")
         if (exit_saved){
+
             exit_clock_in_register.textContent = exit_saved
             exit_registered = true
+        }
+
+        const total_day_hours_saved = localStorage.getItem("total_day_hours_saved")
+        if (total_day_hours_saved){
+
+            total_day_hours_register.textContent = total_day_hours_saved
+        }
+
+        const extra_hours_saved = localStorage.getItem("extra_hours_saved")
+        if (extra_hours_saved){
+
+            extra_hours_register.textContent = extra_hours_saved
         }
     }
 
@@ -159,6 +178,7 @@ clock_in_register.addEventListener("click", async function(){
         await save_the_clock_in_data_base("inicio_almoco", actual_time_formated_hours)
         localStorage.setItem("beggin_dinner_saved", actual_time_formated_hours)
         begin_dinner_registered = true
+        registered_something = true
     }
 
     if (actual_period === "periodo_volta" && ending_dinner_registered === false){
@@ -172,6 +192,7 @@ clock_in_register.addEventListener("click", async function(){
         await save_the_clock_in_data_base("fim_almoco", actual_time_formated_hours)
         localStorage.setItem("ending_dinner_saved", actual_time_formated_hours)
         ending_dinner_registered = true
+        registered_something = true
     }
 
     if (actual_period === "periodo_saida" && exit_registered === false){
@@ -185,6 +206,21 @@ clock_in_register.addEventListener("click", async function(){
         await save_the_clock_in_data_base("saida", actual_time_formated_hours)
         localStorage.setItem("exit_saved", actual_time_formated_hours)
         exit_registered = true
+        registered_something = true
+
+        const result = calcule_extra_hours()
+
+    if (result) {
+
+        total_day_hours_register.textContent = `Horas trabalhadas: ${result.hours_worked}`
+        localStorage.setItem("total_day_hours_saved", result.hours_worked)
+        if (result.is_extra_hour) {
+            extra_hours_register.textContent = `Horas extras: + ${result.extra_hours}`
+            localStorage.setItem("extra_hours_saved", result.extra_hours)
+        } else {
+            extra_hours_register.textContent = `⚠️ Débito: ${result.extra_hours}`
+        }
+        }
     }
 
 //Mensagem de registro OBS:Ainda em manutenção.
@@ -192,6 +228,7 @@ clock_in_register.addEventListener("click", async function(){
         clock_in_message.textContent = "❌ Não é possível registrar agora!"
     }
 })
+
 
 //Função para registrar e coletar a hora atual, no formato brasileiro, com apenas horas e digitos, para ser exibido na tela.
 function register_the_clock() {
@@ -273,4 +310,38 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
 
     }
 
+}
+
+
+function calcule_extra_hours(){
+
+    const entry = localStorage.getItem("entry_saved")
+    const beggin_dinner = localStorage.getItem("beggin_dinner_saved")
+    const ending_dinner = localStorage.getItem("ending_dinner_saved")
+    const exit = localStorage.getItem("exit_saved")
+
+    if (!entry || !beggin_dinner || !ending_dinner || !exit) {
+
+        return null
+    }
+
+    const entry_registered_in_minutes = convert_time_to_minutes(entry)
+    const beggin_dinner_registered_in_minutes = convert_time_to_minutes(beggin_dinner)
+    const ending_dinner_registered_in_minutes = convert_time_to_minutes(ending_dinner)
+    const exit_registered_in_minutes = convert_time_to_minutes(exit)
+
+    const total_hours_at_work = exit_registered_in_minutes - entry_registered_in_minutes
+    const dinner_hours = ending_dinner_registered_in_minutes - beggin_dinner_registered_in_minutes
+    const total_hours_worked = total_hours_at_work - dinner_hours
+    const total_hours_of_work_base = 8 * 60
+    const extra_hours_calcule = total_hours_worked - total_hours_of_work_base
+
+    const result = {
+        hours_worked : convert_minutes_to_hours(total_hours_worked),
+        extra_hours : convert_minutes_to_hours(Math.abs(extra_hours_calcule)),
+        is_extra_hour : extra_hours_calcule > 0, 
+        extra_minutes : extra_hours_calcule
+    }
+
+    return result
 }

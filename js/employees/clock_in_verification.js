@@ -149,4 +149,4 @@ document.addEventListener("DOMContentLoaded", function(){
 
 setInterval(update_to_display, 1000)
 
-export {discover_actual_clock_in_period}
+export {discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours}
