@@ -1,21 +1,7 @@
 //Configuração Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
-import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDS-AfrZ6ORzH6dvEo5WP1Yjwz8PaeS0GA",
-    authDomain: "rh-virtual-rv.firebaseapp.com",
-    projectId: "rh-virtual-rv",
-    storageBucket: "rh-virtual-rv.firebasestorage.app",
-    messagingSenderId: "266794278171",
-    appId: "1:266794278171:web:acad7f4e27a73d78a387be"
-}
-
-const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
-const db = getFirestore(app)
-
+import { auth, db } from "../firebase-config.js"
+import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
 const clock_in_register = document.getElementById("clock-in-register")
 const actual_time_screen = document.getElementById("actual-time-screen")
@@ -30,7 +16,6 @@ const exit_clock_in_register = document.getElementById("exit-clock-in-register")
 const extra_hours_register = document.getElementById("extra-hours-register")
 const total_day_hours_register = document.getElementById("total-day-hours-register")
 
-import {discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
 let entry_registered = false
 let begin_dinner_registered = false
