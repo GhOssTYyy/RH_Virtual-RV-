@@ -1,5 +1,5 @@
 //Configuração Firebase
-import { auth, db } from "../firebase-config.js"
+import { auth, db } from "../firebase_config.js"
 import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 

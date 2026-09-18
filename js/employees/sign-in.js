@@ -1,4 +1,4 @@
-import { auth } from "../firebase-config.js"
+import { auth } from "../firebase_config.js"
 import { createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 const arrow_back_page = document.getElementById("arrow-back-page")
