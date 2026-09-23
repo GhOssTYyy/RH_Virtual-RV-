@@ -17,5 +17,3 @@ const app = initializeApp(firebaseConfig)
 // Exporta os serviços
 export const auth = getAuth(app)
 export const db = getFirestore(app)
-
-console.log("✅ Firebase configurado!")
