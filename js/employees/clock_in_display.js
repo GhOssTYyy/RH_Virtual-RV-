@@ -306,43 +306,39 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
     const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
     const document_id_user = actual_date_formated_to_id + "_" + user.uid
     const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
-    const verify_exist_document = await getDoc(document_reference)
 
-//Verificação se já existe o documento daquele dia, caso haja ele é atualizado com os novos registros, -
-//caso não um novo registro é criado com seu nome da data atual e o id único de cada usuário.
+//Utiliza setDoc com a opção "merge: true", que cria o documento caso ele não exista ou -
+//atualiza apenas os campos enviados caso ele já exista. Isso evita a necessidade de -
+//fazer uma leitura (getDoc) antes de salvar, economizando operações no Firebase.
+//O campo "employee_id" é sempre enviado para satisfazer as regras de segurança -
+//do Firestore, que exigem que o dono do documento seja o próprio usuário logado.
     try {
 
-        if (verify_exist_document.exists()) {
+        await setDoc(document_reference, {
 
-            await updateDoc(document_reference, {
+            employee_id: user.uid,
+            employee_email: user.email,
+            date: actual_date_formated_to_id,
 
-                [clock_in_register_type] : time
-            })
-        } else {
+            [clock_in_register_type] : time
 
-            await setDoc(document_reference, {
-
-                employee_id: user.uid,
-                employee_email: user.email,
-                date: actual_date_formated_to_id,
-
-                [clock_in_register_type] : time
-
-            })
-        }
-
-    } catch(error){
+        }, { merge: true })
         
-
+        console.log("✅ Ponto salvo:", clock_in_register_type)
+        
+    } catch(error){
+        console.log("❌ Erro ao salvar ponto:", error.code, error.message)
     }
 
 }
 
 
+//Função responsável por salvar no banco de dados os cálculos de horas trabalhadas e horas extras -
+//do dia. Utiliza o mesmo padrão de setDoc com "merge: true", garantindo que os campos sejam -
+//adicionados ao documento do dia sem sobrescrever os registros de ponto (entrada, almoço, etc).
 async function save_the_extra_hours_and_total_worked_data_base(result) {
 
     const user = auth.currentUser
-
     if (!user) return
 
     const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
@@ -350,14 +346,19 @@ async function save_the_extra_hours_and_total_worked_data_base(result) {
     const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
 
     try {
+        // ✅ setDoc com merge (cria OU atualiza automaticamente)
+        await setDoc(document_reference, {
+            employee_id: user.uid,
+            employee_email: user.email,
+            date: actual_date_formated_to_id,
+            hours_worked: result.hours_worked,
+            extra_hours: result.extra_hours,
+            is_extra_hour: result.is_extra_hour
+        }, { merge: true })
         
-        await updateDoc(document_reference, {
-
-            hours_worked : result.hours_worked,
-            extra_hours : result.extra_hours,
-            is_extra_hour : result.is_extra_hour
-        }) 
+        console.log("✅ Horas salvas:", result.hours_worked)
+        
     } catch(error){
-
+        console.log("❌ Erro ao salvar horas:", error.code, error.message)
     }
 }
