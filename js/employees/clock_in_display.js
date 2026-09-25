@@ -16,12 +16,19 @@ const exit_clock_in_register = document.getElementById("exit-clock-in-register")
 const extra_hours_register = document.getElementById("extra-hours-register")
 const total_day_hours_register = document.getElementById("total-day-hours-register")
 
+const clock_in_historic_button = document.getElementById("clock-in-historic-button")
 
 let entry_registered = false
 let begin_dinner_registered = false
 let ending_dinner_registered = false
 let exit_registered = false
 let registered_something = false
+
+clock_in_historic_button.addEventListener("click", function(){
+
+    window.location.href = "/pages/employees/historic-clock-in-register.html"
+
+})
 
 document.addEventListener("DOMContentLoaded", function(){
 
