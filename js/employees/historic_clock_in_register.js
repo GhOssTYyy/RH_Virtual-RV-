@@ -2,7 +2,7 @@ import { auth, db } from "../firebase_config.js"
 import { collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
-
+//Verifica se o usuário está logado, espera a autorização do firebase, caso não retorna para a página inical.
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
@@ -12,18 +12,14 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    // ✅ Usuário está logado → busca o histórico
-    console.log("✅ Usuário autenticado:", user.email)
     get_all_user_clock_in_registers(user)
 })
 
-
-// ============================================
-// BUSCAR HISTÓRICO DO FIREBASE
-// ============================================
-
+//Função para pegar do firebase os registros de pontos apenas do seu usuário logado, nunca de outros
+//usuários.
 async function get_all_user_clock_in_registers(user) {
     
+//Container html onde tudo será inserido no final
     const historic_clock_in_register_container = document.getElementById("historic-clock-in-register-container")
 
     try {
@@ -49,14 +45,14 @@ async function get_all_user_clock_in_registers(user) {
             clock_in_registers_array.push(document.data())
         })
 
-        console.log("📊 Registros encontrados:", clock_in_registers_array.length)
+        console.log("Registros encontrados:", clock_in_registers_array.length)
 
         const clock_in_registers_organized = organized_clock_in_year_month(clock_in_registers_array)
 
         display_historic_of_clock_in(clock_in_registers_organized, historic_clock_in_register_container)
 
     } catch (error) {
-        console.log("❌ Erro ao buscar histórico:", error.code, error.message)
+        console.log("Erro ao buscar histórico:", error.code, error.message)
         historic_clock_in_register_container.innerHTML = "<p class='erro'>Erro ao carregar histórico</p>"
     }
 }
@@ -124,7 +120,7 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
 
         const year_html_title = document.createElement("h2")
         year_html_title.className = "year-html-title"
-        year_html_title.textContent = `📅 ${year}`
+        year_html_title.textContent = `${year}`
         year_html_block.appendChild(year_html_title)
 
         const clock_in_registers_months = Object.keys(organized_clock_in[year]).sort().reverse()
@@ -136,7 +132,7 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
 
             const month_html_title = document.createElement("h3")
             month_html_title.className = "month-html-title"
-            month_html_title.textContent = `📆 ${month_names_in_portuguese[month]}`
+            month_html_title.textContent = `${month_names_in_portuguese[month]}`
             month_html_block.appendChild(month_html_title)
 
             const historic_clock_in_table = document.createElement("table")
