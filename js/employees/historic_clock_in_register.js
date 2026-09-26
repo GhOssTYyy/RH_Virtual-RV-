@@ -1,25 +1,40 @@
-import {auth, db } from "../firebase_config.js"
-import { collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import { auth, db } from "../firebase_config.js"
+import { collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
-async function get_all_user_clock_in_registers() {
+
+onAuthStateChanged(auth, function(user) {
     
-    const user = auth.currentUser
-
     if (!user) {
+
         alert("Você precisa estar logado!")
+        window.location.href = "/index.html"
         return
     }
+    
+    // ✅ Usuário está logado → busca o histórico
+    console.log("✅ Usuário autenticado:", user.email)
+    get_all_user_clock_in_registers(user)
+})
 
 
+// ============================================
+// BUSCAR HISTÓRICO DO FIREBASE
+// ============================================
+
+async function get_all_user_clock_in_registers(user) {
+    
     const historic_clock_in_register_container = document.getElementById("historic-clock-in-register-container")
 
     try {
 
         const collection_variable = collection(db, "Clock_in_registers_day")
+        
         const consult_of_historic_clock_in = query(
             collection_variable,
-            where("employee_id","==", user.uid),
-            orderBy("date", "desc")
+            where("employee_id", "==", user.uid),
+            orderBy("date", "desc"),
+            limit(100)
         )
 
         const result = await getDocs(consult_of_historic_clock_in)
@@ -31,20 +46,25 @@ async function get_all_user_clock_in_registers() {
 
         const clock_in_registers_array = []
         result.forEach(function(document){
-
             clock_in_registers_array.push(document.data())
         })
+
+        console.log("📊 Registros encontrados:", clock_in_registers_array.length)
 
         const clock_in_registers_organized = organized_clock_in_year_month(clock_in_registers_array)
 
         display_historic_of_clock_in(clock_in_registers_organized, historic_clock_in_register_container)
 
     } catch (error) {
-
+        console.log("❌ Erro ao buscar histórico:", error.code, error.message)
         historic_clock_in_register_container.innerHTML = "<p class='erro'>Erro ao carregar histórico</p>"
     }
 }
 
+
+// ============================================
+// ORGANIZAR POR ANO E MÊS
+// ============================================
 
 function organized_clock_in_year_month(registers) {
 
@@ -57,14 +77,13 @@ function organized_clock_in_year_month(registers) {
         if (!organized_clock_in[year]) {
             organized_clock_in[year] = {}
         }
-        
 
         if (!organized_clock_in[year][month]) {
-           organized_clock_in[year][month] = []
+            organized_clock_in[year][month] = []
         }
 
         organized_clock_in[year][month].push({
-            day : day,
+            day: day,
             ...register
         })
     })
@@ -72,6 +91,10 @@ function organized_clock_in_year_month(registers) {
     return organized_clock_in
 }
 
+
+// ============================================
+// EXIBIR NO HTML
+// ============================================
 
 function display_historic_of_clock_in(organized_clock_in, historic_clock_in_register_container){
 
@@ -104,7 +127,6 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
         year_html_title.textContent = `📅 ${year}`
         year_html_block.appendChild(year_html_title)
 
-
         const clock_in_registers_months = Object.keys(organized_clock_in[year]).sort().reverse()
 
         clock_in_registers_months.forEach(function(month){
@@ -121,7 +143,6 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
             historic_clock_in_table.className = "historic-clock-in-table"
 
             historic_clock_in_table.innerHTML = `
-
                 <thead>
                     <tr>
                         <th>Dia</th>
@@ -138,7 +159,7 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
 
             const tbody = historic_clock_in_table.querySelector("tbody")
 
-            const clock_in_register_organized_days = organized_clock_in[year][month].sort((a,b) => b.day.localeCompare(a.day))
+            const clock_in_register_organized_days = organized_clock_in[year][month].sort((a, b) => b.day.localeCompare(a.day))
 
             clock_in_register_organized_days.forEach(function(register){
 
@@ -149,15 +170,16 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
 
                 if (register.extra_hours) {
 
-                    if (register.is_extra_hour){
+                    if (register.is_extra_hour) {
                         extra_text = `+ ${register.extra_hours}`
                         extra_class = "extra-hours-positive"
-                } else{
+                    } else {
+                        extra_text = `-${register.extra_hours}`
+                        extra_class = "extra-hours-negative"
+                    }
 
-                    extra_text = `-${register.extra_hours}`
-                    extra_class = "extra-hours-negative"
                 }
-            }
+
                 line.innerHTML = `
                     <td>${register.day}</td>
                     <td>${register.entrada || "-"}</td>
@@ -173,14 +195,8 @@ function display_historic_of_clock_in(organized_clock_in, historic_clock_in_regi
 
             month_html_block.appendChild(historic_clock_in_table)
             year_html_block.appendChild(month_html_block)
-            
         })
 
         historic_clock_in_register_container.appendChild(year_html_block)
     })
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-    
-    get_all_user_clock_in_registers()
-})
