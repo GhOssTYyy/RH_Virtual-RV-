@@ -140,7 +140,7 @@ clock_in_register.addEventListener("click", async function(){
 //Registra o ponto com verificação de hora e tolerância, após a correta verificação, o sistema registra.
     if (actual_period === "periodo_entrada" && entry_registered === false){
 
-//Mensagem de registro OBS:Ainda em manutenção.
+//Mensagem caso o registro já tenho sido salvo.
         if (localStorage.getItem("entry_saved")){
             clock_in_message.textContent = "❌ Você já registrou a ENTRADA hoje!"
             return
@@ -353,7 +353,7 @@ async function save_the_extra_hours_and_total_worked_data_base(result) {
     const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
 
     try {
-        // ✅ setDoc com merge (cria OU atualiza automaticamente)
+
         await setDoc(document_reference, {
             employee_id: user.uid,
             employee_email: user.email,
