@@ -58,10 +58,6 @@ async function get_all_user_clock_in_registers(user) {
 }
 
 
-// ============================================
-// ORGANIZAR POR ANO E MÊS
-// ============================================
-
 function organized_clock_in_year_month(registers) {
 
     const organized_clock_in = {}
@@ -87,10 +83,6 @@ function organized_clock_in_year_month(registers) {
     return organized_clock_in
 }
 
-
-// ============================================
-// EXIBIR NO HTML
-// ============================================
 
 function display_historic_of_clock_in(organized_clock_in, historic_clock_in_register_container){
 

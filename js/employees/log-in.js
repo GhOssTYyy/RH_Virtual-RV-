@@ -7,7 +7,7 @@ const password_content = document.getElementById("password-content")
 const go_to_sign_html = document.getElementById("go-to-sign-html")
 const dark_mode_button = document.getElementById("dark-mode-button")
 const login_button = document.getElementById("login-button")
-
+const forgot_password = document.getElementById("forgot-password")
 
 const saved_local_storage_theme = localStorage.getItem("theme")
 let page_is_on_dark_mode = false
@@ -52,6 +52,12 @@ password_eye.addEventListener("click", function(){
     }
 
 
+})
+
+
+forgot_password.addEventListener("click", function(){
+
+    forgot_password.href = "/pages/employees/forgot-password.html"
 })
 
 //Trocar para a página de registro de conta.
