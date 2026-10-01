@@ -1,0 +1,340 @@
+/* ============================================
+   VARIÁVEIS
+   ============================================ */
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f2f5;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --button-bg: #4a6cf7;
+    --button-hover: #3a5cd5;
+    --button-text: #ffffff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+    --success: #22c55e;
+    --danger: #ef4444;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #1a1a2e;
+    --bg-card: #16213e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0b8;
+    --border-color: #2a2a4a;
+    --button-bg: #6c8cff;
+    --button-hover: #5a7ae8;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.header {
+    background: var(--bg-card);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-title h1 {
+    font-size: 22px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.header-title p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.logout-button {
+    padding: 10px 20px;
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   FILTROS
+   ============================================ */
+
+.filtros {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.filtro-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.filtro-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.filtro-group select,
+.filtro-group input {
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.filtro-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--button-bg);
+    color: var(--button-text);
+}
+
+.btn-primary:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+/* ============================================
+   CONTEÚDO PRINCIPAL
+   ============================================ */
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+}
+
+/* ============================================
+   ESTATÍSTICAS
+   ============================================ */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-icon {
+    font-size: 36px;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--button-bg);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   TABELA
+   ============================================ */
+
+.tabela-container {
+    background: var(--bg-card);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+.tabela-container h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tabela-wrapper {
+    overflow-x: auto;
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.tabela th {
+    background: var(--bg-secondary);
+    padding: 12px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tabela td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.tabela tr:hover {
+    background: var(--bg-secondary);
+}
+
+.carregando,
+.vazio,
+.erro {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.erro {
+    color: var(--danger);
+}
+
+.extra-positivo {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.extra-negativo {
+    color: var(--danger);
+    font-weight: bold;
+}
+
+/* ============================================
+   TABELA FOOTER
+   ============================================ */
+
+.tabela-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+}
+
+#info-total {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .filtros {
+        flex-direction: column;
+    }
+
+    .filtro-buttons {
+        width: 100%;
+    }
+
+    .filtro-buttons button {
+        flex: 1;
+    }
+
+    .tabela-footer {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
