@@ -57,7 +57,7 @@ password_eye.addEventListener("click", function(){
 
 forgot_password.addEventListener("click", function(){
 
-    forgot_password.href = "/pages/employees/forgot-password.html"
+    forgot_password.href = "/forgot-password.html"
 })
 
 //Trocar para a página de registro de conta.
