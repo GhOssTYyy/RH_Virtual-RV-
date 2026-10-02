@@ -1,0 +1,606 @@
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
+
+:root {
+    /* Cores */
+    --azul-escuro: #0a2a4a;
+    --azul-medio: #075394;
+    --azul-claro: #e6f0fa;
+    --azul-fundo: #f2f6fa;
+    
+    --laranja: #ff9418;
+    --laranja-hover: #f88708;
+    --laranja-claro: #fff5e6;
+    
+    --verde: #22c55e;
+    --verde-escuro: #166534;
+    
+    --branco: #ffffff;
+    --cinza-texto: #71859a;
+    --cinza-borda: #e1e8f0;
+    
+    /* Sombras */
+    --sombra-suave: 0 2px 8px rgba(10, 42, 74, 0.05);
+    --sombra-media: 0 4px 12px rgba(10, 42, 74, 0.08);
+    --sombra-botao: 0 4px 12px rgba(255, 148, 24, 0.3);
+    
+    /* Layout */
+    --radius-grande: 20px;
+    --radius-medio: 14px;
+    --radius-pequeno: 10px;
+    
+    --transition: 0.2s ease;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--azul-fundo);
+    color: var(--azul-escuro);
+    min-height: 100vh;
+    padding-bottom: 90px;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: var(--azul-fundo);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-back,
+.header-icon {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--azul-escuro);
+    font-size: 22px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.header-back:hover,
+.header-icon:hover {
+    background: rgba(10, 42, 74, 0.05);
+}
+
+.header-icon {
+    color: var(--azul-medio);
+    font-size: 18px;
+}
+
+.header-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--azul-escuro);
+    text-align: center;
+    flex: 1;
+}
+
+
+/* =========================================================
+   CONTEÚDO PRINCIPAL
+========================================================= */
+
+.main-content {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* =========================================================
+   CARD BASE
+========================================================= */
+
+.card {
+    background: var(--branco);
+    border-radius: var(--radius-grande);
+    padding: 20px;
+    box-shadow: var(--sombra-suave);
+    transition: var(--transition);
+}
+
+
+/* =========================================================
+   CARD DO FUNCIONÁRIO
+========================================================= */
+
+.card-funcionario {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--laranja);
+    color: var(--azul-escuro);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.funcionario-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.funcionario-info h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.funcionario-info p {
+    font-size: 12px;
+    color: var(--cinza-texto);
+    margin-bottom: 6px;
+    text-transform: capitalize;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e8f5ee;
+    color: var(--verde-escuro);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--verde);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+
+/* =========================================================
+   CARD PRINCIPAL DO PONTO
+========================================================= */
+
+.card-ponto {
+    padding: 28px 20px 22px;
+    text-align: center;
+}
+
+.relogio-grande {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--azul-medio);
+    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.relogio-data {
+    font-size: 13px;
+    color: var(--cinza-texto);
+    margin-bottom: 18px;
+    text-transform: capitalize;
+}
+
+.localizacao {
+    font-size: 13px;
+    color: var(--azul-escuro);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.localizacao-status {
+    font-size: 12px;
+    color: var(--verde);
+    font-weight: 600;
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   BOTÃO PRINCIPAL
+========================================================= */
+
+.btn-registrar {
+    width: 100%;
+    padding: 18px 20px;
+    background: var(--laranja);
+    border: none;
+    border-radius: var(--radius-medio);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: var(--transition);
+    box-shadow: var(--sombra-botao);
+    min-height: 76px;
+}
+
+.btn-registrar:hover:not(:disabled) {
+    background: var(--laranja-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 148, 24, 0.4);
+}
+
+.btn-registrar:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-registrar:disabled {
+    background: var(--cinza-borda);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-titulo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn-subtitulo {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--azul-escuro);
+    opacity: 0.75;
+}
+
+
+/* =========================================================
+   MENSAGEM DE FEEDBACK
+========================================================= */
+
+.mensagem {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-pequeno);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    background: var(--azul-claro);
+    color: var(--azul-medio);
+    display: none;
+}
+
+.mensagem:not(:empty) {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   CARD RESUMO DO DIA
+========================================================= */
+
+.card-resumo {
+    padding: 20px;
+}
+
+.resumo-header {
+    margin-bottom: 18px;
+}
+
+.resumo-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+}
+
+
+/* Grid do resumo - 4 colunas */
+.resumo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.resumo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.resumo-titulo {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--cinza-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.resumo-valor {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    font-variant-numeric: tabular-nums;
+}
+
+.resumo-status {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--verde);
+}
+
+.resumo-status.pendente {
+    color: var(--laranja);
+}
+
+
+/* =========================================================
+   CARD SALDO DO DIA
+========================================================= */
+
+.card-saldo {
+    padding: 20px;
+}
+
+.saldo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.saldo-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--azul-claro);
+    border-radius: var(--radius-pequeno);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.saldo-info h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    margin-bottom: 2px;
+}
+
+.saldo-info p {
+    font-size: 12px;
+    color: var(--cinza-texto);
+}
+
+
+/* Grid do saldo */
+.saldo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--cinza-borda);
+}
+
+.saldo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.saldo-titulo {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--cinza-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.saldo-valor {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--azul-medio);
+    font-variant-numeric: tabular-nums;
+}
+
+.saldo-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--verde);
+}
+
+
+/* =========================================================
+   BOTÃO HISTÓRICO
+========================================================= */
+
+.btn-historico {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 2px solid var(--azul-medio);
+    color: var(--azul-medio);
+    border-radius: var(--radius-medio);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 4px;
+}
+
+.btn-historico:hover {
+    background: var(--azul-medio);
+    color: var(--branco);
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   MENU INFERIOR
+========================================================= */
+
+.bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--branco);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px;
+    box-shadow: 0 -2px 12px rgba(10, 42, 74, 0.06);
+    z-index: 100;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pequeno);
+    cursor: pointer;
+    color: var(--cinza-texto);
+    transition: var(--transition);
+    max-width: 80px;
+}
+
+.tab:hover {
+    color: var(--azul-medio);
+}
+
+.tab.active {
+    background: var(--azul-claro);
+    color: var(--azul-medio);
+}
+
+.tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .main-content {
+        padding: 0 12px 20px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .relogio-grande {
+        font-size: 42px;
+    }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 14px;
+    }
+
+    .funcionario-info h2 {
+        font-size: 15px;
+    }
+
+    .resumo-grid {
+        gap: 6px;
+    }
+
+    .resumo-valor {
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+
+    .main-content {
+        max-width: 480px;
+        padding-top: 10px;
+    }
+
+    .bottom-tabs {
+        max-width: 480px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
+}
