@@ -338,3 +338,216 @@ body {
         gap: 15px;
     }
 }
+@media (max-width: 768px) {
+
+    /* Header */
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .header-title h1 {
+        font-size: 20px;
+    }
+
+    .logout-button {
+        width: 100%;
+    }
+
+    /* Filtros */
+    .filtros {
+        flex-direction: column;
+        padding: 15px;
+        margin: 10px 15px 15px;
+    }
+
+    .filtro-group {
+        width: 100%;
+    }
+
+    .filtro-buttons {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .filtro-buttons button {
+        flex: 1;
+        padding: 12px;
+    }
+
+    /* Estatísticas */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 0 15px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-number {
+        font-size: 24px;
+    }
+
+    /* Tabela - TRANSFORMA EM CARDS */
+    .tabela-container {
+        margin: 0 15px;
+        padding: 15px;
+    }
+
+    .tabela-container h2 {
+        font-size: 16px;
+    }
+
+    /* Remove o scroll horizontal */
+    .tabela-wrapper {
+        overflow-x: visible;
+    }
+
+    /* Esconde o cabeçalho da tabela */
+    .tabela thead {
+        display: none;
+    }
+
+    /* Cada linha vira um card */
+    .tabela,
+    .tabela tbody,
+    .tabela tr,
+    .tabela td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Estilo do card */
+    .tabela tr {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Cada célula vira uma linha */
+    .tabela td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 13px;
+    }
+
+    /* Remove a borda da última célula */
+    .tabela td:last-child {
+        border-bottom: none;
+    }
+
+    /* Adiciona título em cada célula */
+    .tabela td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Tabela Footer */
+    .tabela-footer {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .tabela-footer button {
+        width: 100%;
+    }
+
+    #info-total {
+        text-align: center;
+    }
+}
+
+
+/* =========================================================
+   MOBILE MUITO PEQUENO
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .header {
+        padding: 12px;
+    }
+
+    .header-title h1 {
+        font-size: 18px;
+    }
+
+    .header-title p {
+        font-size: 12px;
+    }
+
+    .filtros {
+        padding: 12px;
+        margin: 8px 12px 12px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-icon {
+        font-size: 28px;
+    }
+
+    .stat-number {
+        font-size: 20px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .tabela-container {
+        margin: 0 12px;
+        padding: 12px;
+    }
+
+    .tabela tr {
+        padding: 12px;
+    }
+
+    .tabela td {
+        font-size: 12px;
+        padding: 6px 0;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tabela {
+        min-width: 100%;
+        font-size: 13px;
+    }
+
+    .tabela th,
+    .tabela td {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+}
