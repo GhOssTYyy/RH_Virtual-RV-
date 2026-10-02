@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do RH - RH Virtual</title>
     <link rel="stylesheet" href="/css/RH/rh-dashboard.css">
 </head>
+
 <body>
 
-    <!-- ============================================
-         HEADER
-         ============================================ -->
     <header class="header">
         <div class="header-title">
             <h1>Painel do RH</h1>
@@ -18,10 +17,6 @@
         </div>
         <button class="logout-button" id="logout-button">Sair</button>
     </header>
-
-    <!-- ============================================
-         FILTROS
-         ============================================ -->
     <section class="filtros">
         <div class="filtro-group">
             <label for="filtro-funcionario">Funcionário:</label>
@@ -41,12 +36,8 @@
         </div>
     </section>
 
-    <!-- ============================================
-         CONTEÚDO PRINCIPAL
-         ============================================ -->
     <main class="main-content">
 
-        <!-- Estatísticas -->
         <section class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon"></div>
@@ -73,7 +64,6 @@
             </div>
         </section>
 
-        <!-- Tabela de Registros -->
         <section class="tabela-container">
             <h2>Registros de Ponto</h2>
 
@@ -107,9 +97,6 @@
 
     </main>
 
-    <!-- ============================================
-         SCRIPTS
-         ============================================ -->
     <script type="module" src="/js/RH/rh_dashboard.js"></script>
 
 </body>
