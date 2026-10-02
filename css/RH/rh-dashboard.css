@@ -310,37 +310,36 @@ body {
     font-weight: 600;
 }
 
-/* ============================================
-   RESPONSIVIDADE
-   ============================================ */
+/* =========================================================
+   RESPONSIVIDADE - TABLET
+========================================================= */
 
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 
-    .filtros {
-        flex-direction: column;
+    .tabela {
+        min-width: 100%;
+        font-size: 13px;
     }
 
-    .filtro-buttons {
-        width: 100%;
-    }
-
-    .filtro-buttons button {
-        flex: 1;
-    }
-
-    .tabela-footer {
-        flex-direction: column;
-        gap: 15px;
+    .tabela th,
+    .tabela td {
+        padding: 10px 8px;
+        font-size: 13px;
     }
 }
+
+/* =========================================================
+   RESPONSIVIDADE - MOBILE
+   (JUNTA TODAS AS REGRAS EM UM SÓ @media!)
+========================================================= */
+
 @media (max-width: 768px) {
 
-    /* Header */
+    /* ---------- HEADER ---------- */
     .header {
         flex-direction: column;
         gap: 15px;
@@ -356,7 +355,7 @@ body {
         width: 100%;
     }
 
-    /* Filtros */
+    /* ---------- FILTROS ---------- */
     .filtros {
         flex-direction: column;
         padding: 15px;
@@ -377,7 +376,7 @@ body {
         padding: 12px;
     }
 
-    /* Estatísticas */
+    /* ---------- ESTATÍSTICAS ---------- */
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 10px;
@@ -393,7 +392,7 @@ body {
         font-size: 24px;
     }
 
-    /* Tabela - TRANSFORMA EM CARDS */
+    /* ---------- TABELA VIRA CARDS ---------- */
     .tabela-container {
         margin: 0 15px;
         padding: 15px;
@@ -406,24 +405,30 @@ body {
     /* Remove o scroll horizontal */
     .tabela-wrapper {
         overflow-x: visible;
+        width: 100%;
     }
 
-    /* Esconde o cabeçalho da tabela */
+    /* Esconde o cabeçalho */
     .tabela thead {
         display: none;
     }
 
-    /* Cada linha vira um card */
-    .tabela,
-    .tabela tbody,
-    .tabela tr,
-    .tabela td {
+    /* Tabela vira bloco */
+    .tabela {
+        min-width: 0;        /* ← REMOVE o min-width 700px! */
+        width: 100%;
+        display: block;
+    }
+
+    .tabela tbody {
         display: block;
         width: 100%;
     }
 
-    /* Estilo do card */
+    /* Cada linha vira um CARD */
     .tabela tr {
+        display: block;
+        width: 100%;
         background: var(--bg-secondary);
         border-radius: 12px;
         padding: 15px;
@@ -432,22 +437,24 @@ body {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
-    /* Cada célula vira uma linha */
+    /* Cada célula vira uma LINHA do card */
     .tabela td {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
         padding: 8px 0;
         border-bottom: 1px solid var(--border-color);
         font-size: 13px;
+        text-align: right;
     }
 
-    /* Remove a borda da última célula */
     .tabela td:last-child {
         border-bottom: none;
+        padding-bottom: 0;
     }
 
-    /* Adiciona título em cada célula */
+    /* Adiciona o título antes de cada valor */
     .tabela td::before {
         content: attr(data-label);
         font-weight: 600;
@@ -455,9 +462,11 @@ body {
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        text-align: left;
+        margin-right: 10px;
     }
 
-    /* Tabela Footer */
+    /* ---------- TABELA FOOTER ---------- */
     .tabela-footer {
         flex-direction: column;
         gap: 12px;
@@ -473,7 +482,6 @@ body {
         text-align: center;
     }
 }
-
 
 /* =========================================================
    MOBILE MUITO PEQUENO
@@ -526,28 +534,5 @@ body {
     .tabela td {
         font-size: 12px;
         padding: 6px 0;
-    }
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (min-width: 769px) and (max-width: 1024px) {
-
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .tabela {
-        min-width: 100%;
-        font-size: 13px;
-    }
-
-    .tabela th,
-    .tabela td {
-        padding: 10px 8px;
-        font-size: 13px;
     }
 }

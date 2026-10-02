@@ -190,15 +190,15 @@ function renderizar_tabela() {
             : "N/A"
         
         linha.innerHTML = `
-            <td>${nome}</td>
-            <td>${registro.date || "-"}</td>
-            <td>${registro.entrada || "-"}</td>
-            <td>${registro.inicio_almoco || "-"}</td>
-            <td>${registro.fim_almoco || "-"}</td>
-            <td>${registro.saida || "-"}</td>
-            <td>${registro.hours_worked || "-"}</td>
-            <td class="${extra_class}">${extra_text}</td>
-        `
+            <td data-label="Funcionário">${nome}</td>
+            <td data-label="Data">${registro.date || "-"}</td>
+            <td data-label="Entrada">${registro.entrada || "-"}</td>
+            <td data-label="Almoço">${registro.inicio_almoco || "-"}</td>
+            <td data-label="Volta">${registro.fim_almoco || "-"}</td>
+            <td data-label="Saída">${registro.saida || "-"}</td>
+            <td data-label="Horas">${registro.hours_worked || "-"}</td>
+            <td data-label="Extras" class="${extra_class}">${extra_text}</td>
+`
         
         corpo_tabela.appendChild(linha)
     })
