@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do RH - RH Virtual</title>
+    <link rel="stylesheet" href="/css/RH/rh-dashboard.css">
+</head>
+<body>
+
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Painel do RH</h1>
+            <p>Visão geral dos registros de ponto</p>
+        </div>
+        <button class="logout-button" id="logout-button">Sair</button>
+    </header>
+
+    <!-- ============================================
+         FILTROS
+         ============================================ -->
+    <section class="filtros">
+        <div class="filtro-group">
+            <label for="filtro-funcionario">Funcionário:</label>
+            <select id="filtro-funcionario">
+                <option value="todos">Todos</option>
+            </select>
+        </div>
+
+        <div class="filtro-group">
+            <label for="filtro-data">Data:</label>
+            <input type="date" id="filtro-data">
+        </div>
+
+        <div class="filtro-buttons">
+            <button id="btn-buscar" class="btn-primary">Buscar</button>
+            <button id="btn-limpar" class="btn-secondary">Limpar</button>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CONTEÚDO PRINCIPAL
+         ============================================ -->
+    <main class="main-content">
+
+        <!-- Estatísticas -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-info">
+                    <span class="stat-number" id="total-registros">0</span>
+                    <span class="stat-label">Registros</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-info">
+                    <span class="stat-number" id="total-funcionarios">0</span>
+                    <span class="stat-label">Funcionários</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-info">
+                    <span class="stat-number" id="total-extras">0</span>
+                    <span class="stat-label">Com Extras</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Registros -->
+        <section class="tabela-container">
+            <h2>Registros de Ponto</h2>
+
+            <div class="tabela-wrapper">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Funcionário</th>
+                            <th>Data</th>
+                            <th>Entrada</th>
+                            <th>Almoço</th>
+                            <th>Volta</th>
+                            <th>Saída</th>
+                            <th>Horas</th>
+                            <th>Extras</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela">
+                        <tr>
+                            <td colspan="8" class="carregando">Carregando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tabela-footer">
+                <span id="info-total">0 registros</span>
+                <button id="btn-exportar" class="btn-primary">📥 Exportar Planilha</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    <script type="module" src="/js/RH/rh_dashboard.js"></script>
+
+</body>
+</html>
