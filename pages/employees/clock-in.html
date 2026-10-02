@@ -1,42 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de pontos</title>
+    <title>Registro de Ponto - RH Virtual</title>
+    <link rel="stylesheet" href="/css/employees/clock-in.css">
 </head>
-
 <body>
 
-    <output id="actual-date-screen"></output>
-    <output id="actual-week-day-screen"></output>
-    <output id="actual-time-screen"></output>
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header class="header">
+        <button class="header-back" id="header-back">‹</button>
+        <h1 class="header-title">Registro de Ponto</h1>
+        <button class="header-icon" id="header-icon">▪</button>
+    </header>
 
-    <button id="clock-in-register">
-        <span id="button-text"></span>
-    </button>
+    <!-- ============================================
+         CONTEÚDO PRINCIPAL
+         ============================================ -->
+    <main class="main-content">
 
-    <output id="clock-in-message"></output>
+        <!-- ─────────────────────────────────────────
+             CARD DO FUNCIONÁRIO
+             ───────────────────────────────────────── -->
+        <div class="card card-funcionario">
+            <div class="avatar" id="avatar">JP</div>
+            <div class="funcionario-info">
+                <h2 id="saudacao">Bom dia!</h2>
+                <p id="data-completa">Quinta-feira, 27 de agosto de 2026</p>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="status-texto">Em expediente</span>
+                </div>
+            </div>
+        </div>
 
-    <div class="historic-clock-in-registers-of-day">
+        <!-- ─────────────────────────────────────────
+             CARD PRINCIPAL DO PONTO
+             ───────────────────────────────────────── -->
+        <div class="card card-ponto">
+            
+            <!-- Relógio -->
+            <div class="relogio-grande" id="actual-time-screen">09:46:32</div>
+            
+            <!-- Data -->
+            <p class="relogio-data" id="relogio-data">
+                Quinta-feira · 27/08/2026
+            </p>
+            
+            <!-- Localização -->
+            <p class="localizacao">
+                📍 Empresa XYZ — Campina Grande, PB
+            </p>
+            
+            <!-- Status localização -->
+            <p class="localizacao-status">
+                ✓ Localização registrada
+            </p>
 
-        <output id="entry-clock-in-register">Pendente</output>
-        <output id="begin-dinner-clock-in-register">Pendente</output>
-        <output id="ending-dinner-clock-in-register">Pendente</output>
-        <output id="exit-clock-in-register">Pendente</output>
-        <output id="extra-hours-register"></output>
-        <output id="total-day-hours-register"></output>
+            <!-- Botão principal -->
+            <button class="btn-registrar" id="clock-in-register">
+                <span class="btn-titulo" id="button-text">REGISTRAR PONTO</span>
+                <span class="btn-subtitulo" id="button-subtitle">Toque para registrar</span>
+            </button>
 
-    </div>
+            <!-- Mensagem de feedback -->
+            <div class="mensagem" id="clock-in-message"></div>
 
-    <button id="clock-in-historic-button">Histórico dos ponto</button>
+        </div>
 
-    
-    <script src="/js/employees/main_page.js"> </script>
-    <script type="module" src="/js/employees/clock_in_display.js"></script>
-    <script type="module" src="/js/employees/clock_in_verification.js"></script>
+        <!-- ─────────────────────────────────────────
+             CARD RESUMO DO DIA
+             ───────────────────────────────────────── -->
+        <div class="card card-resumo">
+            
+            <div class="resumo-header">
+                <h3>Resumo de hoje</h3>
+            </div>
+
+            <div class="resumo-grid">
+                
+                <!-- Entrada -->
+                <div class="resumo-item">
+                    <span class="resumo-titulo">Entrada</span>
+                    <span class="resumo-valor" id="entry-clock-in-register">--:--</span>
+                    <span class="resumo-status" id="entry-status">Pendente</span>
+                </div>
+
+                <!-- Início Almoço -->
+                <div class="resumo-item">
+                    <span class="resumo-titulo">Almoço</span>
+                    <span class="resumo-valor" id="begin-dinner-clock-in-register">--:--</span>
+                    <span class="resumo-status" id="begin-dinner-status">Pendente</span>
+                </div>
+
+                <!-- Volta Almoço -->
+                <div class="resumo-item">
+                    <span class="resumo-titulo">Volta</span>
+                    <span class="resumo-valor" id="ending-dinner-clock-in-register">--:--</span>
+                    <span class="resumo-status" id="ending-dinner-status">Pendente</span>
+                </div>
+
+                <!-- Saída -->
+                <div class="resumo-item">
+                    <span class="resumo-titulo">Saída</span>
+                    <span class="resumo-valor" id="exit-clock-in-register">--:--</span>
+                    <span class="resumo-status pendente" id="exit-status">Pendente</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ─────────────────────────────────────────
+             CARD SALDO DO DIA
+             ───────────────────────────────────────── -->
+        <div class="card card-saldo">
+            
+            <div class="saldo-header">
+                <div class="saldo-icon">📊</div>
+                <div class="saldo-info">
+                    <h3>Saldo do dia</h3>
+                    <p>Banco de horas</p>
+                </div>
+            </div>
+
+            <div class="saldo-grid">
+                
+                <!-- Horas trabalhadas -->
+                <div class="saldo-item">
+                    <span class="saldo-titulo">Trabalhadas</span>
+                    <span class="saldo-valor" id="saldo-horas-trabalhadas">00:00</span>
+                    <span class="saldo-status" id="saldo-horas-status">até agora</span>
+                </div>
+
+                <!-- Extras/Débito -->
+                <div class="saldo-item">
+                    <span class="saldo-titulo">Extras</span>
+                    <span class="saldo-valor" id="saldo-horas">+00:00</span>
+                    <span class="saldo-status" id="saldo-status">neutro</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ─────────────────────────────────────────
+             BOTÃO HISTÓRICO
+             ───────────────────────────────────────── -->
+        <button class="btn-historico" id="clock-in-historic-button">
+            📊 Ver Histórico Completo
+        </button>
+
+    </main>
+
+    <!-- ============================================
+         MENU INFERIOR
+         ============================================ -->
+    <nav class="bottom-tabs">
+        
+        <button class="tab" data-tab="home">
+            <span class="tab-icon">⌂</span>
+            <span class="tab-label">Início</span>
+        </button>
+
+        <button class="tab active" data-tab="point">
+            <span class="tab-icon">◷</span>
+            <span class="tab-label">Ponto</span>
+        </button>
+
+        <button class="tab" data-tab="holiday">
+            <span class="tab-icon">☼</span>
+            <span class="tab-label">Férias</span>
+        </button>
+
+        <button class="tab" data-tab="docs">
+            <span class="tab-icon">□</span>
+            <span class="tab-label">Docs</span>
+        </button>
+
+        <button class="tab" data-tab="profile">
+            <span class="tab-icon">♙</span>
+            <span class="tab-label">Perfil</span>
+        </button>
+
+    </nav>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
     <script type="module" src="/js/auto_guard.js"></script>
-</body>
+    <script type="module" src="/js/employees/clock_in_display.js"></script>
 
+</body>
 </html>
