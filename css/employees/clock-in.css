@@ -1,34 +1,34 @@
 /* =========================================================
-   VARIÁVEIS
+   VARIABLES
 ========================================================= */
 
 :root {
-    /* Cores */
-    --azul-escuro: #0a2a4a;
-    --azul-medio: #075394;
-    --azul-claro: #e6f0fa;
-    --azul-fundo: #f2f6fa;
+    /* Colors */
+    --dark-blue: #0a2a4a;
+    --medium-blue: #075394;
+    --light-blue: #e6f0fa;
+    --bg-blue: #f2f6fa;
     
-    --laranja: #ff9418;
-    --laranja-hover: #f88708;
-    --laranja-claro: #fff5e6;
+    --orange: #ff9418;
+    --orange-hover: #f88708;
+    --light-orange: #fff5e6;
     
-    --verde: #22c55e;
-    --verde-escuro: #166534;
+    --green: #22c55e;
+    --dark-green: #166534;
     
-    --branco: #ffffff;
-    --cinza-texto: #71859a;
-    --cinza-borda: #e1e8f0;
+    --white: #ffffff;
+    --gray-text: #71859a;
+    --gray-border: #e1e8f0;
     
-    /* Sombras */
-    --sombra-suave: 0 2px 8px rgba(10, 42, 74, 0.05);
-    --sombra-media: 0 4px 12px rgba(10, 42, 74, 0.08);
-    --sombra-botao: 0 4px 12px rgba(255, 148, 24, 0.3);
+    /* Shadows */
+    --soft-shadow: 0 2px 8px rgba(10, 42, 74, 0.05);
+    --medium-shadow: 0 4px 12px rgba(10, 42, 74, 0.08);
+    --button-shadow: 0 4px 12px rgba(255, 148, 24, 0.3);
     
     /* Layout */
-    --radius-grande: 20px;
-    --radius-medio: 14px;
-    --radius-pequeno: 10px;
+    --radius-large: 20px;
+    --radius-medium: 14px;
+    --radius-small: 10px;
     
     --transition: 0.2s ease;
 }
@@ -46,8 +46,8 @@
 
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--azul-fundo);
-    color: var(--azul-escuro);
+    background: var(--bg-blue);
+    color: var(--dark-blue);
     min-height: 100vh;
     padding-bottom: 90px;
     -webkit-font-smoothing: antialiased;
@@ -63,7 +63,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 18px 20px;
-    background: var(--azul-fundo);
+    background: var(--bg-blue);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -75,7 +75,7 @@ body {
     height: 36px;
     border: none;
     background: transparent;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     font-size: 22px;
     font-weight: 600;
     cursor: pointer;
@@ -92,21 +92,21 @@ body {
 }
 
 .header-icon {
-    color: var(--azul-medio);
+    color: var(--medium-blue);
     font-size: 18px;
 }
 
 .header-title {
     font-size: 17px;
     font-weight: 600;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     text-align: center;
     flex: 1;
 }
 
 
 /* =========================================================
-   CONTEÚDO PRINCIPAL
+   MAIN CONTENT
 ========================================================= */
 
 .main-content {
@@ -120,23 +120,23 @@ body {
 
 
 /* =========================================================
-   CARD BASE
+   BASE CARD
 ========================================================= */
 
 .card {
-    background: var(--branco);
-    border-radius: var(--radius-grande);
+    background: var(--white);
+    border-radius: var(--radius-large);
     padding: 20px;
-    box-shadow: var(--sombra-suave);
+    box-shadow: var(--soft-shadow);
     transition: var(--transition);
 }
 
 
 /* =========================================================
-   CARD DO FUNCIONÁRIO
+   EMPLOYEE CARD
 ========================================================= */
 
-.card-funcionario {
+.card-employee {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -146,8 +146,8 @@ body {
 .avatar {
     width: 48px;
     height: 48px;
-    background: var(--laranja);
-    color: var(--azul-escuro);
+    background: var(--orange);
+    color: var(--dark-blue);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -157,24 +157,24 @@ body {
     flex-shrink: 0;
 }
 
-.funcionario-info {
+.employee-info {
     flex: 1;
     min-width: 0;
 }
 
-.funcionario-info h2 {
+.employee-info h2 {
     font-size: 16px;
     font-weight: 700;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     margin-bottom: 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.funcionario-info p {
+.employee-info p {
     font-size: 12px;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
     margin-bottom: 6px;
     text-transform: capitalize;
 }
@@ -184,7 +184,7 @@ body {
     align-items: center;
     gap: 6px;
     background: #e8f5ee;
-    color: var(--verde-escuro);
+    color: var(--dark-green);
     padding: 3px 10px;
     border-radius: 20px;
     font-size: 11px;
@@ -194,7 +194,7 @@ body {
 .status-dot {
     width: 6px;
     height: 6px;
-    background: var(--verde);
+    background: var(--green);
     border-radius: 50%;
     animation: pulse 2s infinite;
 }
@@ -206,56 +206,56 @@ body {
 
 
 /* =========================================================
-   CARD PRINCIPAL DO PONTO
+   CLOCK CARD
 ========================================================= */
 
-.card-ponto {
+.card-clock {
     padding: 28px 20px 22px;
     text-align: center;
 }
 
-.relogio-grande {
+.big-clock {
     font-size: 48px;
     font-weight: 700;
-    color: var(--azul-medio);
+    color: var(--medium-blue);
     letter-spacing: 1px;
     line-height: 1;
     margin-bottom: 10px;
     font-variant-numeric: tabular-nums;
 }
 
-.relogio-data {
+.clock-date {
     font-size: 13px;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
     margin-bottom: 18px;
     text-transform: capitalize;
 }
 
-.localizacao {
+.location {
     font-size: 13px;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     margin-bottom: 4px;
     font-weight: 500;
 }
 
-.localizacao-status {
+.location-status {
     font-size: 12px;
-    color: var(--verde);
+    color: var(--green);
     font-weight: 600;
     margin-bottom: 22px;
 }
 
 
 /* =========================================================
-   BOTÃO PRINCIPAL
+   MAIN REGISTER BUTTON
 ========================================================= */
 
-.btn-registrar {
+.register-button {
     width: 100%;
     padding: 18px 20px;
-    background: var(--laranja);
+    background: var(--orange);
     border: none;
-    border-radius: var(--radius-medio);
+    border-radius: var(--radius-medium);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -263,60 +263,60 @@ body {
     justify-content: center;
     gap: 4px;
     transition: var(--transition);
-    box-shadow: var(--sombra-botao);
+    box-shadow: var(--button-shadow);
     min-height: 76px;
 }
 
-.btn-registrar:hover:not(:disabled) {
-    background: var(--laranja-hover);
+.register-button:hover:not(:disabled) {
+    background: var(--orange-hover);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 148, 24, 0.4);
 }
 
-.btn-registrar:active:not(:disabled) {
+.register-button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-.btn-registrar:disabled {
-    background: var(--cinza-borda);
+.register-button:disabled {
+    background: var(--gray-border);
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-.btn-titulo {
+.button-title {
     font-size: 15px;
     font-weight: 700;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
-.btn-subtitulo {
+.button-subtitle {
     font-size: 12px;
     font-weight: 500;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     opacity: 0.75;
 }
 
 
 /* =========================================================
-   MENSAGEM DE FEEDBACK
+   FEEDBACK MESSAGE
 ========================================================= */
 
-.mensagem {
+.message {
     margin-top: 14px;
     padding: 10px 14px;
-    border-radius: var(--radius-pequeno);
+    border-radius: var(--radius-small);
     font-size: 12px;
     font-weight: 600;
     text-align: center;
-    background: var(--azul-claro);
-    color: var(--azul-medio);
+    background: var(--light-blue);
+    color: var(--medium-blue);
     display: none;
 }
 
-.mensagem:not(:empty) {
+.message:not(:empty) {
     display: block;
     animation: fadeIn 0.3s ease-out;
 }
@@ -334,84 +334,84 @@ body {
 
 
 /* =========================================================
-   CARD RESUMO DO DIA
+   SUMMARY CARD
 ========================================================= */
 
-.card-resumo {
+.card-summary {
     padding: 20px;
 }
 
-.resumo-header {
+.summary-header {
     margin-bottom: 18px;
 }
 
-.resumo-header h3 {
+.summary-header h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
 }
 
 
-/* Grid do resumo - 4 colunas */
-.resumo-grid {
+/* Summary grid - 4 columns */
+.summary-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
 
-.resumo-item {
+.summary-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
     text-align: left;
 }
 
-.resumo-titulo {
+.summary-title {
     font-size: 10px;
     font-weight: 600;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
-.resumo-valor {
+.summary-value {
     font-size: 14px;
     font-weight: 700;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     font-variant-numeric: tabular-nums;
 }
 
-.resumo-status {
+.summary-status {
     font-size: 10px;
     font-weight: 600;
-    color: var(--verde);
+    color: var(--green);
 }
 
-.resumo-status.pendente {
-    color: var(--laranja);
+.summary-status.pending {
+    color: var(--orange);
 }
 
 
 /* =========================================================
-   CARD SALDO DO DIA
+   BALANCE CARD
 ========================================================= */
 
-.card-saldo {
+.card-balance {
     padding: 20px;
 }
 
-.saldo-header {
+.balance-header {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
 }
 
-.saldo-icon {
+.balance-icon {
     width: 44px;
     height: 44px;
-    background: var(--azul-claro);
-    border-radius: var(--radius-pequeno);
+    background: var(--light-blue);
+    border-radius: var(--radius-small);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -419,67 +419,67 @@ body {
     flex-shrink: 0;
 }
 
-.saldo-info h3 {
+.balance-info h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--azul-escuro);
+    color: var(--dark-blue);
     margin-bottom: 2px;
 }
 
-.saldo-info p {
+.balance-info p {
     font-size: 12px;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
 }
 
 
-/* Grid do saldo */
-.saldo-grid {
+/* Balance grid */
+.balance-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     padding-top: 16px;
-    border-top: 1px solid var(--cinza-borda);
+    border-top: 1px solid var(--gray-border);
 }
 
-.saldo-item {
+.balance-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.saldo-titulo {
+.balance-title {
     font-size: 11px;
     font-weight: 600;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
-.saldo-valor {
+.balance-value {
     font-size: 20px;
     font-weight: 700;
-    color: var(--azul-medio);
+    color: var(--medium-blue);
     font-variant-numeric: tabular-nums;
 }
 
-.saldo-status {
+.balance-status {
     font-size: 11px;
     font-weight: 600;
-    color: var(--verde);
+    color: var(--green);
 }
 
 
 /* =========================================================
-   BOTÃO HISTÓRICO
+   HISTORY BUTTON
 ========================================================= */
 
-.btn-historico {
+.history-button {
     width: 100%;
     padding: 14px;
     background: transparent;
-    border: 2px solid var(--azul-medio);
-    color: var(--azul-medio);
-    border-radius: var(--radius-medio);
+    border: 2px solid var(--medium-blue);
+    color: var(--medium-blue);
+    border-radius: var(--radius-medium);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
@@ -487,15 +487,15 @@ body {
     margin-top: 4px;
 }
 
-.btn-historico:hover {
-    background: var(--azul-medio);
-    color: var(--branco);
+.history-button:hover {
+    background: var(--medium-blue);
+    color: var(--white);
     transform: translateY(-2px);
 }
 
 
 /* =========================================================
-   MENU INFERIOR
+   BOTTOM TABS
 ========================================================= */
 
 .bottom-tabs {
@@ -503,7 +503,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--branco);
+    background: var(--white);
     display: flex;
     justify-content: space-around;
     padding: 10px 8px;
@@ -520,20 +520,20 @@ body {
     padding: 8px 6px;
     background: transparent;
     border: none;
-    border-radius: var(--radius-pequeno);
+    border-radius: var(--radius-small);
     cursor: pointer;
-    color: var(--cinza-texto);
+    color: var(--gray-text);
     transition: var(--transition);
     max-width: 80px;
 }
 
 .tab:hover {
-    color: var(--azul-medio);
+    color: var(--medium-blue);
 }
 
 .tab.active {
-    background: var(--azul-claro);
-    color: var(--azul-medio);
+    background: var(--light-blue);
+    color: var(--medium-blue);
 }
 
 .tab-icon {
@@ -548,7 +548,7 @@ body {
 
 
 /* =========================================================
-   RESPONSIVIDADE
+   RESPONSIVENESS
 ========================================================= */
 
 @media (max-width: 400px) {
@@ -562,7 +562,7 @@ body {
         border-radius: 16px;
     }
 
-    .relogio-grande {
+    .big-clock {
         font-size: 42px;
     }
 
@@ -572,15 +572,15 @@ body {
         font-size: 14px;
     }
 
-    .funcionario-info h2 {
+    .employee-info h2 {
         font-size: 15px;
     }
 
-    .resumo-grid {
+    .summary-grid {
         gap: 6px;
     }
 
-    .resumo-valor {
+    .summary-value {
         font-size: 13px;
     }
 }

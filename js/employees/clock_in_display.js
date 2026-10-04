@@ -1,81 +1,75 @@
-// ============================================
-// IMPORTS
-// ============================================
-
 import { auth, db } from "../firebase_config.js"
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
 
-// ============================================
-// ELEMENTOS DA TELA
-// ============================================
-
 // Header
-const header_back = document.getElementById("header-back")
-const header_icon = document.getElementById("header-icon")
+const header_back_button = document.getElementById("header-back-button")
+const header_menu_button = document.getElementById("header-menu-button")
 
-// Card do funcionário
-const saudacao = document.getElementById("saudacao")
-const data_completa = document.getElementById("data-completa")
-const status_texto = document.getElementById("status-texto")
 
-// Card do ponto
-const actual_time_screen = document.getElementById("actual-time-screen")
-const relogio_data = document.getElementById("relogio-data")
+// Card do Funcionário
+const avatar = document.getElementById("avatar")
+const greeting_text = document.getElementById("greeting-text")
+const full_date_text = document.getElementById("full-date-text")
+const status_text = document.getElementById("status-text")
+
+
+// Card do Relógio
+const clock_time_screen = document.getElementById("clock-time-screen")
+const clock_date_screen = document.getElementById("clock-date-screen")
 const clock_in_message = document.getElementById("clock-in-message")
 
-// Botão principal
-const clock_in_register = document.getElementById("clock-in-register")
-const button_text = document.getElementById("button-text")
-const button_subtitle = document.getElementById("button-subtitle")
 
-// Resumo do dia
+// Botão Principal
+const clock_in_register_button = document.getElementById("clock-in-register-button")
+const button_title_text = document.getElementById("button-title-text")
+const button_subtitle_text = document.getElementById("button-subtitle-text")
+
+
+// Resumo
 const entry_clock_in_register = document.getElementById("entry-clock-in-register")
 const begin_dinner_clock_in_register = document.getElementById("begin-dinner-clock-in-register")
 const ending_dinner_clock_in_register = document.getElementById("ending-dinner-clock-in-register")
 const exit_clock_in_register = document.getElementById("exit-clock-in-register")
 
-// Status do resumo
+
+// Status do Resumo
 const entry_status = document.getElementById("entry-status")
 const begin_dinner_status = document.getElementById("begin-dinner-status")
 const ending_dinner_status = document.getElementById("ending-dinner-status")
 const exit_status = document.getElementById("exit-status")
 
+
 // Saldo
-const saldo_horas_trabalhadas = document.getElementById("saldo-horas-trabalhadas")
-const saldo_horas_status = document.getElementById("saldo-horas-status")
-const saldo_horas = document.getElementById("saldo-horas")
-const saldo_status = document.getElementById("saldo-status")
-
-// Botão histórico
-const clock_in_historic_button = document.getElementById("clock-in-historic-button")
+const worked_hours_balance = document.getElementById("worked-hours-balance")
+const worked_hours_status = document.getElementById("worked-hours-status")
+const extra_hours_balance = document.getElementById("extra-hours-balance")
+const extra_hours_status = document.getElementById("extra-hours-status")
 
 
-// ============================================
-// VARIÁVEIS DE CONTROLE
-// ============================================
+// Botão Histórico
+const clock_in_history_button = document.getElementById("clock-in-history-button")
 
+
+// Variáveis de controle
 let entry_registered = false
 let begin_dinner_registered = false
 let ending_dinner_registered = false
 let exit_registered = false
 let registered_something = false
 
-let nome_usuario = ""
+let user_name = ""
 
 
-// ============================================
-// FUNÇÃO: SAUDAR CONFORME A HORA
-// ============================================
-
-function gerar_saudacao() {
-    const hora = new Date().getHours()
+// Função de saudação conforme a hora
+function generate_greeting() {
+    const hour = new Date().getHours()
     
-    if (hora < 12) {
+    if (hour < 12) {
         return "Bom dia"
-    } else if (hora < 18) {
+    } else if (hour < 18) {
         return "Boa tarde"
     } else {
         return "Boa noite"
@@ -83,14 +77,11 @@ function gerar_saudacao() {
 }
 
 
-// ============================================
-// FUNÇÃO: DATA COMPLETA POR EXTENSO
-// ============================================
-
-function gerar_data_completa() {
-    const agora = new Date()
+// Função de data completa por extenso
+function generate_full_date() {
+    const now = new Date()
     
-    return agora.toLocaleDateString("pt-BR", {
+    return now.toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -99,173 +90,151 @@ function gerar_data_completa() {
 }
 
 
-// ============================================
-// FUNÇÃO: DATA CURTA (para o relógio)
-// ============================================
-
-function gerar_data_curta() {
-    const agora = new Date()
+// Função de data (para o relógio)
+function generate_short_date() {
+    const now = new Date()
     
-    const dia_semana = agora.toLocaleDateString("pt-BR", { weekday: "long" })
-    const data = agora.toLocaleDateString("pt-BR")
+    const week_day = now.toLocaleDateString("pt-BR", { weekday: "long" })
+    const date = now.toLocaleDateString("pt-BR")
     
-    return `${dia_semana} · ${data}`
+    return `${week_day} · ${date}`
 }
 
 
-// ============================================
-// FUNÇÃO: RELÓGIO EM TEMPO REAL
-// ============================================
-
-function atualizar_relogio() {
-    const agora = new Date()
+// Função de relógio em tempo real
+function update_clock() {
+    const now = new Date()
     
-    // Hora formatada com segundos
-    const hora = agora.toLocaleTimeString("pt-BR")
-    actual_time_screen.textContent = hora
+    const time = now.toLocaleTimeString("pt-BR")
+    clock_time_screen.textContent = time
     
-    // Data curta
-    relogio_data.textContent = gerar_data_curta()
+    clock_date_screen.textContent = generate_short_date()
     
-    // Saudação (atualiza também)
-    if (nome_usuario) {
-        saudacao.textContent = `${gerar_saudacao()}, ${nome_usuario}!`
+    if (user_name) {
+        greeting_text.textContent = `${generate_greeting()}, ${user_name}!`
     }
 }
 
 
-// ============================================
-// FUNÇÃO: STATUS DO FUNCIONÁRIO
-// ============================================
-
-function atualizar_status() {
-    const periodo = discover_actual_clock_in_period()
+// Função de status de funcionário
+function update_status() {
+    const period = discover_actual_clock_in_period()
     
-    if (periodo === "periodo_entrada" 
-        || periodo === "trabalhando_manha" 
-        || periodo === "periodo_almoco" 
-        || periodo === "em_almoco" 
-        || periodo === "periodo_volta" 
-        || periodo === "trabalhando_tarde" 
-        || periodo === "periodo_saida") {
-        status_texto.textContent = "Em expediente"
+    if (period === "periodo_entrada" 
+        || period === "trabalhando_manha" 
+        || period === "periodo_almoco" 
+        || period === "em_almoco" 
+        || period === "periodo_volta" 
+        || period === "trabalhando_tarde" 
+        || period === "periodo_saida") {
+        status_text.textContent = "Em expediente"
     } else {
-        status_texto.textContent = "Fora do expediente"
+        status_text.textContent = "Fora do expediente"
     }
 }
 
 
-// ============================================
-// FUNÇÃO: ATUALIZAR BOTÃO (texto + subtítulo)
-// ============================================
 
-function atualizar_botao() {
-    const periodo = discover_actual_clock_in_period()
+// Função de atualizar o botão (texto + subtítulo)
+function update_button() {
+    const period = discover_actual_clock_in_period()
     
-    let texto = "REGISTRAR PONTO"
-    let subtitulo = "Toque para registrar"
-    let desabilitado = false
+    let title = "REGISTRAR PONTO"
+    let subtitle = "Toque para registrar"
+    let disabled = false
     
-    switch (periodo) {
+    switch (period) {
         case "muito_cedo":
-            texto = "MUITO CEDO"
-            subtitulo = "Aguarde o horário"
-            desabilitado = true
+            title = "MUITO CEDO"
+            subtitle = "Aguarde o horário"
+            disabled = true
             break
         
         case "periodo_entrada":
-            texto = "REGISTRAR ENTRADA"
-            subtitulo = "Início do expediente"
+            title = "REGISTRAR ENTRADA"
+            subtitle = "Início do expediente"
             break
         
         case "trabalhando_manha":
-            texto = "TRABALHANDO"
-            subtitulo = "Aguardando intervalo"
-            desabilitado = true
+            title = "TRABALHANDO"
+            subtitle = "Aguardando intervalo"
+            disabled = true
             break
         
         case "periodo_almoco":
-            texto = "REGISTRAR INTERVALO"
-            subtitulo = "Início do intervalo"
+            title = "REGISTRAR INTERVALO"
+            subtitle = "Início do intervalo"
             break
         
         case "em_almoco":
-            texto = "EM INTERVALO"
-            subtitulo = "Bom descanso!"
-            desabilitado = true
+            title = "EM INTERVALO"
+            subtitle = "Bom descanso!"
+            disabled = true
             break
         
         case "periodo_volta":
-            texto = "VOLTAR DO INTERVALO"
-            subtitulo = "Retorno do intervalo"
+            title = "VOLTAR DO INTERVALO"
+            subtitle = "Retorno do intervalo"
             break
         
         case "trabalhando_tarde":
-            texto = "TRABALHANDO"
-            subtitulo = "Aguardando saída"
-            desabilitado = true
+            title = "TRABALHANDO"
+            subtitle = "Aguardando saída"
+            disabled = true
             break
         
         case "periodo_saida":
-            texto = "REGISTRAR SAÍDA"
-            subtitulo = "Fim do expediente"
+            title = "REGISTRAR SAÍDA"
+            subtitle = "Fim do expediente"
             break
         
         case "fora_expediente":
-            texto = "FORA DO EXPEDIENTE"
-            subtitulo = "Até amanhã!"
-            desabilitado = true
+            title = "FORA DO EXPEDIENTE"
+            subtitle = "Até amanhã!"
+            disabled = true
             break
     }
     
-    button_text.textContent = texto
-    button_subtitle.textContent = subtitulo
-    clock_in_register.disabled = desabilitado
+    button_title_text.textContent = title
+    button_subtitle_text.textContent = subtitle
+    clock_in_register_button.disabled = disabled
 }
 
 
-// ============================================
-// FUNÇÃO: CALCULAR HORAS (trabalhadas + extras)
-// ============================================
 
-function calcular_horas_do_dia() {
+// Função de calcular horas e horas extras
+function calculate_daily_hours() {
     
     const entry = localStorage.getItem("entry_saved")
-    const beggin_dinner = localStorage.getItem("beggin_dinner_saved")
+    const begin_dinner = localStorage.getItem("beggin_dinner_saved")
     const ending_dinner = localStorage.getItem("ending_dinner_saved")
     const exit = localStorage.getItem("exit_saved")
     
-    // Se não tem entrada, não tem nada
     if (!entry) {
         return null
     }
     
     const entry_min = convert_time_to_minutes(entry)
-    const agora = new Date()
-    const agora_min = agora.getHours() * 60 + agora.getMinutes()
+    const now = new Date()
+    const now_min = now.getHours() * 60 + now.getMinutes()
     
-    // Se não tem saída ainda, calcula até agora
     let exit_min
     if (exit) {
         exit_min = convert_time_to_minutes(exit)
     } else {
-        exit_min = agora_min
+        exit_min = now_min
     }
     
-    // Total no trabalho
     let total_at_work = exit_min - entry_min
-    
-    // Desconta o almoço se já terminou
     let lunch_time = 0
-    if (beggin_dinner && ending_dinner) {
-        const beggin_min = convert_time_to_minutes(beggin_dinner)
+    
+    if (begin_dinner && ending_dinner) {
+        const begin_min = convert_time_to_minutes(begin_dinner)
         const ending_min = convert_time_to_minutes(ending_dinner)
-        lunch_time = ending_min - beggin_min
-    } else if (beggin_dinner && !ending_dinner) {
-        // Está em almoço agora
-        const beggin_min = convert_time_to_minutes(beggin_dinner)
-        // Não conta o tempo de almoço
-        total_at_work = beggin_min - entry_min
+        lunch_time = ending_min - begin_min
+    } else if (begin_dinner && !ending_dinner) {
+        const begin_min = convert_time_to_minutes(begin_dinner)
+        total_at_work = begin_min - entry_min
         lunch_time = 0
     }
     
@@ -279,101 +248,86 @@ function calcular_horas_do_dia() {
         extra_hours: convert_minutes_to_hours(Math.abs(extra)),
         is_extra_hour: extra > 0,
         extra_minutes: extra,
-        esta_trabalhando: !exit,
-        tem_extra: extra !== 0
+        is_working: !exit,
+        has_extra: extra !== 0
     }
 }
 
 
-// ============================================
-// FUNÇÃO: ATUALIZAR SALDO DO DIA
-// ============================================
-
-function atualizar_saldo() {
+// Função de atualizar saldo do dia
+function update_balance() {
     
-    const result = calcular_horas_do_dia()
+    const result = calculate_daily_hours()
     
-    // Não bateu entrada ainda
     if (!result) {
-        saldo_horas_trabalhadas.textContent = "00:00"
-        saldo_horas_status.textContent = "aguardando"
-        saldo_horas_status.style.color = "var(--cinza-texto)"
+        worked_hours_balance.textContent = "00:00"
+        worked_hours_status.textContent = "aguardando"
+        worked_hours_status.style.color = "var(--cinza-texto)"
         
-        saldo_horas.textContent = "00:00"
-        saldo_status.textContent = "neutro"
-        saldo_status.style.color = "var(--cinza-texto)"
+        extra_hours_balance.textContent = "+00:00"
+        extra_hours_status.textContent = "neutro"
+        extra_hours_status.style.color = "var(--cinza-texto)"
         return
     }
     
-    // ✅ Horas trabalhadas
-    saldo_horas_trabalhadas.textContent = result.hours_worked
+    // Horas trabalhadas
+    worked_hours_balance.textContent = result.hours_worked
     
-    if (result.esta_trabalhando) {
-        saldo_horas_status.textContent = "até agora"
-        saldo_horas_status.style.color = "var(--cinza-texto)"
+    if (result.is_working) {
+        worked_hours_status.textContent = "até agora"
+        worked_hours_status.style.color = "var(--cinza-texto)"
     } else {
-        saldo_horas_status.textContent = "finalizado"
-        saldo_horas_status.style.color = "var(--verde)"
+        worked_hours_status.textContent = "finalizado"
+        worked_hours_status.style.color = "var(--verde)"
     }
     
-    // ✅ Extras/Débito - LÓGICA CORRIGIDA
-    const minutos_extras = result.extra_minutes
+    // Extras/Débito
+    const extra_minutes = result.extra_minutes
     
-    if (minutos_extras > 0) {
-        // POSITIVO
-        saldo_horas.textContent = "+" + result.extra_hours
-        saldo_status.textContent = "positivo"
-        saldo_status.style.color = "var(--verde)"
+    if (extra_minutes > 0) {
+        extra_hours_balance.textContent = "+" + result.extra_hours
+        extra_hours_status.textContent = "positivo"
+        extra_hours_status.style.color = "var(--verde)"
         
-    } else if (minutos_extras < 0) {
-        // NEGATIVO
-        saldo_horas.textContent = "-" + result.extra_hours
-        saldo_status.textContent = "negativo"
-        saldo_status.style.color = "var(--laranja)"
+    } else if (extra_minutes < 0) {
+        extra_hours_balance.textContent = "-" + result.extra_hours
+        extra_hours_status.textContent = "negativo"
+        extra_hours_status.style.color = "var(--laranja)"
         
     } else {
-        // ✅ NEUTRO (0 minutos)
-        saldo_horas.textContent = "00:00"
-        saldo_status.textContent = "neutro"
-        saldo_status.style.color = "var(--cinza-texto)"
+        extra_hours_balance.textContent = "00:00"
+        extra_hours_status.textContent = "neutro"
+        extra_hours_status.style.color = "var(--cinza-texto)"
     }
 }
 
 
-// ============================================
-// FUNÇÃO: ATUALIZAR STATUS DO RESUMO
-// ============================================
 
-function atualizar_status_resumo() {
+// Função atualizar resumo
+function update_summary_status() {
     
-    // Entrada
     entry_status.textContent = entry_registered ? "✓" : "Pendente"
     entry_status.style.color = entry_registered ? "var(--verde)" : "var(--laranja)"
     
-    // Almoço
     begin_dinner_status.textContent = begin_dinner_registered ? "✓" : "Pendente"
     begin_dinner_status.style.color = begin_dinner_registered ? "var(--verde)" : "var(--laranja)"
     
-    // Volta
     ending_dinner_status.textContent = ending_dinner_registered ? "✓" : "Pendente"
     ending_dinner_status.style.color = ending_dinner_registered ? "var(--verde)" : "var(--laranja)"
     
-    // Saída
     exit_status.textContent = exit_registered ? "✓" : "Pendente"
     exit_status.style.color = exit_registered ? "var(--verde)" : "var(--laranja)"
 }
 
 
-// ============================================
-// FUNÇÃO: RESTAURAR DO LOCAL STORAGE
-// ============================================
 
-function verify_exist_clock_in_local_storage() {
+// Função de restaurar do localstorage
+function restore_clock_in_from_local_storage() {
     
-    const actual_date_day = new Date().toLocaleDateString("pt-BR")
-    const verify_date_saved = localStorage.getItem("date_saved_in_local_storage")
+    const current_date = new Date().toLocaleDateString("pt-BR")
+    const saved_date = localStorage.getItem("date_saved_in_local_storage")
     
-    if (verify_date_saved !== actual_date_day) {
+    if (saved_date !== current_date) {
         localStorage.removeItem("entry_saved")
         localStorage.removeItem("beggin_dinner_saved")
         localStorage.removeItem("ending_dinner_saved")
@@ -385,9 +339,9 @@ function verify_exist_clock_in_local_storage() {
             entry_registered = true
         }
         
-        const beggin_dinner_saved = localStorage.getItem("beggin_dinner_saved")
-        if (beggin_dinner_saved) {
-            begin_dinner_clock_in_register.textContent = beggin_dinner_saved
+        const begin_dinner_saved = localStorage.getItem("beggin_dinner_saved")
+        if (begin_dinner_saved) {
+            begin_dinner_clock_in_register.textContent = begin_dinner_saved
             begin_dinner_registered = true
         }
         
@@ -404,15 +358,13 @@ function verify_exist_clock_in_local_storage() {
         }
     }
     
-    localStorage.setItem("date_saved_in_local_storage", actual_date_day)
+    localStorage.setItem("date_saved_in_local_storage", current_date)
 }
 
 
-// ============================================
-// FUNÇÃO: SALVAR NO FIREBASE
-// ============================================
 
-async function save_the_clock_in_data_base(clock_in_register_type, time) {
+// Função de salvar no firebase
+async function save_clock_in_to_database(clock_in_type, time) {
     
     const user = auth.currentUser
     if (!user) {
@@ -420,19 +372,19 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
         return
     }
     
-    const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
-    const document_id_user = actual_date_formated_to_id + "_" + user.uid
-    const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
+    const current_date_formatted = new Date().toISOString().split('T')[0]
+    const document_id = current_date_formatted + "_" + user.uid
+    const document_reference = doc(db, "Clock_in_registers_day", document_id)
     
     try {
         await setDoc(document_reference, {
             employee_id: user.uid,
             employee_email: user.email,
-            date: actual_date_formated_to_id,
-            [clock_in_register_type]: time
+            date: current_date_formatted,
+            [clock_in_type]: time
         }, { merge: true })
         
-        console.log("✅ Ponto salvo:", clock_in_register_type)
+        console.log("✅ Ponto salvo:", clock_in_type)
         
     } catch (error) {
         console.log("❌ Erro ao salvar ponto:", error.code, error.message)
@@ -440,24 +392,22 @@ async function save_the_clock_in_data_base(clock_in_register_type, time) {
 }
 
 
-// ============================================
-// FUNÇÃO: SALVAR HORAS
-// ============================================
 
-async function save_the_extra_hours_and_total_worked_data_base(result) {
+// Função de salvar as horas
+async function save_hours_to_database(result) {
     
     const user = auth.currentUser
     if (!user) return
     
-    const actual_date_formated_to_id = new Date().toISOString().split('T')[0]
-    const document_id_user = actual_date_formated_to_id + "_" + user.uid
-    const document_reference = doc(db, "Clock_in_registers_day", document_id_user)
+    const current_date_formatted = new Date().toISOString().split('T')[0]
+    const document_id = current_date_formatted + "_" + user.uid
+    const document_reference = doc(db, "Clock_in_registers_day", document_id)
     
     try {
         await setDoc(document_reference, {
             employee_id: user.uid,
             employee_email: user.email,
-            date: actual_date_formated_to_id,
+            date: current_date_formatted,
             hours_worked: result.hours_worked,
             extra_hours: result.extra_hours,
             is_extra_hour: result.is_extra_hour
@@ -471,12 +421,9 @@ async function save_the_extra_hours_and_total_worked_data_base(result) {
 }
 
 
-// ============================================
-// FUNÇÃO: MOSTRAR MENSAGEM
-// ============================================
-
-function mostrar_mensagem(texto) {
-    clock_in_message.textContent = texto
+// Função de mostrar a mensagem
+function show_message(text) {
+    clock_in_message.textContent = text
     
     setTimeout(() => {
         clock_in_message.textContent = ""
@@ -484,137 +431,120 @@ function mostrar_mensagem(texto) {
 }
 
 
-// ============================================
-// ✅ REGISTRAR PONTO (EVENTO DE CLIQUE)
-// ============================================
-
-clock_in_register.addEventListener("click", async function() {
+// Registrar ponto
+clock_in_register_button.addEventListener("click", async function() {
     
-    const actual_time_formated = register_the_clock()
-    const actual_period = discover_actual_clock_in_period()
+    const formatted_time = get_current_time()
+    const current_period = discover_actual_clock_in_period()
     registered_something = false
     
-    // ENTRADA
-    if (actual_period === "periodo_entrada" && entry_registered === false) {
+    // entrada
+    if (current_period === "periodo_entrada" && entry_registered === false) {
         
         if (localStorage.getItem("entry_saved")) {
-            mostrar_mensagem("❌ Você já registrou a ENTRADA hoje!")
+            show_message("❌ Você já registrou a ENTRADA hoje!")
             return
         }
         
-        entry_clock_in_register.textContent = actual_time_formated
-        mostrar_mensagem(`✅ Entrada registrada às ${actual_time_formated}`)
+        entry_clock_in_register.textContent = formatted_time
+        show_message(`✅ Entrada registrada às ${formatted_time}`)
         
-        await save_the_clock_in_data_base("entrada", actual_time_formated)
-        localStorage.setItem("entry_saved", actual_time_formated)
+        await save_clock_in_to_database("entrada", formatted_time)
+        localStorage.setItem("entry_saved", formatted_time)
         
         entry_registered = true
         registered_something = true
     }
     
-    // INÍCIO DO INTERVALO
-    if (actual_period === "periodo_almoco" && begin_dinner_registered === false) {
+    // Início do intervalo
+    if (current_period === "periodo_almoco" && begin_dinner_registered === false) {
         
-        begin_dinner_clock_in_register.textContent = actual_time_formated
+        begin_dinner_clock_in_register.textContent = formatted_time
         
-        await save_the_clock_in_data_base("inicio_almoco", actual_time_formated)
-        localStorage.setItem("beggin_dinner_saved", actual_time_formated)
+        await save_clock_in_to_database("inicio_almoco", formatted_time)
+        localStorage.setItem("beggin_dinner_saved", formatted_time)
         
         begin_dinner_registered = true
         registered_something = true
-        mostrar_mensagem(`✅ Intervalo iniciado às ${actual_time_formated}`)
+        show_message(`✅ Intervalo iniciado às ${formatted_time}`)
     }
     
-    // VOLTA DO INTERVALO
-    if (actual_period === "periodo_volta" && ending_dinner_registered === false) {
+    // Volta do intervalo
+    if (current_period === "periodo_volta" && ending_dinner_registered === false) {
         
-        ending_dinner_clock_in_register.textContent = actual_time_formated
+        ending_dinner_clock_in_register.textContent = formatted_time
         
-        await save_the_clock_in_data_base("fim_almoco", actual_time_formated)
-        localStorage.setItem("ending_dinner_saved", actual_time_formated)
+        await save_clock_in_to_database("fim_almoco", formatted_time)
+        localStorage.setItem("ending_dinner_saved", formatted_time)
         
         ending_dinner_registered = true
         registered_something = true
-        mostrar_mensagem(`✅ Retorno registrado às ${actual_time_formated}`)
+        show_message(`✅ Retorno registrado às ${formatted_time}`)
     }
     
-    // SAÍDA
-    if (actual_period === "periodo_saida" && exit_registered === false) {
+    // Saída
+    if (current_period === "periodo_saida" && exit_registered === false) {
         
-        exit_clock_in_register.textContent = actual_time_formated
+        exit_clock_in_register.textContent = formatted_time
         
-        await save_the_clock_in_data_base("saida", actual_time_formated)
-        localStorage.setItem("exit_saved", actual_time_formated)
+        await save_clock_in_to_database("saida", formatted_time)
+        localStorage.setItem("exit_saved", formatted_time)
         
         exit_registered = true
         registered_something = true
         
         // Calcula extras
-        const result = calcular_horas_do_dia()
+        const result = calculate_daily_hours()
         
         if (result) {
-            await save_the_extra_hours_and_total_worked_data_base(result)
+            await save_hours_to_database(result)
         }
         
-        mostrar_mensagem(`✅ Saída registrada às ${actual_time_formated}`)
+        show_message(`✅ Saída registrada às ${formatted_time}`)
     }
     
     // Se nada foi registrado
     if (!registered_something) {
-        mostrar_mensagem("❌ Não é possível registrar agora!")
+        show_message("❌ Não é possível registrar agora!")
     }
     
     // ✅ Atualiza a interface
-    atualizar_botao()
-    atualizar_status_resumo()
-    atualizar_saldo()
+    update_button()
+    update_summary_status()
+    update_balance()
 })
 
 
-// ============================================
-// FUNÇÃO: HORA ATUAL (HH:MM)
-// ============================================
 
-function register_the_clock() {
-    const actual_time = new Date()
-    return actual_time.toLocaleTimeString([], {
+// Função da hora atual (HH:MM)
+function get_current_time() {
+    const now = new Date()
+    return now.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
     })
 }
 
 
-// ============================================
-// ✅ BOTÃO HISTÓRICO
-// ============================================
-
-clock_in_historic_button.addEventListener("click", function() {
+// Botão histórico
+clock_in_history_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/historic-clock-in-register.html"
 })
 
 
-// ============================================
-// ✅ BOTÃO VOLTAR (HEADER)
-// ============================================
-
-header_back.addEventListener("click", function() {
+// Botão voltar (HEADER)
+header_back_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/main-page.html"
 })
 
 
-// ============================================
-// ✅ BOTÃO MENU (HEADER)
-// ============================================
-
-header_icon.addEventListener("click", function() {
+// Botão menu (HEADER)
+header_menu_button.addEventListener("click", function() {
     alert("Em breve: Menu")
 })
 
 
-// ============================================
-// ✅ INICIALIZAÇÃO
-// ============================================
-
+// INICIALIZAÇÃO
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
@@ -622,34 +552,36 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    console.log("✅ Usuário autenticado:", user.email)
     
     // Extrai o nome
-    nome_usuario = user.email.split("@")[0]
-    nome_usuario = nome_usuario.charAt(0).toUpperCase() + nome_usuario.slice(1)
+    user_name = user.email.split("@")[0]
+    user_name = user_name.charAt(0).toUpperCase() + user_name.slice(1)
     
     // Atualiza saudação
-    saudacao.textContent = `${gerar_saudacao()}, ${nome_usuario}!`
-    data_completa.textContent = gerar_data_completa()
+    greeting_text.textContent = `${generate_greeting()}, ${user_name}!`
+    full_date_text.textContent = generate_full_date()
+    
+    // Atualiza avatar
+    avatar.textContent = user_name.substring(0, 2).toUpperCase()
     
     // Restaura
-    verify_exist_clock_in_local_storage()
+    restore_clock_in_from_local_storage()
     
     // Relógio
-    atualizar_relogio()
-    setInterval(atualizar_relogio, 1000)
+    update_clock()
+    setInterval(update_clock, 1000)
     
     // Atualiza tudo
-    atualizar_botao()
-    atualizar_status()
-    atualizar_status_resumo()
-    atualizar_saldo()
+    update_button()
+    update_status()
+    update_summary_status()
+    update_balance()
     
     // Atualiza a cada 30s
     setInterval(() => {
-        atualizar_botao()
-        atualizar_status()
-        atualizar_status_resumo()
-        atualizar_saldo()
+        update_button()
+        update_status()
+        update_summary_status()
+        update_balance()
     }, 30000)
 })

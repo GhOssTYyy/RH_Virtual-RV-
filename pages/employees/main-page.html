@@ -8,26 +8,20 @@
 </head>
 <body>
 
-    <!-- ============================================
-         HEADER (TOPO)
-         ============================================ -->
+
     <header class="header">
         
-        <!-- Saudação do usuário -->
         <div class="header-welcome">
             <h1 id="welcome-name">👋 Olá!</h1>
             <p>Bem-vindo ao RH Virtual</p>
         </div>
         
-        <!-- Botões no canto superior direito -->
         <div class="header-actions">
             
-            <!-- Botão de Configurações (com logout dentro) -->
             <button class="settings-button" id="settings-button" title="Configurações">
                 ⚙️
             </button>
             
-            <!-- Foto de Perfil -->
             <div class="profile-picture" id="profile-picture" title="Meu perfil">
                 👤
             </div>
@@ -36,12 +30,8 @@
         
     </header>
 
-    <!-- ============================================
-         CONTEÚDO PRINCIPAL
-         ============================================ -->
     <main class="main-content">
         
-        <!-- Seção de Boas-Vindas -->
         <div class="welcome-section">
             <h2>🏠 Início</h2>
             <p>Bem-vindo ao seu painel de RH Virtual</p>
@@ -50,38 +40,28 @@
 
     </main>
 
-    <!-- ============================================
-         TABS (NAVEGAÇÃO INFERIOR)
-         ============================================ -->
     <nav class="bottom-tabs">
         
-        <!-- Início -->
         <button class="tab active" data-tab="home">
             <span class="tab-icon">🏠</span>
             <span class="tab-label">Início</span>
         </button>
 
-        <!-- Ponto -->
         <button class="tab" data-tab="point">
             <span class="tab-icon">⏰</span>
             <span class="tab-label">Ponto</span>
         </button>
 
-        <!-- ❌ HISTÓRICO REMOVIDO (acessado pela tela de ponto) -->
-
-        <!-- Férias -->
         <button class="tab" data-tab="holiday">
             <span class="tab-icon">🌴</span>
             <span class="tab-label">Férias</span>
         </button>
 
-        <!-- Perfil -->
         <button class="tab" data-tab="profile">
             <span class="tab-icon">👤</span>
             <span class="tab-label">Perfil</span>
         </button>
 
-        <!-- ✅ ABA RH (SÓ APARECE PARA RH - escondida por padrão) -->
         <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
             <span class="tab-icon">📊</span>
             <span class="tab-label">RH</span>
@@ -89,9 +69,6 @@
 
     </nav>
 
-    <!-- ============================================
-         SCRIPTS
-         ============================================ -->
     <script type="module" src="/js/auto_guard.js"></script>
     <script type="module" src="/js/employees/main_page.js"></script>
 
