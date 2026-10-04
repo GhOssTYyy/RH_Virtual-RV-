@@ -1,15 +1,7 @@
-// ============================================
-// IMPORTS
-// ============================================
-
 import { auth, db } from "../firebase_config.js"
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 import { collection, query, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 
-
-// ============================================
-// ELEMENTOS
-// ============================================
 
 const logout_button = document.getElementById("logout-button")
 const filtro_funcionario = document.getElementById("filtro-funcionario")
@@ -26,18 +18,10 @@ const total_funcionarios = document.getElementById("total-funcionarios")
 const total_extras = document.getElementById("total-extras")
 
 
-// ============================================
-// VARIÁVEIS GLOBAIS
-// ============================================
-
 let todos_registros = []      // Todos os registros do Firestore
 let registros_filtrados = []  // Registros após aplicar filtros
 
-
-// ============================================
-// ESPERA O FIREBASE CONFIRMAR O USUÁRIO
-// ============================================
-
+//Firebase confirma o usuário
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
@@ -52,10 +36,7 @@ onAuthStateChanged(auth, function(user) {
 })
 
 
-// ============================================
-// BUSCAR TODOS OS REGISTROS DO FIRESTORE
-// ============================================
-
+// Buscar todos os registros do firestore
 async function buscar_todos_registros() {
     
     corpo_tabela.innerHTML = '<tr><td colspan="8" class="carregando">Carregando...</td></tr>'
@@ -94,10 +75,7 @@ async function buscar_todos_registros() {
 }
 
 
-// ============================================
-// PREENCHER FILTRO DE FUNCIONÁRIOS
-// ============================================
-
+// Preenche filtro de usuários
 function preencher_filtro_funcionarios() {
     
     // Pega os emails únicos
@@ -118,10 +96,7 @@ function preencher_filtro_funcionarios() {
 }
 
 
-// ============================================
-// APLICAR FILTROS
-// ============================================
-
+// Aplicar filtros
 function aplicar_filtros() {
     
     const funcionario_selecionado = filtro_funcionario.value
@@ -152,10 +127,7 @@ function aplicar_filtros() {
 }
 
 
-// ============================================
-// RENDERIZAR A TABELA
-// ============================================
-
+// Renderizar a tabela
 function renderizar_tabela() {
     
     if (registros_filtrados.length === 0) {
@@ -207,10 +179,7 @@ function renderizar_tabela() {
 }
 
 
-// ============================================
-// ATUALIZAR ESTATÍSTICAS
-// ============================================
-
+// Atualizar estatísticas
 function atualizar_estatisticas() {
     
     // Total de registros
@@ -226,19 +195,13 @@ function atualizar_estatisticas() {
 }
 
 
-// ============================================
-// BOTÃO BUSCAR
-// ============================================
-
+// Botão de buscar
 btn_buscar.addEventListener("click", function() {
     aplicar_filtros()
 })
 
 
-// ============================================
-// BOTÃO LIMPAR
-// ============================================
-
+// Botão de limpar
 btn_limpar.addEventListener("click", function() {
     filtro_funcionario.value = "todos"
     filtro_data.value = ""
@@ -246,10 +209,7 @@ btn_limpar.addEventListener("click", function() {
 })
 
 
-// ============================================
-// BOTÃO EXPORTAR (CSV)
-// ============================================
-
+// Botão de exportar (CSV)
 btn_exportar.addEventListener("click", function() {
     
     if (registros_filtrados.length === 0) {
@@ -280,10 +240,7 @@ btn_exportar.addEventListener("click", function() {
 })
 
 
-// ============================================
-// BOTÃO LOGOUT
-// ============================================
-
+// Botão logout
 logout_button.addEventListener("click", async function() {
     
     const confirm_logout = confirm("Deseja realmente sair?")
