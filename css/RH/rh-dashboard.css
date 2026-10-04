@@ -310,9 +310,6 @@ body {
     font-weight: 600;
 }
 
-/* =========================================================
-   RESPONSIVIDADE - TABLET
-========================================================= */
 
 @media (min-width: 769px) and (max-width: 1024px) {
 
@@ -332,10 +329,6 @@ body {
     }
 }
 
-/* =========================================================
-   RESPONSIVIDADE - MOBILE
-   (JUNTA TODAS AS REGRAS EM UM SÓ @media!)
-========================================================= */
 
 @media (max-width: 768px) {
 
@@ -415,7 +408,7 @@ body {
 
     /* Tabela vira bloco */
     .tabela {
-        min-width: 0;        /* ← REMOVE o min-width 700px! */
+        min-width: 0;       
         width: 100%;
         display: block;
     }
