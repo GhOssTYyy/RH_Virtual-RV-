@@ -4,56 +4,74 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/fi
 import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
 
-// Header
+// ============================================
+// REFERÊNCIAS DO DOM — HEADER
+// ============================================
 const header_back_button = document.getElementById("header-back-button")
 const header_menu_button = document.getElementById("header-menu-button")
 
 
-// Card do Funcionário
+// ============================================
+// REFERÊNCIAS — CARD DO FUNCIONÁRIO
+// ============================================
 const avatar = document.getElementById("avatar")
 const greeting_text = document.getElementById("greeting-text")
 const full_date_text = document.getElementById("full-date-text")
 const status_text = document.getElementById("status-text")
 
 
-// Card do Relógio
+// ============================================
+// REFERÊNCIAS — CARD DO RELÓGIO
+// ============================================
 const clock_time_screen = document.getElementById("clock-time-screen")
 const clock_date_screen = document.getElementById("clock-date-screen")
 const clock_in_message = document.getElementById("clock-in-message")
 
 
-// Botão Principal
+// ============================================
+// REFERÊNCIAS — BOTÃO PRINCIPAL
+// ============================================
 const clock_in_register_button = document.getElementById("clock-in-register-button")
 const button_title_text = document.getElementById("button-title-text")
 const button_subtitle_text = document.getElementById("button-subtitle-text")
 
 
-// Resumo
+// ============================================
+// REFERÊNCIAS — RESUMO
+// ============================================
 const entry_clock_in_register = document.getElementById("entry-clock-in-register")
 const begin_dinner_clock_in_register = document.getElementById("begin-dinner-clock-in-register")
 const ending_dinner_clock_in_register = document.getElementById("ending-dinner-clock-in-register")
 const exit_clock_in_register = document.getElementById("exit-clock-in-register")
 
 
-// Status do Resumo
+// ============================================
+// REFERÊNCIAS — STATUS DO RESUMO
+// ============================================
 const entry_status = document.getElementById("entry-status")
 const begin_dinner_status = document.getElementById("begin-dinner-status")
 const ending_dinner_status = document.getElementById("ending-dinner-status")
 const exit_status = document.getElementById("exit-status")
 
 
-// Saldo
+// ============================================
+// REFERÊNCIAS — SALDO
+// ============================================
 const worked_hours_balance = document.getElementById("worked-hours-balance")
 const worked_hours_status = document.getElementById("worked-hours-status")
 const extra_hours_balance = document.getElementById("extra-hours-balance")
 const extra_hours_status = document.getElementById("extra-hours-status")
 
 
-// Botão Histórico
+// ============================================
+// REFERÊNCIAS — BOTÃO HISTÓRICO
+// ============================================
 const clock_in_history_button = document.getElementById("clock-in-history-button")
 
 
-// Variáveis de controle
+// ============================================
+// VARIÁVEIS DE CONTROLE
+// ============================================
 let entry_registered = false
 let begin_dinner_registered = false
 let ending_dinner_registered = false
@@ -63,7 +81,9 @@ let registered_something = false
 let user_name = ""
 
 
-// Função de saudação conforme a hora
+// ============================================
+// FUNÇÕES DE FORMATAÇÃO (datas/saudações)
+// ============================================
 function generate_greeting() {
     const hour = new Date().getHours()
     
@@ -77,7 +97,6 @@ function generate_greeting() {
 }
 
 
-// Função de data completa por extenso
 function generate_full_date() {
     const now = new Date()
     
@@ -90,7 +109,6 @@ function generate_full_date() {
 }
 
 
-// Função de data (para o relógio)
 function generate_short_date() {
     const now = new Date()
     
@@ -101,7 +119,18 @@ function generate_short_date() {
 }
 
 
-// Função de relógio em tempo real
+function get_current_time() {
+    const now = new Date()
+    return now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    })
+}
+
+
+// ============================================
+// RELÓGIO EM TEMPO REAL
+// ============================================
 function update_clock() {
     const now = new Date()
     
@@ -116,7 +145,9 @@ function update_clock() {
 }
 
 
-// Função de status de funcionário
+// ============================================
+// STATUS DO FUNCIONÁRIO (badge)
+// ============================================
 function update_status() {
     const period = discover_actual_clock_in_period()
     
@@ -134,8 +165,9 @@ function update_status() {
 }
 
 
-
-// Função de atualizar o botão (texto + subtítulo)
+// ============================================
+// ATUALIZA O BOTÃO PRINCIPAL
+// ============================================
 function update_button() {
     const period = discover_actual_clock_in_period()
     
@@ -201,8 +233,9 @@ function update_button() {
 }
 
 
-
-// Função de calcular horas e horas extras
+// ============================================
+// CÁLCULO DE HORAS DO DIA
+// ============================================
 function calculate_daily_hours() {
     
     const entry = localStorage.getItem("entry_saved")
@@ -254,7 +287,9 @@ function calculate_daily_hours() {
 }
 
 
-// Função de atualizar saldo do dia
+// ============================================
+// ATUALIZA O SALDO DO DIA
+// ============================================
 function update_balance() {
     
     const result = calculate_daily_hours()
@@ -270,7 +305,6 @@ function update_balance() {
         return
     }
     
-    // Horas trabalhadas
     worked_hours_balance.textContent = result.hours_worked
     
     if (result.is_working) {
@@ -281,7 +315,6 @@ function update_balance() {
         worked_hours_status.style.color = "var(--verde)"
     }
     
-    // Extras/Débito
     const extra_minutes = result.extra_minutes
     
     if (extra_minutes > 0) {
@@ -302,8 +335,9 @@ function update_balance() {
 }
 
 
-
-// Função atualizar resumo
+// ============================================
+// ATUALIZA RESUMO (✓ / Pendente)
+// ============================================
 function update_summary_status() {
     
     entry_status.textContent = entry_registered ? "✓" : "Pendente"
@@ -320,8 +354,9 @@ function update_summary_status() {
 }
 
 
-
-// Função de restaurar do localstorage
+// ============================================
+// RESTAURA DO LOCALSTORAGE
+// ============================================
 function restore_clock_in_from_local_storage() {
     
     const current_date = new Date().toLocaleDateString("pt-BR")
@@ -362,8 +397,9 @@ function restore_clock_in_from_local_storage() {
 }
 
 
-
-// Função de salvar no firebase
+// ============================================
+// SALVA PONTO NO FIRESTORE
+// ============================================
 async function save_clock_in_to_database(clock_in_type, time) {
     
     const user = auth.currentUser
@@ -403,13 +439,11 @@ async function save_clock_in_to_database(clock_in_type, time) {
 // ============================================
 async function atualizar_indice_de_meses(user, data_str) {
     
-    // data_str está no formato "YYYY-MM-DD"
-    const mes_chave = data_str.substring(0, 7)  // → "YYYY-MM"
+    const mes_chave = data_str.substring(0, 7)  // "YYYY-MM"
     
     const user_doc_ref = doc(db, "employees", user.uid)
     
     try {
-        // Lê o doc atual
         const user_snapshot = await getDoc(user_doc_ref)
         
         let meses = []
@@ -419,11 +453,10 @@ async function atualizar_indice_de_meses(user, data_str) {
             meses = dados.meses_com_registro || []
         }
         
-        // Se o mês ainda não está no índice, adiciona
         if (!meses.includes(mes_chave)) {
             
             meses.push(mes_chave)
-            meses.sort().reverse()  // mais recente primeiro
+            meses.sort().reverse()
             
             const nome = user.email.split("@")[0]
             const nome_formatado = nome.charAt(0).toUpperCase() + nome.slice(1)
@@ -443,8 +476,9 @@ async function atualizar_indice_de_meses(user, data_str) {
 }
 
 
-
-// Função de salvar as horas
+// ============================================
+// SALVA AS HORAS NO FIRESTORE
+// ============================================
 async function save_hours_to_database(result) {
     
     const user = auth.currentUser
@@ -472,7 +506,9 @@ async function save_hours_to_database(result) {
 }
 
 
-// Função de mostrar a mensagem
+// ============================================
+// MOSTRA MENSAGEM DE FEEDBACK
+// ============================================
 function show_message(text) {
     clock_in_message.textContent = text
     
@@ -482,14 +518,16 @@ function show_message(text) {
 }
 
 
-// Registrar ponto
+// ============================================
+// REGISTRAR PONTO (botão principal)
+// ============================================
 clock_in_register_button.addEventListener("click", async function() {
     
     const formatted_time = get_current_time()
     const current_period = discover_actual_clock_in_period()
     registered_something = false
     
-    // entrada
+    // ENTRADA
     if (current_period === "periodo_entrada" && entry_registered === false) {
         
         if (localStorage.getItem("entry_saved")) {
@@ -507,7 +545,7 @@ clock_in_register_button.addEventListener("click", async function() {
         registered_something = true
     }
     
-    // Início do intervalo
+    // INÍCIO DO INTERVALO
     if (current_period === "periodo_almoco" && begin_dinner_registered === false) {
         
         begin_dinner_clock_in_register.textContent = formatted_time
@@ -520,7 +558,7 @@ clock_in_register_button.addEventListener("click", async function() {
         show_message(`✅ Intervalo iniciado às ${formatted_time}`)
     }
     
-    // Volta do intervalo
+    // VOLTA DO INTERVALO
     if (current_period === "periodo_volta" && ending_dinner_registered === false) {
         
         ending_dinner_clock_in_register.textContent = formatted_time
@@ -533,7 +571,7 @@ clock_in_register_button.addEventListener("click", async function() {
         show_message(`✅ Retorno registrado às ${formatted_time}`)
     }
     
-    // Saída
+    // SAÍDA
     if (current_period === "periodo_saida" && exit_registered === false) {
         
         exit_clock_in_register.textContent = formatted_time
@@ -544,7 +582,6 @@ clock_in_register_button.addEventListener("click", async function() {
         exit_registered = true
         registered_something = true
         
-        // Calcula extras
         const result = calculate_daily_hours()
         
         if (result) {
@@ -554,55 +591,72 @@ clock_in_register_button.addEventListener("click", async function() {
         show_message(`✅ Saída registrada às ${formatted_time}`)
     }
     
-    // Se nada foi registrado
+    // Nada registrado
     if (!registered_something) {
         show_message("❌ Não é possível registrar agora!")
     }
     
-    // ✅ Atualiza a interface
     update_button()
     update_summary_status()
     update_balance()
 })
 
 
-
-// Função da hora atual (HH:MM)
-function get_current_time() {
-    const now = new Date()
-    return now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-    })
-}
-
-
-// Botão histórico
+// ============================================
+// BOTÃO HISTÓRICO
+// ============================================
 clock_in_history_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/historic-clock-in-register.html"
 })
 
 
-// Botão voltar (HEADER)
+// ============================================
+// BOTÃO VOLTAR (HEADER)
+// ============================================
 header_back_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/main-page.html"
 })
 
 
-// Botão menu (HEADER)
+// ============================================
+// BOTÃO MENU (HEADER)
+// ============================================
 header_menu_button.addEventListener("click", function() {
     alert("Em breve: Menu")
 })
 
 
+// ============================================
+// NAVEGAÇÃO DAS TABS INFERIORES
+// ============================================
+const tabs = document.querySelectorAll(".tab")
+
+tabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+        const target = tab.dataset.tab
+        console.log("🚀 Tab clicada:", target)
+        
+        if (target === "home") {
+            window.location.href = "/pages/employees/main-page.html"
+        } else if (target === "holiday") {
+            window.location.href = "/pages/employees/holiday-day-off.html"
+        } else if (target === "profile") {
+            alert("Em breve: Perfil do usuário!")
+        }
+        // "point" já é a página atual — não faz nada
+    })
+})
+
+
+// ============================================
 // INICIALIZAÇÃO
+// ============================================
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
         window.location.href = "/index.html"
         return
     }
-    
     
     // Extrai o nome
     user_name = user.email.split("@")[0]
