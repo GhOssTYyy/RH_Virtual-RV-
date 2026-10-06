@@ -11,7 +11,9 @@
 <body>
 
     <header class="header">
-        <button class="header-back" id="header-back-button">‹</button>
+        <button class="header-back" id="header-back-button">
+            <img src="" alt="⬅️" class="header-back-icon" onerror="this.replaceWith('⬅️')">
+        </button>
         <h1 class="header-title">Histórico de Pontos</h1>
         <div class="header-spacer"></div>
     </header>
@@ -21,7 +23,9 @@
         <!-- Dropdown de ANO -->
         <div class="year-selector-wrapper">
             <label for="year-selector" class="year-selector-label">
-                <span class="year-selector-icon">📅</span>
+                <span class="year-selector-icon">
+                    <img src="" alt="📅" class="label-icon" onerror="this.replaceWith('📅')">
+                </span>
                 <span>Ano</span>
             </label>
             <div class="year-selector-container">
@@ -53,22 +57,22 @@
     <nav class="bottom-tabs">
         
         <button class="tab" data-tab="home">
-            <span class="tab-icon">🏠</span>
+            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
 
         <button class="tab" data-tab="point">
-            <span class="tab-icon">⏰</span>
+            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
 
         <button class="tab active" data-tab="historic">
-            <span class="tab-icon">📊</span>
+            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
 
         <button class="tab" data-tab="holiday">
-            <span class="tab-icon">🌴</span>
+            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
 

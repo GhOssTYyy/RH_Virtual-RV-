@@ -12,11 +12,11 @@
         <div class="header-actions">
             
             <button class="settings-button" id="settings-button" title="Configurações">
-                ⚙️
+                <img src="/assets/icons/settings_button_icon.svg" alt="⚙️" class="button-icon" onerror="this.replaceWith('⚙️')">
             </button>
             
             <div class="profile-picture" id="profile-picture" title="Meu perfil">
-                👤
+                <img src="" alt="👤" class="button-icon" onerror="this.replaceWith('👤')">
             </div>
             
         </div>
@@ -24,7 +24,7 @@
 
     <main class="main-content">
 
-        <!-- Saudação -->
+        <!-- Saudação (mantém emoji) -->
         <div class="welcome-section">
             <h1 id="welcome-name">👋 Olá!</h1>
             <p id="welcome-date">Carregando...</p>
@@ -33,7 +33,9 @@
         <!-- Card Próxima Ação -->
         <div class="next-action-card" id="next-action-card">
             
-            <div class="next-action-icon" id="next-action-icon">⏰</div>
+            <div class="next-action-icon" id="next-action-icon">
+                <img src="" alt="⏰" class="icon-img" onerror="this.replaceWith('⏰')">
+            </div>
             
             <div class="next-action-info">
                 <span class="next-action-label">Próxima ação</span>
@@ -52,27 +54,27 @@
     <nav class="bottom-tabs">
         
         <button class="tab active" data-tab="home">
-            <span class="tab-icon">🏠</span>
+            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
 
         <button class="tab" data-tab="point">
-            <span class="tab-icon">⏰</span>
+            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
 
         <button class="tab" data-tab="historic">
-            <span class="tab-icon">📊</span>
+            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
 
         <button class="tab" data-tab="holiday">
-            <span class="tab-icon">🌴</span>
+            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
 
         <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
-            <span class="tab-icon">📈</span>
+            <img src="/assets/icons/statistics_button_rh_icon.svg" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
             <span class="tab-label">RH</span>
         </button>
 
