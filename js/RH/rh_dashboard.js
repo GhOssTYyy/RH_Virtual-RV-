@@ -3,6 +3,15 @@ import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { collection, query, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 
 
+// ============================================
+// 🔒 GUARD DO RH
+// ============================================
+const emails_rh = [
+    "jpandreiph@gmail.com"
+]
+
+
+// Elementos do DOM
 const logout_button = document.getElementById("logout-button")
 const filtro_funcionario = document.getElementById("filtro-funcionario")
 const filtro_data = document.getElementById("filtro-data")
@@ -18,10 +27,13 @@ const total_funcionarios = document.getElementById("total-funcionarios")
 const total_extras = document.getElementById("total-extras")
 
 
-let todos_registros = []      // Todos os registros do Firestore
-let registros_filtrados = []  // Registros após aplicar filtros
+let todos_registros = []
+let registros_filtrados = []
 
-//Firebase confirma o usuário
+
+// ============================================
+// INICIALIZAÇÃO COM GUARD
+// ============================================
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
@@ -29,14 +41,23 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
+    // 🔒 GUARD: só RH acessa
+    if (!emails_rh.includes(user.email)) {
+        
+        alert("❌ Acesso negado. Esta página é restrita ao RH.")
+        window.location.href = "/pages/employees/main-page.html"
+        return
+    }
+    
     console.log("✅ RH autenticado:", user.email)
     
-    // ✅ Busca todos os registros
     buscar_todos_registros()
 })
 
 
-// Buscar todos os registros do firestore
+// ============================================
+// BUSCAR TODOS OS REGISTROS
+// ============================================
 async function buscar_todos_registros() {
     
     corpo_tabela.innerHTML = '<tr><td colspan="8" class="carregando">Carregando...</td></tr>'
@@ -62,10 +83,7 @@ async function buscar_todos_registros() {
         
         console.log("📊 Registros carregados:", todos_registros.length)
         
-        // ✅ Preenche o filtro de funcionários
         preencher_filtro_funcionarios()
-        
-        // ✅ Aplica os filtros (inicialmente sem filtro)
         aplicar_filtros()
         
     } catch (error) {
@@ -75,16 +93,15 @@ async function buscar_todos_registros() {
 }
 
 
-// Preenche filtro de usuários
+// ============================================
+// FILTROS
+// ============================================
 function preencher_filtro_funcionarios() {
     
-    // Pega os emails únicos
     const emails_unicos = [...new Set(todos_registros.map(r => r.employee_email))]
     
-    // Limpa o select (mantém o "Todos")
     filtro_funcionario.innerHTML = '<option value="todos">Todos</option>'
     
-    // Adiciona cada email
     emails_unicos.forEach(function(email) {
         if (!email) return
         
@@ -96,22 +113,18 @@ function preencher_filtro_funcionarios() {
 }
 
 
-// Aplicar filtros
 function aplicar_filtros() {
     
     const funcionario_selecionado = filtro_funcionario.value
     const data_selecionada = filtro_data.value
     
-    // Filtra os registros
     registros_filtrados = todos_registros.filter(function(registro) {
         
-        // Filtro por funcionário
         if (funcionario_selecionado !== "todos" 
             && registro.employee_email !== funcionario_selecionado) {
             return false
         }
         
-        // Filtro por data
         if (data_selecionada && registro.date !== data_selecionada) {
             return false
         }
@@ -121,13 +134,14 @@ function aplicar_filtros() {
     
     console.log("🔍 Registros filtrados:", registros_filtrados.length)
     
-    // ✅ Atualiza a tela
     renderizar_tabela()
     atualizar_estatisticas()
 }
 
 
-// Renderizar a tabela
+// ============================================
+// RENDERIZAR TABELA
+// ============================================
 function renderizar_tabela() {
     
     if (registros_filtrados.length === 0) {
@@ -142,7 +156,6 @@ function renderizar_tabela() {
         
         const linha = document.createElement("tr")
         
-        // Formata o "extras" com cor
         let extra_text = "-"
         let extra_class = ""
         
@@ -156,7 +169,6 @@ function renderizar_tabela() {
             }
         }
         
-        // Formata o email (pega só antes do @)
         const nome = registro.employee_email 
             ? registro.employee_email.split("@")[0] 
             : "N/A"
@@ -170,7 +182,7 @@ function renderizar_tabela() {
             <td data-label="Saída">${registro.saida || "-"}</td>
             <td data-label="Horas">${registro.hours_worked || "-"}</td>
             <td data-label="Extras" class="${extra_class}">${extra_text}</td>
-`
+        `
         
         corpo_tabela.appendChild(linha)
     })
@@ -179,29 +191,29 @@ function renderizar_tabela() {
 }
 
 
-// Atualizar estatísticas
+// ============================================
+// ESTATÍSTICAS
+// ============================================
 function atualizar_estatisticas() {
     
-    // Total de registros
     total_registros.textContent = registros_filtrados.length
     
-    // Total de funcionários únicos
     const emails_unicos = [...new Set(registros_filtrados.map(r => r.employee_email))]
     total_funcionarios.textContent = emails_unicos.length
     
-    // Total com extras
     const com_extras = registros_filtrados.filter(r => r.is_extra_hour).length
     total_extras.textContent = com_extras
 }
 
 
-// Botão de buscar
+// ============================================
+// BOTÕES
+// ============================================
 btn_buscar.addEventListener("click", function() {
     aplicar_filtros()
 })
 
 
-// Botão de limpar
 btn_limpar.addEventListener("click", function() {
     filtro_funcionario.value = "todos"
     filtro_data.value = ""
@@ -209,7 +221,6 @@ btn_limpar.addEventListener("click", function() {
 })
 
 
-// Botão de exportar (CSV)
 btn_exportar.addEventListener("click", function() {
     
     if (registros_filtrados.length === 0) {
@@ -217,17 +228,14 @@ btn_exportar.addEventListener("click", function() {
         return
     }
     
-    // Cabeçalho do CSV
     let csv = "Funcionário,Data,Entrada,Almoço,Volta,Saída,Horas,Extras\n"
     
-    // Dados
     registros_filtrados.forEach(function(r) {
         const nome = r.employee_email ? r.employee_email.split("@")[0] : "N/A"
         
         csv += `${nome},${r.date || ""},${r.entrada || ""},${r.inicio_almoco || ""},${r.fim_almoco || ""},${r.saida || ""},${r.hours_worked || ""},${r.extra_hours || ""}\n`
     })
     
-    // Cria o arquivo e baixa
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
@@ -240,7 +248,6 @@ btn_exportar.addEventListener("click", function() {
 })
 
 
-// Botão logout
 logout_button.addEventListener("click", async function() {
     
     const confirm_logout = confirm("Deseja realmente sair?")

@@ -1,5 +1,5 @@
 import { auth, db } from "../firebase_config.js"
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
 
@@ -377,6 +377,7 @@ async function save_clock_in_to_database(clock_in_type, time) {
     const document_reference = doc(db, "Clock_in_registers_day", document_id)
     
     try {
+        // 1️⃣ Salva o ponto do dia
         await setDoc(document_reference, {
             employee_id: user.uid,
             employee_email: user.email,
@@ -386,8 +387,58 @@ async function save_clock_in_to_database(clock_in_type, time) {
         
         console.log("✅ Ponto salvo:", clock_in_type)
         
+        // 2️⃣ Atualiza o índice de meses (só quando é ENTRADA)
+        if (clock_in_type === "entrada") {
+            await atualizar_indice_de_meses(user, current_date_formatted)
+        }
+        
     } catch (error) {
         console.log("❌ Erro ao salvar ponto:", error.code, error.message)
+    }
+}
+
+
+// ============================================
+// ATUALIZA O ÍNDICE DE MESES NO DOC DO USUÁRIO
+// ============================================
+async function atualizar_indice_de_meses(user, data_str) {
+    
+    // data_str está no formato "YYYY-MM-DD"
+    const mes_chave = data_str.substring(0, 7)  // → "YYYY-MM"
+    
+    const user_doc_ref = doc(db, "employees", user.uid)
+    
+    try {
+        // Lê o doc atual
+        const user_snapshot = await getDoc(user_doc_ref)
+        
+        let meses = []
+        
+        if (user_snapshot.exists()) {
+            const dados = user_snapshot.data()
+            meses = dados.meses_com_registro || []
+        }
+        
+        // Se o mês ainda não está no índice, adiciona
+        if (!meses.includes(mes_chave)) {
+            
+            meses.push(mes_chave)
+            meses.sort().reverse()  // mais recente primeiro
+            
+            const nome = user.email.split("@")[0]
+            const nome_formatado = nome.charAt(0).toUpperCase() + nome.slice(1)
+            
+            await setDoc(user_doc_ref, {
+                email: user.email,
+                name: nome_formatado,
+                meses_com_registro: meses
+            }, { merge: true })
+            
+            console.log("📅 Índice de meses atualizado:", mes_chave)
+        }
+        
+    } catch (error) {
+        console.log("⚠️ Erro ao atualizar índice (não crítico):", error.code, error.message)
     }
 }
 

@@ -1,190 +1,339 @@
 import { auth, db } from "../firebase_config.js"
-import { collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
-//Verifica se o usuário está logado, espera a autorização do firebase, caso não retorna para a página inical.
-onAuthStateChanged(auth, function(user) {
+
+// ============================================
+// ESTADO
+// ============================================
+let usuario_atual = null
+let meses_disponiveis = []          // ex: ["2026-10", "2026-09", ...]
+let ano_ativo = null                // ex: "2026"
+let mes_ativo = null                // ex: "10"
+
+const month_names_in_portuguese = {
+    "01": "Janeiro",
+    "02": "Fevereiro",
+    "03": "Março",
+    "04": "Abril",
+    "05": "Maio",
+    "06": "Junho",
+    "07": "Julho",
+    "08": "Agosto",
+    "09": "Setembro",
+    "10": "Outubro",
+    "11": "Novembro",
+    "12": "Dezembro"
+}
+
+const month_short_in_portuguese = {
+    "01": "Jan", "02": "Fev", "03": "Mar", "04": "Abr",
+    "05": "Mai", "06": "Jun", "07": "Jul", "08": "Ago",
+    "09": "Set", "10": "Out", "11": "Nov", "12": "Dez"
+}
+
+
+// Elementos do DOM
+const year_tabs_el = document.getElementById("year-tabs")
+const month_tabs_el = document.getElementById("month-tabs")
+const active_month_title_el = document.getElementById("active-month-title")
+const container_el = document.getElementById("historic-clock-in-register-container")
+const header_back_button = document.getElementById("header-back-button")
+
+
+// ============================================
+// BOTÃO VOLTAR
+// ============================================
+if (header_back_button) {
+    header_back_button.addEventListener("click", function() {
+        window.location.href = "/pages/employees/main-page.html"
+    })
+}
+
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+onAuthStateChanged(auth, async function(user) {
     
     if (!user) {
-
         alert("Você precisa estar logado!")
         window.location.href = "/index.html"
         return
     }
     
-    get_all_user_clock_in_registers(user)
+    usuario_atual = user
+    
+    await carregar_indice_de_meses()
 })
 
-//Função para pegar do firebase os registros de pontos apenas do seu usuário logado, nunca de outros
-//usuários.
-async function get_all_user_clock_in_registers(user) {
+
+// ============================================
+// CARREGA O ÍNDICE DE MESES
+// ============================================
+async function carregar_indice_de_meses() {
     
-//Container html onde tudo será inserido no final
-    const historic_clock_in_register_container = document.getElementById("historic-clock-in-register-container")
-
+    container_el.innerHTML = "<p class='carregando'>Carregando Histórico...</p>"
+    
     try {
-
-        const collection_variable = collection(db, "Clock_in_registers_day")
+        const user_doc_ref = doc(db, "employees", usuario_atual.uid)
+        const snapshot = await getDoc(user_doc_ref)
         
-        const consult_of_historic_clock_in = query(
-            collection_variable,
-            where("employee_id", "==", user.uid),
-            orderBy("date", "desc"),
-            limit(100)
-        )
-
-        const result = await getDocs(consult_of_historic_clock_in)
-
-        if (result.empty) {
-            historic_clock_in_register_container.innerHTML = "<p class='vazio'>Nenhum registro encontrado</p>"
+        if (!snapshot.exists()) {
+            // Primeira vez — não tem índice
+            meses_disponiveis = []
+            renderizar_sem_registros()
             return
         }
-
-        const clock_in_registers_array = []
-        result.forEach(function(document){
-            clock_in_registers_array.push(document.data())
-        })
-
-        console.log("Registros encontrados:", clock_in_registers_array.length)
-
-        const clock_in_registers_organized = organized_clock_in_year_month(clock_in_registers_array)
-
-        display_historic_of_clock_in(clock_in_registers_organized, historic_clock_in_register_container)
-
+        
+        const dados = snapshot.data()
+        meses_disponiveis = dados.meses_com_registro || []
+        
+        if (meses_disponiveis.length === 0) {
+            renderizar_sem_registros()
+            return
+        }
+        
+        // Mês mais recente vem primeiro (já foi ordenado desc na hora de salvar)
+        const mes_mais_recente = meses_disponiveis[0]
+        const [ano, mes] = mes_mais_recente.split("-")
+        
+        ano_ativo = ano
+        mes_ativo = mes
+        
+        renderizar_abas_de_ano()
+        renderizar_abas_de_mes()
+        await carregar_mes(ano, mes)
+        
     } catch (error) {
-        console.log("Erro ao buscar histórico:", error.code, error.message)
-        historic_clock_in_register_container.innerHTML = "<p class='erro'>Erro ao carregar histórico</p>"
+        console.log("❌ Erro ao carregar índice:", error.code, error.message)
+        container_el.innerHTML = "<p class='erro'>Erro ao carregar histórico</p>"
     }
 }
 
 
-function organized_clock_in_year_month(registers) {
-
-    const organized_clock_in = {}
-
-    registers.forEach(function(register){
-
-        const [year, month, day] = register.date.split("-")
-
-        if (!organized_clock_in[year]) {
-            organized_clock_in[year] = {}
+// ============================================
+// RENDERIZA ABAS DE ANO
+// ============================================
+function renderizar_abas_de_ano() {
+    
+    // Pega anos únicos
+    const anos = [...new Set(meses_disponiveis.map(m => m.split("-")[0]))]
+    anos.sort().reverse()  // mais recente primeiro
+    
+    year_tabs_el.innerHTML = ""
+    
+    anos.forEach(function(ano) {
+        
+        const btn = document.createElement("button")
+        btn.className = "year-tab"
+        btn.textContent = ano
+        btn.dataset.ano = ano
+        
+        if (ano === ano_ativo) {
+            btn.classList.add("active")
         }
-
-        if (!organized_clock_in[year][month]) {
-            organized_clock_in[year][month] = []
-        }
-
-        organized_clock_in[year][month].push({
-            day: day,
-            ...register
+        
+        btn.addEventListener("click", async function() {
+            
+            ano_ativo = ano
+            
+            // Ao trocar de ano, seleciona o mês mais recente desse ano
+            const meses_do_ano = meses_disponiveis
+                .filter(m => m.startsWith(ano + "-"))
+                .sort()
+                .reverse()
+            
+            mes_ativo = meses_do_ano[0].split("-")[1]
+            
+            renderizar_abas_de_ano()
+            renderizar_abas_de_mes()
+            await carregar_mes(ano_ativo, mes_ativo)
         })
+        
+        year_tabs_el.appendChild(btn)
     })
-
-    return organized_clock_in
 }
 
 
-function display_historic_of_clock_in(organized_clock_in, historic_clock_in_register_container){
-
-    const month_names_in_portuguese = {
-        "01": "Janeiro",
-        "02": "Fevereiro",
-        "03": "Março",
-        "04": "Abril",
-        "05": "Maio",
-        "06": "Junho",
-        "07": "Julho",
-        "08": "Agosto",
-        "09": "Setembro",
-        "10": "Outubro",
-        "11": "Novembro",
-        "12": "Dezembro"
-    }
-
-    historic_clock_in_register_container.innerHTML = ""
-
-    const clock_in_register_years = Object.keys(organized_clock_in).sort().reverse()
-
-    clock_in_register_years.forEach(function(year){
-
-        const year_html_block = document.createElement("div")
-        year_html_block.className = "year-html-block"
-
-        const year_html_title = document.createElement("h2")
-        year_html_title.className = "year-html-title"
-        year_html_title.textContent = `${year}`
-        year_html_block.appendChild(year_html_title)
-
-        const clock_in_registers_months = Object.keys(organized_clock_in[year]).sort().reverse()
-
-        clock_in_registers_months.forEach(function(month){
-
-            const month_html_block = document.createElement("div")
-            month_html_block.className = "month-html-block"
-
-            const month_html_title = document.createElement("h3")
-            month_html_title.className = "month-html-title"
-            month_html_title.textContent = `${month_names_in_portuguese[month]}`
-            month_html_block.appendChild(month_html_title)
-
-            const historic_clock_in_table = document.createElement("table")
-            historic_clock_in_table.className = "historic-clock-in-table"
-
-            historic_clock_in_table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Dia</th>
-                        <th>Entrada</th>
-                        <th>Almoço</th>
-                        <th>Volta</th>
-                        <th>Saída</th>
-                        <th>Horas</th>
-                        <th>Extras</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            `
-
-            const tbody = historic_clock_in_table.querySelector("tbody")
-
-            const clock_in_register_organized_days = organized_clock_in[year][month].sort((a, b) => b.day.localeCompare(a.day))
-
-            clock_in_register_organized_days.forEach(function(register){
-
-                const line = document.createElement("tr")
-
-                let extra_text = "-"
-                let extra_class = ""
-
-                if (register.extra_hours) {
-
-                    if (register.is_extra_hour) {
-                        extra_text = `+ ${register.extra_hours}`
-                        extra_class = "extra-hours-positive"
-                    } else {
-                        extra_text = `-${register.extra_hours}`
-                        extra_class = "extra-hours-negative"
-                    }
-
-                }
-
-                line.innerHTML = `
-                    <td>${register.day}</td>
-                    <td>${register.entrada || "-"}</td>
-                    <td>${register.inicio_almoco || "-"}</td>
-                    <td>${register.fim_almoco || "-"}</td>
-                    <td>${register.saida || "-"}</td>
-                    <td>${register.hours_worked || "-"}</td>
-                    <td class="${extra_class}">${extra_text}</td>
-                `
-
-                tbody.appendChild(line)
+// ============================================
+// RENDERIZA ABAS DE MÊS
+// ============================================
+function renderizar_abas_de_mes() {
+    
+    // Pega todos os meses do ano ativo
+    const meses_do_ano = meses_disponiveis
+        .filter(m => m.startsWith(ano_ativo + "-"))
+        .map(m => m.split("-")[1])
+    
+    month_tabs_el.innerHTML = ""
+    
+    // Cria os 12 meses; os que têm registro ficam ativos
+    Object.keys(month_short_in_portuguese).forEach(function(mes) {
+        
+        const tem_registro = meses_do_ano.includes(mes)
+        
+        const btn = document.createElement("button")
+        btn.className = "month-tab"
+        btn.textContent = month_short_in_portuguese[mes]
+        
+        if (!tem_registro) {
+            btn.classList.add("disabled")
+            btn.disabled = true
+        } else {
+            
+            if (mes === mes_ativo) {
+                btn.classList.add("active")
+            }
+            
+            btn.addEventListener("click", async function() {
+                mes_ativo = mes
+                renderizar_abas_de_mes()
+                await carregar_mes(ano_ativo, mes_ativo)
             })
-
-            month_html_block.appendChild(historic_clock_in_table)
-            year_html_block.appendChild(month_html_block)
-        })
-
-        historic_clock_in_register_container.appendChild(year_html_block)
+        }
+        
+        month_tabs_el.appendChild(btn)
     })
+}
+
+
+// ============================================
+// CARREGA UM MÊS ESPECÍFICO
+// ============================================
+async function carregar_mes(ano, mes) {
+    
+    // Atualiza título
+    active_month_title_el.textContent = 
+        `${month_names_in_portuguese[mes]} ${ano}`
+    
+    container_el.innerHTML = "<p class='carregando'>Carregando...</p>"
+    
+    try {
+        const registros = await buscar_registros_do_mes(usuario_atual, ano, mes)
+        
+        if (registros.length === 0) {
+            container_el.innerHTML = "<p class='vazio'>Nenhum registro neste mês</p>"
+            return
+        }
+        
+        // Ordena por dia decrescente
+        registros.sort((a, b) => b.day.localeCompare(a.day))
+        
+        renderizar_historico(registros, container_el)
+        
+    } catch (error) {
+        console.log("❌ Erro:", error.code, error.message)
+        container_el.innerHTML = "<p class='erro'>Erro ao carregar registros</p>"
+    }
+}
+
+
+// ============================================
+// BUSCA REGISTROS VIA GET (paralelo)
+// ============================================
+async function buscar_registros_do_mes(user, ano, mes) {
+    
+    const dias_no_mes = new Date(ano, mes, 0).getDate()
+    const promises = []
+    
+    for (let dia = 1; dia <= dias_no_mes; dia++) {
+        
+        const dia_fmt = String(dia).padStart(2, "0")
+        const mes_fmt = String(mes).padStart(2, "0")
+        const data_str = `${ano}-${mes_fmt}-${dia_fmt}`
+        const doc_id = `${data_str}_${user.uid}`
+        
+        const doc_ref = doc(db, "Clock_in_registers_day", doc_id)
+        
+        promises.push(
+            getDoc(doc_ref).then(function(snapshot) {
+                if (snapshot.exists()) {
+                    return {
+                        day: dia_fmt,
+                        ...snapshot.data()
+                    }
+                }
+                return null
+            })
+        )
+    }
+    
+    const resultados = await Promise.all(promises)
+    return resultados.filter(r => r !== null)
+}
+
+
+// ============================================
+// RENDERIZA A TABELA DO MÊS
+// ============================================
+function renderizar_historico(registros, container) {
+    
+    container.innerHTML = ""
+    
+    const tabela = document.createElement("table")
+    tabela.className = "historic-clock-in-table"
+    
+    tabela.innerHTML = `
+        <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Entrada</th>
+                <th>Almoço</th>
+                <th>Volta</th>
+                <th>Saída</th>
+                <th>Horas</th>
+                <th>Extras</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `
+    
+    const tbody = tabela.querySelector("tbody")
+    
+    registros.forEach(function(register) {
+        
+        const line = document.createElement("tr")
+        
+        let extra_text = "-"
+        let extra_class = ""
+        
+        if (register.extra_hours) {
+            if (register.is_extra_hour) {
+                extra_text = `+ ${register.extra_hours}`
+                extra_class = "extra-hours-positive"
+            } else {
+                extra_text = `- ${register.extra_hours}`
+                extra_class = "extra-hours-negative"
+            }
+        }
+        
+        line.innerHTML = `
+            <td>${register.day}</td>
+            <td>${register.entrada || "-"}</td>
+            <td>${register.inicio_almoco || "-"}</td>
+            <td>${register.fim_almoco || "-"}</td>
+            <td>${register.saida || "-"}</td>
+            <td>${register.hours_worked || "-"}</td>
+            <td class="${extra_class}">${extra_text}</td>
+        `
+        
+        tbody.appendChild(line)
+    })
+    
+    container.appendChild(tabela)
+}
+
+
+// ============================================
+// SEM REGISTROS
+// ============================================
+function renderizar_sem_registros() {
+    
+    year_tabs_el.innerHTML = ""
+    month_tabs_el.innerHTML = ""
+    active_month_title_el.textContent = ""
+    
+    container_el.innerHTML = 
+        "<p class='vazio'>Nenhum registro encontrado. Registre um ponto para começar seu histórico!</p>"
 }
