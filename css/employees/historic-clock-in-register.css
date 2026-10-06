@@ -2,28 +2,23 @@
    AZUL INVERNO — PALETA PRINCIPAL
 ========================================================= */
 :root {
-    /* Azuis inverno */
     --azul-escuro: #1E3A5F;
     --azul-medio: #2E5A8E;
     --azul-interativo: #4A7BB5;
     --azul-claro: #E8F0F8;
     --azul-gelo: #F4F7FA;
 
-    /* Neutros */
     --branco: #FFFFFF;
     --texto-principal: #1A2942;
     --texto-secundario: #7A8BA3;
     --borda: #D6E0EB;
 
-    /* Estados */
     --verde: #22C55E;
     --vermelho: #EF4444;
 
-    /* Sombras */
     --sombra-suave: 0 2px 8px rgba(30, 58, 95, 0.06);
     --sombra-media: 0 4px 12px rgba(30, 58, 95, 0.10);
 
-    /* Layout */
     --radius-grande: 20px;
     --radius-medio: 14px;
     --radius-pequeno: 10px;
@@ -45,7 +40,7 @@ body {
     background: var(--azul-gelo);
     color: var(--texto-principal);
     min-height: 100vh;
-    padding-bottom: 20px;
+    padding-bottom: 90px;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -77,6 +72,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
 .header-back:hover {
@@ -93,6 +89,7 @@ body {
 
 .header-spacer {
     width: 36px;
+    flex-shrink: 0;
 }
 
 /* =========================================================
@@ -108,47 +105,77 @@ body {
 }
 
 /* =========================================================
-   ABAS DE ANO (Segment Control)
+   SELETOR DE ANO (Dropdown)
 ========================================================= */
-.year-tabs {
+.year-selector-wrapper {
     display: flex;
-    gap: 4px;
-    background: var(--branco);
-    padding: 4px;
-    border-radius: var(--radius-medio);
-    box-shadow: var(--sombra-suave);
-    overflow-x: auto;
-    scrollbar-width: none;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.year-tabs::-webkit-scrollbar {
-    display: none;
-}
-
-.year-tab {
-    flex: 1;
-    min-width: 80px;
-    padding: 10px 16px;
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-pequeno);
-    font-size: 14px;
+.year-selector-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--texto-secundario);
-    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-left: 4px;
+}
+
+.year-selector-icon {
+    font-size: 14px;
+}
+
+.year-selector-container {
+    position: relative;
+    background: var(--branco);
+    border-radius: var(--radius-medio);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
     transition: var(--transition);
-    white-space: nowrap;
 }
 
-.year-tab:hover:not(.active) {
+.year-selector-container:hover {
+    box-shadow: var(--sombra-media);
+}
+
+.year-selector {
+    width: 100%;
+    padding: 14px 44px 14px 18px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-medio);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    font-family: inherit;
+}
+
+.year-selector-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
     color: var(--azul-medio);
-    background: var(--azul-claro);
+    pointer-events: none;
+    transition: var(--transition);
 }
 
-.year-tab.active {
-    background: var(--azul-escuro);
-    color: var(--branco);
-    box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+.year-selector-container:focus-within {
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+}
+
+.year-selector-container:focus-within .year-selector-arrow {
+    color: var(--azul-escuro);
 }
 
 /* =========================================================
@@ -267,7 +294,7 @@ body {
 }
 
 /* =========================================================
-   ESTADOS (carregando / vazio / erro)
+   ESTADOS
 ========================================================= */
 .carregando,
 .vazio,
@@ -284,44 +311,80 @@ body {
 }
 
 /* =========================================================
+   BOTTOM TABS
+========================================================= */
+.bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--branco);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px;
+    box-shadow: 0 -2px 12px rgba(30, 58, 95, 0.08);
+    z-index: 100;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pequeno);
+    cursor: pointer;
+    color: var(--texto-secundario);
+    transition: var(--transition);
+    max-width: 80px;
+}
+
+.tab:hover {
+    color: var(--azul-medio);
+}
+
+.tab.active {
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
+}
+
+.tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* =========================================================
    RESPONSIVO
 ========================================================= */
 @media (max-width: 600px) {
-
-    .main-content {
-        padding: 0 12px 20px;
-    }
-
-    .month-tabs {
-        grid-template-columns: repeat(4, 1fr);
-        padding: 10px;
-    }
-
-    .historic-clock-in-table {
-        font-size: 11px;
-    }
-
+    .main-content { padding: 0 12px 20px; }
+    .month-tabs { grid-template-columns: repeat(4, 1fr); padding: 10px; }
+    .historic-clock-in-table { font-size: 11px; }
     .historic-clock-in-table thead th,
-    .historic-clock-in-table tbody td {
-        padding: 10px 6px;
-    }
+    .historic-clock-in-table tbody td { padding: 10px 6px; }
 }
 
 @media (max-width: 400px) {
-
     .historic-clock-in-table thead th,
-    .historic-clock-in-table tbody td {
-        padding: 8px 4px;
-        font-size: 10px;
-    }
+    .historic-clock-in-table tbody td { padding: 8px 4px; font-size: 10px; }
+    .month-tab { font-size: 10px; padding: 8px 2px; }
+    .year-selector { font-size: 14px; padding: 12px 40px 12px 16px; }
+    .year-selector-arrow { right: 16px; }
+}
 
-    .month-tab {
-        font-size: 10px;
-        padding: 8px 2px;
-    }
-
-    .year-tab {
-        font-size: 13px;
-        padding: 8px 12px;
+@media (min-width: 768px) {
+    .bottom-tabs {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
     }
 }

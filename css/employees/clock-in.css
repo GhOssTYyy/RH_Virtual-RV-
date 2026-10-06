@@ -1,43 +1,35 @@
 /* =========================================================
-   VARIABLES
+   AZUL INVERNO — PALETA PRINCIPAL
 ========================================================= */
-
 :root {
-    /* Colors */
-    --dark-blue: #0a2a4a;
-    --medium-blue: #075394;
-    --light-blue: #e6f0fa;
-    --bg-blue: #f2f6fa;
-    
-    --orange: #ff9418;
-    --orange-hover: #f88708;
-    --light-orange: #fff5e6;
-    
-    --green: #22c55e;
-    --dark-green: #166534;
-    
-    --white: #ffffff;
-    --gray-text: #71859a;
-    --gray-border: #e1e8f0;
-    
-    /* Shadows */
-    --soft-shadow: 0 2px 8px rgba(10, 42, 74, 0.05);
-    --medium-shadow: 0 4px 12px rgba(10, 42, 74, 0.08);
-    --button-shadow: 0 4px 12px rgba(255, 148, 24, 0.3);
-    
-    /* Layout */
-    --radius-large: 20px;
-    --radius-medium: 14px;
-    --radius-small: 10px;
-    
+    --azul-escuro: #1E3A5F;
+    --azul-medio: #2E5A8E;
+    --azul-interativo: #4A7BB5;
+    --azul-claro: #E8F0F8;
+    --azul-gelo: #F4F7FA;
+
+    --branco: #FFFFFF;
+    --texto-principal: #1A2942;
+    --texto-secundario: #7A8BA3;
+    --borda: #D6E0EB;
+
+    --verde: #22C55E;
+    --vermelho: #EF4444;
+
+    --sombra-suave: 0 2px 8px rgba(30, 58, 95, 0.06);
+    --sombra-media: 0 4px 12px rgba(30, 58, 95, 0.10);
+    --sombra-botao: 0 4px 12px rgba(30, 58, 95, 0.25);
+
+    --radius-grande: 20px;
+    --radius-medio: 14px;
+    --radius-pequeno: 10px;
+
     --transition: 0.2s ease;
 }
-
 
 /* =========================================================
    RESET
 ========================================================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -46,36 +38,33 @@
 
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-blue);
-    color: var(--dark-blue);
+    background: var(--azul-gelo);
+    color: var(--texto-principal);
     min-height: 100vh;
     padding-bottom: 90px;
     -webkit-font-smoothing: antialiased;
 }
 
-
 /* =========================================================
    HEADER
 ========================================================= */
-
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px 20px;
-    background: var(--bg-blue);
+    background: var(--azul-gelo);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
-.header-back,
-.header-icon {
+.header-back {
     width: 36px;
     height: 36px;
     border: none;
     background: transparent;
-    color: var(--dark-blue);
+    color: var(--azul-escuro);
     font-size: 22px;
     font-weight: 600;
     cursor: pointer;
@@ -84,31 +73,29 @@ body {
     align-items: center;
     justify-content: center;
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
-.header-back:hover,
-.header-icon:hover {
-    background: rgba(10, 42, 74, 0.05);
-}
-
-.header-icon {
-    color: var(--medium-blue);
-    font-size: 18px;
+.header-back:hover {
+    background: rgba(30, 58, 95, 0.08);
 }
 
 .header-title {
     font-size: 17px;
-    font-weight: 600;
-    color: var(--dark-blue);
+    font-weight: 700;
+    color: var(--azul-escuro);
     text-align: center;
     flex: 1;
 }
 
+.header-spacer {
+    width: 36px;
+    flex-shrink: 0;
+}
 
 /* =========================================================
    MAIN CONTENT
 ========================================================= */
-
 .main-content {
     max-width: 420px;
     margin: 0 auto;
@@ -118,24 +105,20 @@ body {
     gap: 14px;
 }
 
-
 /* =========================================================
    BASE CARD
 ========================================================= */
-
 .card {
-    background: var(--white);
-    border-radius: var(--radius-large);
+    background: var(--branco);
+    border-radius: var(--radius-grande);
     padding: 20px;
-    box-shadow: var(--soft-shadow);
+    box-shadow: var(--sombra-suave);
     transition: var(--transition);
 }
-
 
 /* =========================================================
    EMPLOYEE CARD
 ========================================================= */
-
 .card-employee {
     display: flex;
     align-items: center;
@@ -146,8 +129,8 @@ body {
 .avatar {
     width: 48px;
     height: 48px;
-    background: var(--orange);
-    color: var(--dark-blue);
+    background: var(--azul-medio);
+    color: var(--branco);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -165,7 +148,7 @@ body {
 .employee-info h2 {
     font-size: 16px;
     font-weight: 700;
-    color: var(--dark-blue);
+    color: var(--azul-escuro);
     margin-bottom: 3px;
     white-space: nowrap;
     overflow: hidden;
@@ -174,7 +157,7 @@ body {
 
 .employee-info p {
     font-size: 12px;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
     margin-bottom: 6px;
     text-transform: capitalize;
 }
@@ -183,8 +166,8 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #e8f5ee;
-    color: var(--dark-green);
+    background: #E8F5EE;
+    color: #166534;
     padding: 3px 10px;
     border-radius: 20px;
     font-size: 11px;
@@ -194,7 +177,7 @@ body {
 .status-dot {
     width: 6px;
     height: 6px;
-    background: var(--green);
+    background: var(--verde);
     border-radius: 50%;
     animation: pulse 2s infinite;
 }
@@ -204,11 +187,9 @@ body {
     50% { opacity: 0.4; }
 }
 
-
 /* =========================================================
    CLOCK CARD
 ========================================================= */
-
 .card-clock {
     padding: 28px 20px 22px;
     text-align: center;
@@ -217,7 +198,7 @@ body {
 .big-clock {
     font-size: 48px;
     font-weight: 700;
-    color: var(--medium-blue);
+    color: var(--azul-escuro);
     letter-spacing: 1px;
     line-height: 1;
     margin-bottom: 10px;
@@ -226,36 +207,34 @@ body {
 
 .clock-date {
     font-size: 13px;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
     margin-bottom: 18px;
     text-transform: capitalize;
 }
 
 .location {
     font-size: 13px;
-    color: var(--dark-blue);
+    color: var(--texto-principal);
     margin-bottom: 4px;
     font-weight: 500;
 }
 
 .location-status {
     font-size: 12px;
-    color: var(--green);
+    color: var(--verde);
     font-weight: 600;
     margin-bottom: 22px;
 }
 
-
 /* =========================================================
    MAIN REGISTER BUTTON
 ========================================================= */
-
 .register-button {
     width: 100%;
     padding: 18px 20px;
-    background: var(--orange);
+    background: var(--azul-escuro);
     border: none;
-    border-radius: var(--radius-medium);
+    border-radius: var(--radius-medio);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -263,14 +242,14 @@ body {
     justify-content: center;
     gap: 4px;
     transition: var(--transition);
-    box-shadow: var(--button-shadow);
+    box-shadow: var(--sombra-botao);
     min-height: 76px;
 }
 
 .register-button:hover:not(:disabled) {
-    background: var(--orange-hover);
+    background: var(--azul-medio);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 148, 24, 0.4);
+    box-shadow: 0 6px 20px rgba(30, 58, 95, 0.35);
 }
 
 .register-button:active:not(:disabled) {
@@ -278,7 +257,7 @@ body {
 }
 
 .register-button:disabled {
-    background: var(--gray-border);
+    background: var(--borda);
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
@@ -287,7 +266,7 @@ body {
 .button-title {
     font-size: 15px;
     font-weight: 700;
-    color: var(--dark-blue);
+    color: var(--branco);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
@@ -295,24 +274,27 @@ body {
 .button-subtitle {
     font-size: 12px;
     font-weight: 500;
-    color: var(--dark-blue);
-    opacity: 0.75;
+    color: var(--branco);
+    opacity: 0.85;
 }
 
+.register-button:disabled .button-title,
+.register-button:disabled .button-subtitle {
+    color: var(--texto-secundario);
+}
 
 /* =========================================================
    FEEDBACK MESSAGE
 ========================================================= */
-
 .message {
     margin-top: 14px;
     padding: 10px 14px;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-pequeno);
     font-size: 12px;
     font-weight: 600;
     text-align: center;
-    background: var(--light-blue);
-    color: var(--medium-blue);
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
     display: none;
 }
 
@@ -332,11 +314,9 @@ body {
     }
 }
 
-
 /* =========================================================
    SUMMARY CARD
 ========================================================= */
-
 .card-summary {
     padding: 20px;
 }
@@ -348,11 +328,9 @@ body {
 .summary-header h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--dark-blue);
+    color: var(--azul-escuro);
 }
 
-
-/* Summary grid - 4 columns */
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -369,7 +347,7 @@ body {
 .summary-title {
     font-size: 10px;
     font-weight: 600;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
@@ -377,25 +355,23 @@ body {
 .summary-value {
     font-size: 14px;
     font-weight: 700;
-    color: var(--dark-blue);
+    color: var(--azul-escuro);
     font-variant-numeric: tabular-nums;
 }
 
 .summary-status {
     font-size: 10px;
     font-weight: 600;
-    color: var(--green);
+    color: var(--verde);
 }
 
 .summary-status.pending {
-    color: var(--orange);
+    color: var(--texto-secundario);
 }
-
 
 /* =========================================================
    BALANCE CARD
 ========================================================= */
-
 .card-balance {
     padding: 20px;
 }
@@ -410,8 +386,8 @@ body {
 .balance-icon {
     width: 44px;
     height: 44px;
-    background: var(--light-blue);
-    border-radius: var(--radius-small);
+    background: var(--azul-claro);
+    border-radius: var(--radius-pequeno);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -422,23 +398,21 @@ body {
 .balance-info h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--dark-blue);
+    color: var(--azul-escuro);
     margin-bottom: 2px;
 }
 
 .balance-info p {
     font-size: 12px;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
 }
 
-
-/* Balance grid */
 .balance-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     padding-top: 16px;
-    border-top: 1px solid var(--gray-border);
+    border-top: 1px solid var(--borda);
 }
 
 .balance-item {
@@ -450,7 +424,7 @@ body {
 .balance-title {
     font-size: 11px;
     font-weight: 600;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
@@ -458,56 +432,29 @@ body {
 .balance-value {
     font-size: 20px;
     font-weight: 700;
-    color: var(--medium-blue);
+    color: var(--azul-escuro);
     font-variant-numeric: tabular-nums;
 }
 
 .balance-status {
     font-size: 11px;
     font-weight: 600;
-    color: var(--green);
+    color: var(--verde);
 }
-
-
-/* =========================================================
-   HISTORY BUTTON
-========================================================= */
-
-.history-button {
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    border: 2px solid var(--medium-blue);
-    color: var(--medium-blue);
-    border-radius: var(--radius-medium);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    margin-top: 4px;
-}
-
-.history-button:hover {
-    background: var(--medium-blue);
-    color: var(--white);
-    transform: translateY(-2px);
-}
-
 
 /* =========================================================
    BOTTOM TABS
 ========================================================= */
-
 .bottom-tabs {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--white);
+    background: var(--branco);
     display: flex;
     justify-content: space-around;
     padding: 10px 8px;
-    box-shadow: 0 -2px 12px rgba(10, 42, 74, 0.06);
+    box-shadow: 0 -2px 12px rgba(30, 58, 95, 0.08);
     z-index: 100;
 }
 
@@ -520,20 +467,20 @@ body {
     padding: 8px 6px;
     background: transparent;
     border: none;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-pequeno);
     cursor: pointer;
-    color: var(--gray-text);
+    color: var(--texto-secundario);
     transition: var(--transition);
     max-width: 80px;
 }
 
 .tab:hover {
-    color: var(--medium-blue);
+    color: var(--azul-medio);
 }
 
 .tab.active {
-    background: var(--light-blue);
-    color: var(--medium-blue);
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
 }
 
 .tab-icon {
@@ -546,57 +493,21 @@ body {
     font-weight: 600;
 }
 
-
 /* =========================================================
    RESPONSIVENESS
 ========================================================= */
-
 @media (max-width: 400px) {
-
-    .main-content {
-        padding: 0 12px 20px;
-    }
-
-    .card {
-        padding: 16px;
-        border-radius: 16px;
-    }
-
-    .big-clock {
-        font-size: 42px;
-    }
-
-    .avatar {
-        width: 44px;
-        height: 44px;
-        font-size: 14px;
-    }
-
-    .employee-info h2 {
-        font-size: 15px;
-    }
-
-    .summary-grid {
-        gap: 6px;
-    }
-
-    .summary-value {
-        font-size: 13px;
-    }
+    .main-content { padding: 0 12px 20px; }
+    .card { padding: 16px; border-radius: 16px; }
+    .big-clock { font-size: 42px; }
+    .avatar { width: 44px; height: 44px; font-size: 14px; }
+    .employee-info h2 { font-size: 15px; }
+    .summary-grid { gap: 6px; }
+    .summary-value { font-size: 13px; }
 }
 
-
-/* =========================================================
-   DESKTOP
-========================================================= */
-
 @media (min-width: 768px) {
-
-    .main-content {
-        max-width: 480px;
-        padding-top: 10px;
-    }
-
+    .main-content { max-width: 480px; padding-top: 10px; }
     .bottom-tabs {
         max-width: 480px;
         left: 50%;

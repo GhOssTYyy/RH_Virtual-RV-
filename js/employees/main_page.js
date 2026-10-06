@@ -19,7 +19,7 @@ const tabs = document.querySelectorAll(".tab")
 
 
 // ============================================
-// LISTA DE RH (temporário até movermos pra Abordagem B)
+// LISTA DE RH (temporário)
 // ============================================
 const emails_rh = [
     "jpandreiph@gmail.com"
@@ -27,7 +27,7 @@ const emails_rh = [
 
 
 // ============================================
-// NAVEGAÇÃO DAS TABS INFERIORES
+// NAVEGAÇÃO DAS TABS
 // ============================================
 tabs.forEach(function(tab) {
     tab.addEventListener("click", function() {
@@ -39,19 +39,20 @@ tabs.forEach(function(tab) {
         
         if (target === "point") {
             window.location.href = "/pages/employees/clock-in.html"
+        } else if (target === "historic") {
+            window.location.href = "/pages/employees/historic-clock-in-register.html"
         } else if (target === "holiday") {
             window.location.href = "/pages/employees/holiday-day-off.html"
-        } else if (target === "profile") {
-            alert("Em breve: Perfil do usuário!")
         } else if (target === "rh") {
             window.location.href = "/pages/RH/rh-dashboard.html"
         }
+        // "home" já é a página atual
     })
 })
 
 
 // ============================================
-// BOTÃO PRÓXIMA AÇÃO (vai pro ponto)
+// BOTÃO PRÓXIMA AÇÃO
 // ============================================
 next_action_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/clock-in.html"
@@ -86,14 +87,13 @@ function gerar_data_completa() {
 
 
 // ============================================
-// PRÓXIMA AÇÃO — lógica simplificada
+// PRÓXIMA AÇÃO
 // ============================================
 function gerar_proxima_acao() {
     
     const hoje = new Date().toLocaleDateString("pt-BR")
     const data_salva = localStorage.getItem("date_saved_in_local_storage")
     
-    // Se a data salva é diferente de hoje, limpa (novo dia)
     if (data_salva !== hoje) {
         return {
             icon: "⏰",
@@ -102,7 +102,6 @@ function gerar_proxima_acao() {
         }
     }
     
-    // Lê o que já foi registrado hoje
     const entrada = localStorage.getItem("entry_saved")
     const inicio_almoco = localStorage.getItem("beggin_dinner_saved")
     const fim_almoco = localStorage.getItem("ending_dinner_saved")
@@ -149,7 +148,7 @@ function gerar_proxima_acao() {
 
 
 // ============================================
-// ATUALIZA O CARD DE PRÓXIMA AÇÃO
+// ATUALIZA PRÓXIMA AÇÃO
 // ============================================
 function atualizar_proxima_acao() {
     
@@ -171,17 +170,14 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    // Saudação
     const nome = user.email.split("@")[0]
     const nome_formatado = nome.charAt(0).toUpperCase() + nome.slice(1)
     
     welcome_name.textContent = `👋 Olá, ${nome_formatado}!`
     welcome_date.textContent = gerar_data_completa()
     
-    // Avatar
     profile_picture.textContent = nome.charAt(0).toUpperCase()
     
-    // Mostra tab RH se for o caso
     if (emails_rh.includes(user.email)) {
         const tab_rh = document.getElementById("tab-rh")
         if (tab_rh) {
@@ -189,6 +185,5 @@ onAuthStateChanged(auth, function(user) {
         }
     }
     
-    // Próxima ação
     atualizar_proxima_acao()
 })

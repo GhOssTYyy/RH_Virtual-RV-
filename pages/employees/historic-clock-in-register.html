@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Registro Dos Pontos</title>
+    <title>Histórico de Pontos - RH Virtual</title>
     <link rel="stylesheet" href="/css/employees/historic-clock-in-register.css">
 </head>
 
@@ -18,9 +18,18 @@
 
     <main class="main-content">
 
-        <!-- Abas de ANO -->
-        <div class="year-tabs" id="year-tabs">
-            <!-- preenchido via JS -->
+        <!-- Dropdown de ANO -->
+        <div class="year-selector-wrapper">
+            <label for="year-selector" class="year-selector-label">
+                <span class="year-selector-icon">📅</span>
+                <span>Ano</span>
+            </label>
+            <div class="year-selector-container">
+                <select id="year-selector" class="year-selector">
+                    <!-- preenchido via JS -->
+                </select>
+                <span class="year-selector-arrow">▾</span>
+            </div>
         </div>
 
         <!-- Abas de MÊS -->
@@ -39,6 +48,31 @@
         </div>
 
     </main>
+
+    <!-- Menu Inferior -->
+    <nav class="bottom-tabs">
+        
+        <button class="tab" data-tab="home">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">Início</span>
+        </button>
+
+        <button class="tab" data-tab="point">
+            <span class="tab-icon">⏰</span>
+            <span class="tab-label">Ponto</span>
+        </button>
+
+        <button class="tab active" data-tab="historic">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Histórico</span>
+        </button>
+
+        <button class="tab" data-tab="holiday">
+            <span class="tab-icon">🌴</span>
+            <span class="tab-label">Férias</span>
+        </button>
+
+    </nav>
 
     <script type="module" src="/js/auto_guard.js"></script>
     <script type="module" src="/js/employees/historic_clock_in_register.js"></script>

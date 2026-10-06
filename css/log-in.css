@@ -1,56 +1,61 @@
-/* ============================================
-   TEMA PADRÃO (CLARO)
-   ============================================ */
+/* =========================================================
+   AZUL INVERNO — PALETA PRINCIPAL
+========================================================= */
 :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #ffffff;
-    --bg-form: #ffffff;
-    --text-primary: #000000;
-    --text-secondary: #000000;
-    --border-color: #000000;
-    --input-bg: #ffffff;
-    --input-text: #000000;
-    --button-bg: #000000;
-    --button-hover: #333333;
-    --button-text: #ffffff;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --link-color: #000000;
-    --link-hover: #333333;
-    --checkbox-accent: #000000;
+    --azul-escuro: #1E3A5F;
+    --azul-medio: #2E5A8E;
+    --azul-interativo: #4A7BB5;
+    --azul-claro: #E8F0F8;
+    --azul-gelo: #F4F7FA;
+
+    --branco: #FFFFFF;
+    --texto-principal: #1A2942;
+    --texto-secundario: #7A8BA3;
+    --borda: #D6E0EB;
+
+    --vermelho: #EF4444;
+
+    --sombra-suave: 0 2px 8px rgba(30, 58, 95, 0.06);
+    --sombra-media: 0 8px 32px rgba(30, 58, 95, 0.15);
+
+    --radius-grande: 20px;
+    --radius-medio: 14px;
+    --radius-pequeno: 10px;
+
+    --transition: 0.2s ease;
+
     --icon-filter: none;
 }
 
-/* ============================================
-   TEMA ESCURO
-   ============================================ */
+/* =========================================================
+   DARK MODE
+========================================================= */
 [data-theme="dark"] {
-    --bg-primary: #0a0a1a;
-    --bg-secondary: #1a1a2e;
-    --bg-form: #16213e;
-    --text-primary: #ffffff;
-    --text-secondary: #ffffff;
-    --border-color: #ffffff;
-    --input-bg: #1a1a3e;
-    --input-text: #ffffff;
-    --button-bg: #ffffff;
-    --button-hover: #e0e0e0;
-    --button-text: #000000;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --link-color: #ffffff;
-    --link-hover: #e0e0e0;
-    --checkbox-accent: #ffffff;
+    --azul-escuro: #4A7BB5;
+    --azul-medio: #5B8DBF;
+    --azul-claro: #1A2A42;
+    --azul-gelo: #0F1A2E;
+
+    --branco: #16213E;
+    --texto-principal: #E8F0F8;
+    --texto-secundario: #8FA3BF;
+    --borda: #2A3F5C;
+
     --icon-filter: brightness(0) invert(1);
 }
 
+/* =========================================================
+   RESET
+========================================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-    background: var(--bg-secondary);
+    background: var(--azul-gelo);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,15 +63,18 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* =========================================================
+   CONTAINER
+========================================================= */
 .container {
-    background: var(--bg-form);
+    background: var(--branco);
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    border-radius: var(--radius-grande);
+    box-shadow: var(--sombra-media);
     width: 100%;
     max-width: 420px;
     transition: background 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--borda);
 }
 
 form {
@@ -75,7 +83,9 @@ form {
     gap: 20px;
 }
 
-/*Botão de tema */
+/* =========================================================
+   TEMA
+========================================================= */
 #dark-mode-button {
     width: 32px;
     height: 32px;
@@ -89,15 +99,21 @@ form {
     transform: scale(1.1);
 }
 
+/* =========================================================
+   TÍTULO
+========================================================= */
 #title {
     text-align: center;
     font-size: 28px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--azul-escuro);
     margin-bottom: 10px;
     transition: color 0.3s ease;
 }
 
+/* =========================================================
+   INPUTS
+========================================================= */
 .input-box {
     position: relative;
     width: 100%;
@@ -106,22 +122,22 @@ form {
 .input-box input {
     width: 100%;
     padding: 14px 16px;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    background: var(--input-bg);
-    color: var(--input-text);
+    border: 2px solid var(--borda);
+    border-radius: var(--radius-pequeno);
+    background: var(--branco);
+    color: var(--texto-principal);
     font-size: 15px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     outline: none;
 }
 
 .input-box input:focus {
-    border-color: var(--button-bg);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+    border-color: var(--azul-escuro);
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
 }
 
 .input-box input::placeholder {
-    color: var(--text-secondary);
+    color: var(--texto-secundario);
     opacity: 0.8;
 }
 
@@ -142,12 +158,15 @@ form {
     opacity: 0.7;
 }
 
+/* =========================================================
+   REMEMBER
+========================================================= */
 .remember {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: var(--text-primary);
+    color: var(--texto-principal);
     font-weight: 500;
     transition: color 0.3s ease;
 }
@@ -162,75 +181,99 @@ form {
 .remember input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: var(--checkbox-accent);
+    accent-color: var(--azul-escuro);
     cursor: pointer;
 }
 
 .remember a {
-    color: var(--link-color);
+    color: var(--azul-escuro);
     text-decoration: underline;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .remember a:hover {
-    color: var(--link-hover);
+    color: var(--azul-medio);
 }
 
-/* Botão de Login */
+/* =========================================================
+   BOTÃO LOGIN
+========================================================= */
 .login {
     width: 100%;
     padding: 14px;
-    background: var(--button-bg);
-    color: var(--button-text);
+    background: var(--azul-escuro);
+    color: var(--branco);
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-pequeno);
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .login:hover {
-    background: var(--button-hover);
+    background: var(--azul-medio);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.35);
 }
 
 .login:active {
     transform: translateY(0);
 }
 
+/* =========================================================
+   LINK REGISTRO
+========================================================= */
 .register-link {
     text-align: center;
     font-size: 14px;
-    color: var(--text-primary);
+    color: var(--texto-principal);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .register-link a {
-    color: var(--link-color);
+    color: var(--azul-escuro);
     text-decoration: underline;
     font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .register-link a:hover {
-    color: var(--link-hover);
+    color: var(--azul-medio);
 }
 
-/* Responsividade */
+#container-logo-app-mode-button {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo-app-icon {
+
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
 @media (max-width: 480px) {
     .container {
         padding: 24px 20px;
         margin: 20px;
     }
-    
+
     #title {
         font-size: 24px;
     }
-    
+
     .remember {
         flex-direction: column;
         align-items: flex-start;

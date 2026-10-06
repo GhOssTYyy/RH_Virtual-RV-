@@ -8,7 +8,6 @@ import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minut
 // REFERÊNCIAS DO DOM — HEADER
 // ============================================
 const header_back_button = document.getElementById("header-back-button")
-const header_menu_button = document.getElementById("header-menu-button")
 
 
 // ============================================
@@ -64,12 +63,6 @@ const extra_hours_status = document.getElementById("extra-hours-status")
 
 
 // ============================================
-// REFERÊNCIAS — BOTÃO HISTÓRICO
-// ============================================
-const clock_in_history_button = document.getElementById("clock-in-history-button")
-
-
-// ============================================
 // VARIÁVEIS DE CONTROLE
 // ============================================
 let entry_registered = false
@@ -82,7 +75,7 @@ let user_name = ""
 
 
 // ============================================
-// FUNÇÕES DE FORMATAÇÃO (datas/saudações)
+// FUNÇÕES DE FORMATAÇÃO
 // ============================================
 function generate_greeting() {
     const hour = new Date().getHours()
@@ -297,11 +290,11 @@ function update_balance() {
     if (!result) {
         worked_hours_balance.textContent = "00:00"
         worked_hours_status.textContent = "aguardando"
-        worked_hours_status.style.color = "var(--cinza-texto)"
+        worked_hours_status.style.color = "var(--texto-secundario)"
         
         extra_hours_balance.textContent = "+00:00"
         extra_hours_status.textContent = "neutro"
-        extra_hours_status.style.color = "var(--cinza-texto)"
+        extra_hours_status.style.color = "var(--texto-secundario)"
         return
     }
     
@@ -309,7 +302,7 @@ function update_balance() {
     
     if (result.is_working) {
         worked_hours_status.textContent = "até agora"
-        worked_hours_status.style.color = "var(--cinza-texto)"
+        worked_hours_status.style.color = "var(--texto-secundario)"
     } else {
         worked_hours_status.textContent = "finalizado"
         worked_hours_status.style.color = "var(--verde)"
@@ -325,12 +318,12 @@ function update_balance() {
     } else if (extra_minutes < 0) {
         extra_hours_balance.textContent = "-" + result.extra_hours
         extra_hours_status.textContent = "negativo"
-        extra_hours_status.style.color = "var(--laranja)"
+        extra_hours_status.style.color = "var(--vermelho)"
         
     } else {
         extra_hours_balance.textContent = "00:00"
         extra_hours_status.textContent = "neutro"
-        extra_hours_status.style.color = "var(--cinza-texto)"
+        extra_hours_status.style.color = "var(--texto-secundario)"
     }
 }
 
@@ -341,16 +334,16 @@ function update_balance() {
 function update_summary_status() {
     
     entry_status.textContent = entry_registered ? "✓" : "Pendente"
-    entry_status.style.color = entry_registered ? "var(--verde)" : "var(--laranja)"
+    entry_status.style.color = entry_registered ? "var(--verde)" : "var(--texto-secundario)"
     
     begin_dinner_status.textContent = begin_dinner_registered ? "✓" : "Pendente"
-    begin_dinner_status.style.color = begin_dinner_registered ? "var(--verde)" : "var(--laranja)"
+    begin_dinner_status.style.color = begin_dinner_registered ? "var(--verde)" : "var(--texto-secundario)"
     
     ending_dinner_status.textContent = ending_dinner_registered ? "✓" : "Pendente"
-    ending_dinner_status.style.color = ending_dinner_registered ? "var(--verde)" : "var(--laranja)"
+    ending_dinner_status.style.color = ending_dinner_registered ? "var(--verde)" : "var(--texto-secundario)"
     
     exit_status.textContent = exit_registered ? "✓" : "Pendente"
-    exit_status.style.color = exit_registered ? "var(--verde)" : "var(--laranja)"
+    exit_status.style.color = exit_registered ? "var(--verde)" : "var(--texto-secundario)"
 }
 
 
@@ -413,7 +406,6 @@ async function save_clock_in_to_database(clock_in_type, time) {
     const document_reference = doc(db, "Clock_in_registers_day", document_id)
     
     try {
-        // 1️⃣ Salva o ponto do dia
         await setDoc(document_reference, {
             employee_id: user.uid,
             employee_email: user.email,
@@ -423,7 +415,6 @@ async function save_clock_in_to_database(clock_in_type, time) {
         
         console.log("✅ Ponto salvo:", clock_in_type)
         
-        // 2️⃣ Atualiza o índice de meses (só quando é ENTRADA)
         if (clock_in_type === "entrada") {
             await atualizar_indice_de_meses(user, current_date_formatted)
         }
@@ -435,11 +426,11 @@ async function save_clock_in_to_database(clock_in_type, time) {
 
 
 // ============================================
-// ATUALIZA O ÍNDICE DE MESES NO DOC DO USUÁRIO
+// ATUALIZA O ÍNDICE DE MESES
 // ============================================
 async function atualizar_indice_de_meses(user, data_str) {
     
-    const mes_chave = data_str.substring(0, 7)  // "YYYY-MM"
+    const mes_chave = data_str.substring(0, 7)
     
     const user_doc_ref = doc(db, "employees", user.uid)
     
@@ -603,26 +594,10 @@ clock_in_register_button.addEventListener("click", async function() {
 
 
 // ============================================
-// BOTÃO HISTÓRICO
-// ============================================
-clock_in_history_button.addEventListener("click", function() {
-    window.location.href = "/pages/employees/historic-clock-in-register.html"
-})
-
-
-// ============================================
 // BOTÃO VOLTAR (HEADER)
 // ============================================
 header_back_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/main-page.html"
-})
-
-
-// ============================================
-// BOTÃO MENU (HEADER)
-// ============================================
-header_menu_button.addEventListener("click", function() {
-    alert("Em breve: Menu")
 })
 
 
@@ -638,12 +613,12 @@ tabs.forEach(function(tab) {
         
         if (target === "home") {
             window.location.href = "/pages/employees/main-page.html"
+        } else if (target === "historic") {
+            window.location.href = "/pages/employees/historic-clock-in-register.html"
         } else if (target === "holiday") {
             window.location.href = "/pages/employees/holiday-day-off.html"
-        } else if (target === "profile") {
-            alert("Em breve: Perfil do usuário!")
         }
-        // "point" já é a página atual — não faz nada
+        // "point" já é a página atual
     })
 })
 
