@@ -4,13 +4,32 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/fi
 
 
 // ============================================
+// REFERÊNCIAS — HEADER
+// ============================================
+const header_back_button = document.getElementById("header-back-button")
+
+
+// ============================================
+// REFERÊNCIAS — CONTEÚDO
+// ============================================
+const year_selector_el = document.getElementById("year-selector")
+const month_tabs_el = document.getElementById("month-tabs")
+const active_month_title_el = document.getElementById("active-month-title")
+const container_el = document.getElementById("historic-clock-in-register-container")
+
+
+// ============================================
 // ESTADO
 // ============================================
 let usuario_atual = null
-let meses_disponiveis = []          // ex: ["2026-10", "2026-09", ...]
-let ano_ativo = null                // ex: "2026"
-let mes_ativo = null                // ex: "10"
+let meses_disponiveis = []
+let ano_ativo = null
+let mes_ativo = null
 
+
+// ============================================
+// NOMES DOS MESES
+// ============================================
 const month_names_in_portuguese = {
     "01": "Janeiro",
     "02": "Fevereiro",
@@ -27,28 +46,57 @@ const month_names_in_portuguese = {
 }
 
 const month_short_in_portuguese = {
-    "01": "Jan", "02": "Fev", "03": "Mar", "04": "Abr",
-    "05": "Mai", "06": "Jun", "07": "Jul", "08": "Ago",
-    "09": "Set", "10": "Out", "11": "Nov", "12": "Dez"
+    "01": "Jan",
+    "02": "Fev",
+    "03": "Mar",
+    "04": "Abr",
+    "05": "Mai",
+    "06": "Jun",
+    "07": "Jul",
+    "08": "Ago",
+    "09": "Set",
+    "10": "Out",
+    "11": "Nov",
+    "12": "Dez"
 }
 
-
-// Elementos do DOM
-const year_tabs_el = document.getElementById("year-tabs")
-const month_tabs_el = document.getElementById("month-tabs")
-const active_month_title_el = document.getElementById("active-month-title")
-const container_el = document.getElementById("historic-clock-in-register-container")
-const header_back_button = document.getElementById("header-back-button")
+// 🔑 Ordem cronológica explícita (garante Jan → Dez)
+const ordem_cronologica_dos_meses = [
+    "01", "02", "03", "04", "05", "06",
+    "07", "08", "09", "10", "11", "12"
+]
 
 
 // ============================================
-// BOTÃO VOLTAR
+// HEADER — BOTÃO VOLTAR
 // ============================================
 if (header_back_button) {
     header_back_button.addEventListener("click", function() {
         window.location.href = "/pages/employees/main-page.html"
     })
 }
+
+
+// ============================================
+// NAVEGAÇÃO DAS TABS
+// ============================================
+const tabs = document.querySelectorAll(".tab")
+
+tabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+        const target = tab.dataset.tab
+        console.log("🚀 Tab clicada:", target)
+        
+        if (target === "home") {
+            window.location.href = "/pages/employees/main-page.html"
+        } else if (target === "point") {
+            window.location.href = "/pages/employees/clock-in.html"
+        } else if (target === "holiday") {
+            window.location.href = "/pages/employees/holiday-day-off.html"
+        }
+        // "historic" já é a página atual
+    })
+})
 
 
 // ============================================
@@ -80,7 +128,6 @@ async function carregar_indice_de_meses() {
         const snapshot = await getDoc(user_doc_ref)
         
         if (!snapshot.exists()) {
-            // Primeira vez — não tem índice
             meses_disponiveis = []
             renderizar_sem_registros()
             return
@@ -94,7 +141,7 @@ async function carregar_indice_de_meses() {
             return
         }
         
-        // Mês mais recente vem primeiro (já foi ordenado desc na hora de salvar)
+        // Mês mais recente (já vem ordenado desc do Firestore)
         const mes_mais_recente = meses_disponiveis[0]
         const [ano, mes] = mes_mais_recente.split("-")
         
@@ -113,63 +160,59 @@ async function carregar_indice_de_meses() {
 
 
 // ============================================
-// RENDERIZA ABAS DE ANO
+// RENDERIZA O DROPDOWN DE ANO
 // ============================================
 function renderizar_abas_de_ano() {
     
-    // Pega anos únicos
     const anos = [...new Set(meses_disponiveis.map(m => m.split("-")[0]))]
-    anos.sort().reverse()  // mais recente primeiro
+    anos.sort().reverse()
     
-    year_tabs_el.innerHTML = ""
+    year_selector_el.innerHTML = ""
     
     anos.forEach(function(ano) {
         
-        const btn = document.createElement("button")
-        btn.className = "year-tab"
-        btn.textContent = ano
-        btn.dataset.ano = ano
+        const option = document.createElement("option")
+        option.value = ano
+        option.textContent = ano
         
         if (ano === ano_ativo) {
-            btn.classList.add("active")
+            option.selected = true
         }
         
-        btn.addEventListener("click", async function() {
-            
-            ano_ativo = ano
-            
-            // Ao trocar de ano, seleciona o mês mais recente desse ano
-            const meses_do_ano = meses_disponiveis
-                .filter(m => m.startsWith(ano + "-"))
-                .sort()
-                .reverse()
-            
-            mes_ativo = meses_do_ano[0].split("-")[1]
-            
-            renderizar_abas_de_ano()
-            renderizar_abas_de_mes()
-            await carregar_mes(ano_ativo, mes_ativo)
-        })
-        
-        year_tabs_el.appendChild(btn)
+        year_selector_el.appendChild(option)
     })
+    
+    // Remove listener antigo e adiciona novo
+    year_selector_el.onchange = async function() {
+        
+        ano_ativo = year_selector_el.value
+        
+        const meses_do_ano = meses_disponiveis
+            .filter(m => m.startsWith(ano_ativo + "-"))
+            .sort()
+            .reverse()
+        
+        mes_ativo = meses_do_ano[0].split("-")[1]
+        
+        renderizar_abas_de_mes()
+        await carregar_mes(ano_ativo, mes_ativo)
+    }
 }
 
 
 // ============================================
-// RENDERIZA ABAS DE MÊS
+// RENDERIZA ABAS DE MÊS (ORDEM CRONOLÓGICA)
 // ============================================
 function renderizar_abas_de_mes() {
     
-    // Pega todos os meses do ano ativo
     const meses_do_ano = meses_disponiveis
         .filter(m => m.startsWith(ano_ativo + "-"))
         .map(m => m.split("-")[1])
     
     month_tabs_el.innerHTML = ""
     
-    // Cria os 12 meses; os que têm registro ficam ativos
-    Object.keys(month_short_in_portuguese).forEach(function(mes) {
+    // 🔑 Usa array explícito em ordem cronológica (Jan → Dez)
+    ordem_cronologica_dos_meses.forEach(function(mes) {
         
         const tem_registro = meses_do_ano.includes(mes)
         
@@ -203,7 +246,6 @@ function renderizar_abas_de_mes() {
 // ============================================
 async function carregar_mes(ano, mes) {
     
-    // Atualiza título
     active_month_title_el.textContent = 
         `${month_names_in_portuguese[mes]} ${ano}`
     
@@ -217,7 +259,6 @@ async function carregar_mes(ano, mes) {
             return
         }
         
-        // Ordena por dia decrescente
         registros.sort((a, b) => b.day.localeCompare(a.day))
         
         renderizar_historico(registros, container_el)
@@ -330,7 +371,7 @@ function renderizar_historico(registros, container) {
 // ============================================
 function renderizar_sem_registros() {
     
-    year_tabs_el.innerHTML = ""
+    year_selector_el.innerHTML = ""
     month_tabs_el.innerHTML = ""
     active_month_title_el.textContent = ""
     

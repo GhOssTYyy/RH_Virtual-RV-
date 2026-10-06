@@ -9,12 +9,6 @@
 <body>
 
     <header class="header">
-        
-        <div class="header-welcome">
-            <h1 id="welcome-name">👋 Olá!</h1>
-            <p id="welcome-date">Carregando...</p>
-        </div>
-        
         <div class="header-actions">
             
             <button class="settings-button" id="settings-button" title="Configurações">
@@ -26,10 +20,15 @@
             </div>
             
         </div>
-        
     </header>
 
     <main class="main-content">
+
+        <!-- Saudação -->
+        <div class="welcome-section">
+            <h1 id="welcome-name">👋 Olá!</h1>
+            <p id="welcome-date">Carregando...</p>
+        </div>
 
         <!-- Card Próxima Ação -->
         <div class="next-action-card" id="next-action-card">
@@ -62,18 +61,18 @@
             <span class="tab-label">Ponto</span>
         </button>
 
+        <button class="tab" data-tab="historic">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Histórico</span>
+        </button>
+
         <button class="tab" data-tab="holiday">
             <span class="tab-icon">🌴</span>
             <span class="tab-label">Férias</span>
         </button>
 
-        <button class="tab" data-tab="profile">
-            <span class="tab-icon">👤</span>
-            <span class="tab-label">Perfil</span>
-        </button>
-
         <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
-            <span class="tab-icon">📊</span>
+            <span class="tab-icon">📈</span>
             <span class="tab-label">RH</span>
         </button>
 

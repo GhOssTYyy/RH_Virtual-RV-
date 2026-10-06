@@ -1,17 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Férias e Days Off</title>
+    <title>Férias e Days Off - RH Virtual</title>
+    <link rel="stylesheet" href="/css/employees/holiday-day-off.css">
 </head>
 
 <body>
-    
-    <button>Pedir Férias</button>
-    <script src="/js/employees/main_page.js"></script>
+
+    <header class="header">
+        <button class="header-back" id="header-back-button">‹</button>
+        <h1 class="header-title">Férias e Days Off</h1>
+        <div class="header-spacer"></div>
+    </header>
+
+    <main class="main-content">
+        
+        <div class="placeholder-card">
+            <div class="placeholder-icon">🌴</div>
+            <h2 class="placeholder-title">Em breve</h2>
+            <p class="placeholder-text">
+                A funcionalidade de Férias e Days Off está em desenvolvimento.
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Menu Inferior -->
+    <nav class="bottom-tabs">
+        
+        <button class="tab" data-tab="home">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">Início</span>
+        </button>
+
+        <button class="tab" data-tab="point">
+            <span class="tab-icon">⏰</span>
+            <span class="tab-label">Ponto</span>
+        </button>
+
+        <button class="tab" data-tab="historic">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Histórico</span>
+        </button>
+
+        <button class="tab active" data-tab="holiday">
+            <span class="tab-icon">🌴</span>
+            <span class="tab-label">Férias</span>
+        </button>
+
+    </nav>
+
     <script type="module" src="/js/auto_guard.js"></script>
+    <script type="module" src="/js/employees/holiday_day_off.js"></script>
+
 </body>
 
 </html>

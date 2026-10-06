@@ -1,0 +1,390 @@
+/* =========================================================
+   AZUL INVERNO — PALETA PRINCIPAL
+========================================================= */
+:root {
+    --azul-escuro: #1E3A5F;
+    --azul-medio: #2E5A8E;
+    --azul-interativo: #4A7BB5;
+    --azul-claro: #E8F0F8;
+    --azul-gelo: #F4F7FA;
+
+    --branco: #FFFFFF;
+    --texto-principal: #1A2942;
+    --texto-secundario: #7A8BA3;
+    --borda: #D6E0EB;
+
+    --verde: #22C55E;
+    --vermelho: #EF4444;
+
+    --sombra-suave: 0 2px 8px rgba(30, 58, 95, 0.06);
+    --sombra-media: 0 4px 12px rgba(30, 58, 95, 0.10);
+
+    --radius-grande: 20px;
+    --radius-medio: 14px;
+    --radius-pequeno: 10px;
+
+    --transition: 0.2s ease;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--azul-gelo);
+    color: var(--texto-principal);
+    min-height: 100vh;
+    padding-bottom: 90px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: var(--azul-gelo);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-back {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--azul-escuro);
+    font-size: 22px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.header-back:hover {
+    background: rgba(30, 58, 95, 0.08);
+}
+
+.header-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    text-align: center;
+    flex: 1;
+}
+
+.header-spacer {
+    width: 36px;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+.main-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* =========================================================
+   SELETOR DE ANO (Dropdown)
+========================================================= */
+.year-selector-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.year-selector-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-left: 4px;
+}
+
+.year-selector-icon {
+    font-size: 14px;
+}
+
+.year-selector-container {
+    position: relative;
+    background: var(--branco);
+    border-radius: var(--radius-medio);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.year-selector-container:hover {
+    box-shadow: var(--sombra-media);
+}
+
+.year-selector {
+    width: 100%;
+    padding: 14px 44px 14px 18px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-medio);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    font-family: inherit;
+}
+
+.year-selector-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--azul-medio);
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+.year-selector-container:focus-within {
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+}
+
+.year-selector-container:focus-within .year-selector-arrow {
+    color: var(--azul-escuro);
+}
+
+/* =========================================================
+   ABAS DE MÊS
+========================================================= */
+.month-tabs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    background: var(--branco);
+    padding: 12px;
+    border-radius: var(--radius-grande);
+    box-shadow: var(--sombra-suave);
+}
+
+.month-tab {
+    padding: 10px 4px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pequeno);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto-principal);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.month-tab:hover:not(.disabled):not(.active) {
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
+}
+
+.month-tab.active {
+    background: var(--azul-escuro);
+    color: var(--branco);
+    box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+}
+
+.month-tab.disabled {
+    color: var(--borda);
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   TÍTULO DO MÊS ATIVO
+========================================================= */
+.active-month-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--azul-escuro);
+    text-align: center;
+    padding: 4px 0;
+    text-transform: capitalize;
+}
+
+/* =========================================================
+   TABELA
+========================================================= */
+#historic-clock-in-register-container {
+    background: var(--branco);
+    border-radius: var(--radius-grande);
+    padding: 16px;
+    box-shadow: var(--sombra-suave);
+    overflow-x: auto;
+}
+
+.historic-clock-in-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.historic-clock-in-table thead th {
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--azul-escuro);
+}
+
+.historic-clock-in-table thead th:first-child {
+    border-top-left-radius: var(--radius-pequeno);
+}
+
+.historic-clock-in-table thead th:last-child {
+    border-top-right-radius: var(--radius-pequeno);
+}
+
+.historic-clock-in-table tbody td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--borda);
+    color: var(--texto-principal);
+    font-variant-numeric: tabular-nums;
+}
+
+.historic-clock-in-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.historic-clock-in-table tbody tr:hover {
+    background: var(--azul-gelo);
+}
+
+.extra-hours-positive {
+    color: var(--verde);
+    font-weight: 700;
+}
+
+.extra-hours-negative {
+    color: var(--vermelho);
+    font-weight: 700;
+}
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+.carregando,
+.vazio,
+.erro {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--texto-secundario);
+    font-style: italic;
+    font-size: 14px;
+}
+
+.erro {
+    color: var(--vermelho);
+}
+
+/* =========================================================
+   BOTTOM TABS
+========================================================= */
+.bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--branco);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px;
+    box-shadow: 0 -2px 12px rgba(30, 58, 95, 0.08);
+    z-index: 100;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pequeno);
+    cursor: pointer;
+    color: var(--texto-secundario);
+    transition: var(--transition);
+    max-width: 80px;
+}
+
+.tab:hover {
+    color: var(--azul-medio);
+}
+
+.tab.active {
+    background: var(--azul-claro);
+    color: var(--azul-escuro);
+}
+
+.tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+@media (max-width: 600px) {
+    .main-content { padding: 0 12px 20px; }
+    .month-tabs { grid-template-columns: repeat(4, 1fr); padding: 10px; }
+    .historic-clock-in-table { font-size: 11px; }
+    .historic-clock-in-table thead th,
+    .historic-clock-in-table tbody td { padding: 10px 6px; }
+}
+
+@media (max-width: 400px) {
+    .historic-clock-in-table thead th,
+    .historic-clock-in-table tbody td { padding: 8px 4px; font-size: 10px; }
+    .month-tab { font-size: 10px; padding: 8px 2px; }
+    .year-selector { font-size: 14px; padding: 12px 40px 12px 16px; }
+    .year-selector-arrow { right: 16px; }
+}
+
+@media (min-width: 768px) {
+    .bottom-tabs {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
+}

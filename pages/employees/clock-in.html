@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
     <header class="header">
         <button class="header-back" id="header-back-button">‹</button>
         <h1 class="header-title">Registro de Ponto</h1>
-        <button class="header-icon" id="header-menu-button">▪</button>
+        <div class="header-spacer"></div>
     </header>
 
     <main class="main-content">
@@ -121,11 +121,6 @@
 
         </div>
 
-        <!-- Botão Histórico -->
-        <button class="history-button" id="clock-in-history-button">
-            Ver Histórico Completo
-        </button>
-
     </main>
 
     <!-- Menu Inferior -->
@@ -141,14 +136,14 @@
             <span class="tab-label">Ponto</span>
         </button>
 
+        <button class="tab" data-tab="historic">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Histórico</span>
+        </button>
+
         <button class="tab" data-tab="holiday">
             <span class="tab-icon">🌴</span>
             <span class="tab-label">Férias</span>
-        </button>
-
-        <button class="tab" data-tab="profile">
-            <span class="tab-icon">👤</span>
-            <span class="tab-label">Perfil</span>
         </button>
 
     </nav>
