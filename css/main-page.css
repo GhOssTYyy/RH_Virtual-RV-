@@ -267,6 +267,36 @@ body {
 }
 
 /* =========================================================
+   ÍCONES (imagens com fallback)
+========================================================= */
+.button-icon,
+.icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+}
+
+.settings-button .button-icon,
+.profile-picture .button-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.next-action-icon .icon-img {
+    width: 28px;
+    height: 28px;
+}
+
+.tab-icon-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+    line-height: 1;
+}
+
+/* =========================================================
    RESPONSIVO
 ========================================================= */
 @media (max-width: 400px) {

@@ -154,7 +154,10 @@ function atualizar_proxima_acao() {
     
     const acao = gerar_proxima_acao()
     
-    next_action_icon.textContent = acao.icon
+    // Renderiza o ícone com fallback pro emoji
+    next_action_icon.innerHTML = `
+        <img src="" alt="${acao.icon}" class="icon-img" onerror="this.replaceWith('${acao.icon}')">
+    `
     next_action_title.textContent = acao.title
     next_action_subtitle.textContent = acao.subtitle
 }

@@ -9,7 +9,9 @@
 <body>
 
     <header class="header">
-        <button class="header-back" id="header-back-button">‹</button>
+        <button class="header-back" id="header-back-button">
+            <img src="" alt="⬅️" class="header-back-icon" onerror="this.replaceWith('⬅️')">
+        </button>
         <h1 class="header-title">Registro de Ponto</h1>
         <div class="header-spacer"></div>
     </header>
@@ -96,7 +98,9 @@
         <div class="card card-balance">
             
             <div class="balance-header">
-                <div class="balance-icon">📊</div>
+                <div class="balance-icon">
+                    <img src="" alt="📊" class="icon-img" onerror="this.replaceWith('📊')">
+                </div>
                 <div class="balance-info">
                     <h3>Saldo do dia</h3>
                     <p>Banco de horas</p>
@@ -127,22 +131,22 @@
     <nav class="bottom-tabs">
         
         <button class="tab" data-tab="home">
-            <span class="tab-icon">🏠</span>
+            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
 
         <button class="tab active" data-tab="point">
-            <span class="tab-icon">⏰</span>
+            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
 
         <button class="tab" data-tab="historic">
-            <span class="tab-icon">📊</span>
+            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
 
         <button class="tab" data-tab="holiday">
-            <span class="tab-icon">🌴</span>
+            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
 

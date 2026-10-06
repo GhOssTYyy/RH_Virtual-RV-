@@ -362,6 +362,31 @@ body {
 }
 
 /* =========================================================
+   ÍCONES (imagens com fallback)
+========================================================= */
+.header-back-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+}
+
+.label-icon {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    display: block;
+}
+
+.tab-icon-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+    line-height: 1;
+}
+
+/* =========================================================
    RESPONSIVO
 ========================================================= */
 @media (max-width: 600px) {
