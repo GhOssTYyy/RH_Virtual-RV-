@@ -55,7 +55,7 @@ register_account.addEventListener("click", async function(event){
     const password_input_1 = password_content_1.value
     const password_input_2 = password_content_2.value
 
-    if (password_input_1.value !== password_input_2.value){
+    if (password_input_1 !== password_input_2){
 
         alert("As senhas não coincidem!")
         return

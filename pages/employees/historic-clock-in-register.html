@@ -1,24 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Registro Dos Pontos</title>
-
+    <link rel="stylesheet" href="/css/employees/historic-clock-in-register.css">
 </head>
 
 <body>
 
-    <h1>Meu histórico de pontos</h1>
+    <header class="header">
+        <button class="header-back" id="header-back-button">‹</button>
+        <h1 class="header-title">Histórico de Pontos</h1>
+        <div class="header-spacer"></div>
+    </header>
 
-    <div id="historic-clock-in-register-container">
-        <p>Carregando Histórico...</p>
-    </div>
+    <main class="main-content">
+
+        <!-- Abas de ANO -->
+        <div class="year-tabs" id="year-tabs">
+            <!-- preenchido via JS -->
+        </div>
+
+        <!-- Abas de MÊS -->
+        <div class="month-tabs" id="month-tabs">
+            <!-- preenchido via JS -->
+        </div>
+
+        <!-- Título do mês ativo -->
+        <div class="active-month-title" id="active-month-title">
+            Carregando...
+        </div>
+
+        <!-- Container dos registros -->
+        <div id="historic-clock-in-register-container">
+            <p class="carregando">Carregando Histórico...</p>
+        </div>
+
+    </main>
 
     <script type="module" src="/js/auto_guard.js"></script>
     <script type="module" src="/js/employees/historic_clock_in_register.js"></script>
+
 </body>
 
 </html>
