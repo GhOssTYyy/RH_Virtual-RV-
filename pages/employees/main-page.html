@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +8,11 @@
 </head>
 <body>
 
-
     <header class="header">
         
         <div class="header-welcome">
             <h1 id="welcome-name">👋 Olá!</h1>
-            <p>Bem-vindo ao RH Virtual</p>
+            <p id="welcome-date">Carregando...</p>
         </div>
         
         <div class="header-actions">
@@ -31,11 +30,22 @@
     </header>
 
     <main class="main-content">
-        
-        <div class="welcome-section">
-            <h2>🏠 Início</h2>
-            <p>Bem-vindo ao seu painel de RH Virtual</p>
-            <p>Use a navegação abaixo para acessar as funcionalidades</p>
+
+        <!-- Card Próxima Ação -->
+        <div class="next-action-card" id="next-action-card">
+            
+            <div class="next-action-icon" id="next-action-icon">⏰</div>
+            
+            <div class="next-action-info">
+                <span class="next-action-label">Próxima ação</span>
+                <h2 class="next-action-title" id="next-action-title">Carregando...</h2>
+                <p class="next-action-subtitle" id="next-action-subtitle">Aguarde...</p>
+            </div>
+
+            <button class="next-action-button" id="next-action-button">
+                Ir para o Ponto
+            </button>
+
         </div>
 
     </main>
