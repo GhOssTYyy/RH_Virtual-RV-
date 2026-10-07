@@ -2,6 +2,7 @@ import { auth, db } from "../firebase_config.js"
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
+import { verify_location } from "./clock_in_location.js"
 
 
 // ============================================
@@ -75,7 +76,7 @@ let user_name = ""
 
 
 // ============================================
-// FUNÇÕES DE FORMATAÇÃO
+// FUNÇÕES DE FORMATAÇÃO (datas/saudações)
 // ============================================
 function generate_greeting() {
     const hour = new Date().getHours()
@@ -391,15 +392,20 @@ function restore_clock_in_from_local_storage() {
 
 
 // ============================================
-// SALVA PONTO NO FIRESTORE
+// SALVA PONTO NO FIRESTORE (COM LOCALIZAÇÃO)
 // ============================================
 async function save_clock_in_to_database(clock_in_type, time) {
     
     const user = auth.currentUser
     if (!user) {
         alert("Você precisa estar logado!")
-        return
+        return null
     }
+    
+    // 🔑 NOVO: verifica a localização antes de salvar
+    console.log("📍 Verificando localização...")
+    const location = await verify_location()
+    console.log("📍 Resultado:", location.status, "-", location.message)
     
     const current_date_formatted = new Date().toISOString().split('T')[0]
     const document_id = current_date_formatted + "_" + user.uid
@@ -410,17 +416,29 @@ async function save_clock_in_to_database(clock_in_type, time) {
             employee_id: user.uid,
             employee_email: user.email,
             date: current_date_formatted,
-            [clock_in_type]: time
+            [clock_in_type]: time,
+            
+            // 🔑 NOVO: campos de localização
+            latitude: location.latitude,
+            longitude: location.longitude,
+            accuracy: location.accuracy,
+            distance_from_company: location.distance,
+            location_status: location.status
+            
         }, { merge: true })
         
-        console.log("✅ Ponto salvo:", clock_in_type)
+        console.log("✅ Ponto salvo:", clock_in_type, "| Localização:", location.status)
         
         if (clock_in_type === "entrada") {
             await atualizar_indice_de_meses(user, current_date_formatted)
         }
         
+        // 🔑 NOVO: retorna o status da localização
+        return location
+        
     } catch (error) {
         console.log("❌ Erro ao salvar ponto:", error.code, error.message)
+        return location // ainda retorna, pra mostrar a mensagem
     }
 }
 
@@ -498,13 +516,30 @@ async function save_hours_to_database(result) {
 
 
 // ============================================
-// MOSTRA MENSAGEM DE FEEDBACK
+// MOSTRA MENSAGEM DE FEEDBACK (COM COR POR LOCALIZAÇÃO)
 // ============================================
-function show_message(text) {
+function show_message(text, location_status) {
     clock_in_message.textContent = text
+    
+    // 🔑 NOVO: muda a cor do fundo conforme o status da localização
+    if (location_status === "dentro") {
+        clock_in_message.style.background = "#E8F5EE"
+        clock_in_message.style.color = "#166534"
+    } else if (location_status === "fora") {
+        clock_in_message.style.background = "#FEF3C7"
+        clock_in_message.style.color = "#92400E"
+    } else if (location_status === "sem_gps" || location_status === "impreciso") {
+        clock_in_message.style.background = "#F1F5F9"
+        clock_in_message.style.color = "#475569"
+    } else {
+        clock_in_message.style.background = ""
+        clock_in_message.style.color = ""
+    }
     
     setTimeout(() => {
         clock_in_message.textContent = ""
+        clock_in_message.style.background = ""
+        clock_in_message.style.color = ""
     }, 4000)
 }
 
@@ -522,15 +557,16 @@ clock_in_register_button.addEventListener("click", async function() {
     if (current_period === "periodo_entrada" && entry_registered === false) {
         
         if (localStorage.getItem("entry_saved")) {
-            show_message("❌ Você já registrou a ENTRADA hoje!")
+            show_message("❌ Você já registrou a ENTRADA hoje!", null)
             return
         }
         
         entry_clock_in_register.textContent = formatted_time
-        show_message(`✅ Entrada registrada às ${formatted_time}`)
         
-        await save_clock_in_to_database("entrada", formatted_time)
+        const location = await save_clock_in_to_database("entrada", formatted_time)
         localStorage.setItem("entry_saved", formatted_time)
+        
+        show_message(`✅ Entrada registrada às ${formatted_time}`, location?.status)
         
         entry_registered = true
         registered_something = true
@@ -541,12 +577,13 @@ clock_in_register_button.addEventListener("click", async function() {
         
         begin_dinner_clock_in_register.textContent = formatted_time
         
-        await save_clock_in_to_database("inicio_almoco", formatted_time)
+        const location = await save_clock_in_to_database("inicio_almoco", formatted_time)
         localStorage.setItem("beggin_dinner_saved", formatted_time)
+        
+        show_message(`✅ Intervalo iniciado às ${formatted_time}`, location?.status)
         
         begin_dinner_registered = true
         registered_something = true
-        show_message(`✅ Intervalo iniciado às ${formatted_time}`)
     }
     
     // VOLTA DO INTERVALO
@@ -554,12 +591,13 @@ clock_in_register_button.addEventListener("click", async function() {
         
         ending_dinner_clock_in_register.textContent = formatted_time
         
-        await save_clock_in_to_database("fim_almoco", formatted_time)
+        const location = await save_clock_in_to_database("fim_almoco", formatted_time)
         localStorage.setItem("ending_dinner_saved", formatted_time)
+        
+        show_message(`✅ Retorno registrado às ${formatted_time}`, location?.status)
         
         ending_dinner_registered = true
         registered_something = true
-        show_message(`✅ Retorno registrado às ${formatted_time}`)
     }
     
     // SAÍDA
@@ -567,7 +605,7 @@ clock_in_register_button.addEventListener("click", async function() {
         
         exit_clock_in_register.textContent = formatted_time
         
-        await save_clock_in_to_database("saida", formatted_time)
+        const location = await save_clock_in_to_database("saida", formatted_time)
         localStorage.setItem("exit_saved", formatted_time)
         
         exit_registered = true
@@ -579,12 +617,12 @@ clock_in_register_button.addEventListener("click", async function() {
             await save_hours_to_database(result)
         }
         
-        show_message(`✅ Saída registrada às ${formatted_time}`)
+        show_message(`✅ Saída registrada às ${formatted_time}`, location?.status)
     }
     
     // Nada registrado
     if (!registered_something) {
-        show_message("❌ Não é possível registrar agora!")
+        show_message("❌ Não é possível registrar agora!", null)
     }
     
     update_button()
