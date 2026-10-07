@@ -176,7 +176,7 @@ onAuthStateChanged(auth, function(user) {
     const nome = user.email.split("@")[0]
     const nome_formatado = nome.charAt(0).toUpperCase() + nome.slice(1)
     
-    welcome_name.textContent = `👋 Olá, ${nome_formatado}!`
+    welcome_name.textContent = `Olá, ${nome_formatado}!`
     welcome_date.textContent = gerar_data_completa()
     
     profile_picture.textContent = nome.charAt(0).toUpperCase()
