@@ -531,7 +531,7 @@ function restaurar_status_localizacao() {
         // Sem status salvo → mostra mensagem neutra
         if (!salvo) {
             if (location_status_text) {
-                location_status_text.textContent = "📍 Localização será verificada no registro"
+                location_status_text.textContent = "Localização será verificada no registro"
                 location_status_text.className = "location-status"
             }
             return
@@ -567,7 +567,7 @@ function update_location_display(location_result) {
     location_status_text.className = "location-status"
     
     if (!location_result) {
-        location_status_text.textContent = "📍 Verificando localização..."
+        location_status_text.textContent = "Verificando localização..."
         return
     }
     
