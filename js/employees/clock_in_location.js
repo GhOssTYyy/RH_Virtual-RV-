@@ -223,8 +223,4 @@ async function verify_location() {
 // EXPORTAÇÃO
 // =========================================================
 
-export {
-    verify_location,
-    get_company_location,
-    calculate_distance_meters
-}
+export {verify_location,get_company_location,calculate_distance_meters}
