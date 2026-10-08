@@ -1,13 +1,11 @@
-#Firebase
-.env
-.env.local
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
 
-#Dependencies
+# Node
 node_modules/
 
-#System
+# Sistema
 .DS_Store
 Thumbs.db
-
-#Logs
-*.log
