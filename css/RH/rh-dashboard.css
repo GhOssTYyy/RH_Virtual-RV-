@@ -475,6 +475,61 @@ body {
         text-align: center;
     }
 }
+/* =========================================================
+   BADGES DE LOCALIZAÇÃO
+========================================================= */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: help;
+    transition: transform 0.15s ease;
+}
+
+.badge:hover {
+    transform: scale(1.05);
+}
+
+/* ✅ Dentro da área */
+.badge-dentro {
+    background: #E8F5EE;
+    color: #166534;
+    border: 1px solid #BBE7C9;
+}
+
+/* ⚠️ Fora da área */
+.badge-fora {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+/* ❓ Sem GPS */
+.badge-sem-gps {
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+
+/* 📡 GPS impreciso */
+.badge-impreciso {
+    background: #EDE9FE;
+    color: #5B21B6;
+    border: 1px solid #DDD6FE;
+}
+
+/* ⚙️ Sem config / sem info */
+.badge-sem-info {
+    background: #F8FAFC;
+    color: #94A3B8;
+    border: 1px solid #E2E8F0;
+}
 
 /* =========================================================
    MOBILE MUITO PEQUENO
@@ -527,5 +582,14 @@ body {
     .tabela td {
         font-size: 12px;
         padding: 6px 0;
+    }
+}
+/* =========================================================
+   RESPONSIVO — badge vira linha no mobile
+========================================================= */
+@media (max-width: 768px) {
+    .badge {
+        font-size: 11px;
+        padding: 3px 8px;
     }
 }
