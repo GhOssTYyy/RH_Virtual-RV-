@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -31,16 +31,13 @@
             </label>
             <div class="year-selector-container">
                 <select id="year-selector" class="year-selector">
-                    <!-- preenchido via JS -->
                 </select>
                 <span class="year-selector-arrow">▾</span>
             </div>
         </div>
 
         <!-- Abas de MÊS -->
-        <div class="month-tabs" id="month-tabs">
-            <!-- preenchido via JS -->
-        </div>
+        <div class="month-tabs" id="month-tabs"></div>
 
         <!-- Título do mês ativo -->
         <div class="active-month-title" id="active-month-title">
@@ -66,32 +63,31 @@
 
     </main>
 
-    <!-- Menu Inferior -->
     <nav class="bottom-tabs">
-        
         <button class="tab" data-tab="home">
             <img src="" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
-
         <button class="tab" data-tab="point">
             <img src="" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
-
         <button class="tab active" data-tab="historic">
             <img src="" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
-
         <button class="tab" data-tab="holiday">
             <img src="" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
-
+        <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
+            <img src="" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
+            <span class="tab-label">RH</span>
+        </button>
     </nav>
 
     <script type="module" src="/js/auto_guard.js"></script>
+    <script type="module" src="/js/employees/rh_tab_guard.js"></script>
     <script type="module" src="/js/employees/historic_clock_in_register.js"></script>
 
 </body>

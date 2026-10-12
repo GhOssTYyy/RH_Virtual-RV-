@@ -758,6 +758,9 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
+        // 🔑 Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
+        if (target === "rh") return
+        
         if (target === "home") {
             window.location.href = "/pages/employees/main-page.html"
         } else if (target === "historic") {
@@ -770,9 +773,6 @@ tabs.forEach(function(tab) {
 })
 
 
-// ============================================
-// INICIALIZAÇÃO
-// ============================================
 // ============================================
 // INICIALIZAÇÃO
 // ============================================

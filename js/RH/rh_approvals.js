@@ -759,6 +759,8 @@ tabs.forEach(function(tab) {
             alert("Em breve: Funcionários")
         } else if (target === "settings") {
             alert("Em breve: Configurações")
+        } else if (target === "back") {
+            window.location.href = "/pages/employees/main-page.html"
         }
     })
 })

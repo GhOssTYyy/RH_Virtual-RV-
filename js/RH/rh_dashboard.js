@@ -39,8 +39,10 @@ const total_extras = document.getElementById("total-extras")
 // ============================================
 // REFERÊNCIAS — BOTTOM TABS DO RH
 // ============================================
+// Referências das bottom tabs do RH
 const rh_tabs = document.querySelectorAll(".tab")
 const tab_approvals_badge = document.getElementById("tab-approvals-badge")
+const header_back_button = document.getElementById("header-back-button")
 
 
 // ============================================
@@ -67,16 +69,22 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    console.log("✅ RH autenticado:", user.email)
-    
-    // 🔑 Configura as bottom tabs do RH
-    configurar_tabs_rh()
-    
-    // 🔑 Carrega contador de ajustes pendentes
-    carregar_contador_ajustes()
-    
-    // Busca todos os registros
-    buscar_todos_registros()
+console.log("✅ RH autenticado:", user.email)
+
+// 🔑 Seta de voltar no header
+if (header_back_button) {
+    header_back_button.addEventListener("click", function() {
+        window.location.href = "/pages/employees/main-page.html"
+    })
+}
+
+// 🔑 Configura as bottom tabs do RH
+configurar_tabs_rh()
+
+// 🔑 Carrega contador de ajustes pendentes
+carregar_contador_ajustes()
+
+buscar_todos_registros()
 })
 
 
@@ -91,16 +99,17 @@ function configurar_tabs_rh() {
             
             console.log("🚀 Tab RH clicada:", target)
             
-            if (target === "dashboard") {
-                // Já estamos aqui
-                return
-            } else if (target === "approvals") {
-                window.location.href = "/pages/RH/rh-approvals.html"
-            } else if (target === "employees") {
-                alert("Em breve: Funcionários")
-            } else if (target === "settings") {
-                alert("Em breve: Configurações")
-            }
+        if (target === "dashboard") {
+            return
+        } else if (target === "approvals") {
+            window.location.href = "/pages/RH/rh-approvals.html"
+        } else if (target === "employees") {
+            alert("Em breve: Funcionários")
+        } else if (target === "settings") {
+            alert("Em breve: Configurações")
+        } else if (target === "back") {
+            window.location.href = "/pages/employees/main-page.html"
+        }
         })
     })
 }

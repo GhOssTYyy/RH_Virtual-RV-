@@ -536,3 +536,19 @@ body {
         border-radius: 20px 20px 0 0;
     }
 }
+/* =========================================================
+   TAB RH (destaque sutil)
+========================================================= */
+.tab.tab-rh {
+    color: var(--azul-medio, #2E5A8E);
+}
+
+.tab.tab-rh:hover {
+    color: var(--azul-escuro, #1E3A5F);
+}
+
+.tab.tab-rh.active {
+    background: rgba(30, 58, 95, 0.1);
+    color: var(--azul-escuro, #1E3A5F);
+    font-weight: 700;
+}

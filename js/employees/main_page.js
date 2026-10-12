@@ -19,20 +19,15 @@ const tabs = document.querySelectorAll(".tab")
 
 
 // ============================================
-// LISTA DE RH (temporário)
-// ============================================
-const emails_rh = [
-    "jpandreiph@gmail.com"
-]
-
-
-// ============================================
 // NAVEGAÇÃO DAS TABS
 // ============================================
 tabs.forEach(function(tab) {
     tab.addEventListener("click", function() {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
+        
+        // 🔑 Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
+        if (target === "rh") return
         
         tabs.forEach(t => t.classList.remove("active"))
         tab.classList.add("active")
@@ -43,10 +38,7 @@ tabs.forEach(function(tab) {
             window.location.href = "/pages/employees/historic-clock-in-register.html"
         } else if (target === "holiday") {
             window.location.href = "/pages/employees/holiday-day-off.html"
-        } else if (target === "rh") {
-            window.location.href = "/pages/RH/rh-dashboard.html"
         }
-        // "home" já é a página atual
     })
 })
 
@@ -154,7 +146,6 @@ function atualizar_proxima_acao() {
     
     const acao = gerar_proxima_acao()
     
-    // Renderiza o ícone com fallback pro emoji
     next_action_icon.innerHTML = `
         <img src="" alt="${acao.icon}" class="icon-img" onerror="this.replaceWith('${acao.icon}')">
     `
@@ -176,17 +167,10 @@ onAuthStateChanged(auth, function(user) {
     const nome = user.email.split("@")[0]
     const nome_formatado = nome.charAt(0).toUpperCase() + nome.slice(1)
     
-    welcome_name.textContent = `Olá, ${nome_formatado}!`
+    welcome_name.textContent = `👋 Olá, ${nome_formatado}!`
     welcome_date.textContent = gerar_data_completa()
     
     profile_picture.textContent = nome.charAt(0).toUpperCase()
-    
-    if (emails_rh.includes(user.email)) {
-        const tab_rh = document.getElementById("tab-rh")
-        if (tab_rh) {
-            tab_rh.style.display = "flex"
-        }
-    }
     
     atualizar_proxima_acao()
 })

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,6 @@
 
     <main class="main-content">
 
-        <!-- Filtros -->
         <div class="filters-container" id="filters-container">
             <button class="filter-btn active" data-filter="pending">⏳ Pendentes</button>
             <button class="filter-btn" data-filter="approved">✅ Aprovados</button>
@@ -26,7 +25,6 @@
             <button class="filter-btn" data-filter="all">📋 Todos</button>
         </div>
 
-        <!-- Lista de ajustes -->
         <div id="adjustments-container">
             <div class="empty-state">
                 <div class="empty-state-icon">⏳</div>
@@ -36,33 +34,30 @@
 
     </main>
 
-    <!-- Menu Inferior do RH -->
     <nav class="bottom-tabs">
-        
         <button class="tab" data-tab="dashboard">
             <span class="tab-icon">📊</span>
             <span class="tab-label">Dashboard</span>
         </button>
-
         <button class="tab active" data-tab="approvals">
             <span class="tab-icon">✅</span>
             <span class="tab-label">Aprovações</span>
         </button>
-
         <button class="tab" data-tab="employees">
             <span class="tab-icon">👥</span>
             <span class="tab-label">Funcionários</span>
         </button>
-
         <button class="tab" data-tab="settings">
             <span class="tab-icon">⚙️</span>
             <span class="tab-label">Config.</span>
         </button>
-
+        <button class="tab" data-tab="back">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">Voltar</span>
+        </button>
     </nav>
 
     <script type="module" src="/js/RH/rh_approvals.js"></script>
 
 </body>
-
 </html>
