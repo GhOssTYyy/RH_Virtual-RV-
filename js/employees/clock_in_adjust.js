@@ -6,19 +6,19 @@ import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/fir
 // MAPA DE ÍCONES
 // =========================================================
 const ICONES = {
-    dia:          { emoji: "📅", arquivo: "/assets/icons/calendar_icon.svg" },
+    dia:          { emoji: "📅", arquivo: "/assets/icons/calendar-icon.svg" },
     campo:        { emoji: "⏰", arquivo: "/assets/icons/clock-in-button-icon.svg" },
     horario:      { emoji: "📝", arquivo: "/assets/icons/edit_icon.svg" },
-    categoria:    { emoji: "📋", arquivo: "/assets/icons/content_paste_icon.svg" },
-    motivo:       { emoji: "💬", arquivo: "/assets/icons/message_icon.svg" },
+    categoria:    { emoji: "📋", arquivo: "/assets/icons/clipboard-icon.svg" },
+    motivo:       { emoji: "💬", arquivo: "/assets/icons/message-icon.svg" },
     
     entrada:      { emoji: "⏰", arquivo: "/assets/icons/clock-in-button-icon.svg" },
-    almoço:       { emoji: "🍽️", arquivo: "/assets/icons/dining_icon.svg" },
-    volta:        { emoji: "🔄", arquivo: "/assets/icons/return_icon.svg" },
-    saida:        { emoji: "🏁", arquivo: "/assets/icons/exit_icon.svg" },
+    almoço:       { emoji: "🍽️", arquivo: "/assets/icons/lunch-icon.svg" },
+    volta:        { emoji: "🔄", arquivo: "/assets/icons/return-icon.svg" },
+    saida:        { emoji: "🏁", arquivo: "/assets/icons/finish-icon.svg" },
     
-    sucesso:      { emoji: "✅", arquivo: "/assets/icons/check_icon.svg" },
-    erro:         { emoji: "❌", arquivo: "/assets/icons/close_icon.svg" }
+    sucesso:      { emoji: "✅", arquivo: "/assets/icons/check-icon.svg" },
+    erro:         { emoji: "❌", arquivo: "/assets/icons/x-icon.svg" }
 }
 
 
@@ -37,27 +37,77 @@ function icone(nome, classe = "icon-img") {
 // CATEGORIAS DISPONÍVEIS
 // =========================================================
 export const CATEGORIAS = [
-    { id: "esquecimento",       label: "Esquecimento",                icone: "📌" },
-    { id: "erro",               label: "Erro de digitação",           icone: "❌" },
-    { id: "atestado",           label: "Atestado médico",             icone: "🏥" },
-    { id: "remoto",             label: "Trabalho remoto",             icone: "🏠" },
-    { id: "tecnico",            label: "Problema técnico",            icone: "⚠️" },
-    { id: "licenca_medica",     label: "Licença médica",              icone: "🩺" },
-    { id: "licenca_parental",   label: "Licença maternidade/paternidade", icone: "👶" },
-    { id: "licenca_casamento",  label: "Licença casamento",           icone: "💍" },
-    { id: "licenca_luto",       label: "Licença luto",                icone: "🕊️" },
-    { id: "outro",              label: "Outro",                       icone: "📝" }
+    { 
+        id: "esquecimento", 
+        label: "Esquecimento", 
+        emoji: "📌",
+        arquivo: "/assets/icons/category-esquecimento.svg"
+    },
+    { 
+        id: "erro", 
+        label: "Erro de digitação", 
+        emoji: "❌",
+        arquivo: "/assets/icons/category-erro.svg"
+    },
+    { 
+        id: "atestado", 
+        label: "Atestado médico", 
+        emoji: "🏥",
+        arquivo: "/assets/icons/category-atestado.svg"
+    },
+    { 
+        id: "remoto", 
+        label: "Trabalho remoto", 
+        emoji: "🏠",
+        arquivo: "/assets/icons/category-remoto.svg"
+    },
+    { 
+        id: "tecnico", 
+        label: "Problema técnico", 
+        emoji: "⚠️",
+        arquivo: "/assets/icons/category-tecnico.svg"
+    },
+    { 
+        id: "licenca_medica", 
+        label: "Licença médica", 
+        emoji: "🩺",
+        arquivo: "/assets/icons/category-licenca-medica.svg"
+    },
+    { 
+        id: "licenca_parental", 
+        label: "Licença maternidade/paternidade", 
+        emoji: "👶",
+        arquivo: "/assets/icons/category-licenca-parental.svg"
+    },
+    { 
+        id: "licenca_casamento", 
+        label: "Licença casamento", 
+        emoji: "💍",
+        arquivo: "/assets/icons/category-licenca-casamento.svg"
+    },
+    { 
+        id: "licenca_luto", 
+        label: "Licença luto", 
+        emoji: "🕊️",
+        arquivo: "/assets/icons/category-licenca-luto.svg"
+    },
+    { 
+        id: "outro", 
+        label: "Outro", 
+        emoji: "📝",
+        arquivo: "/assets/icons/category-outro.svg"
+    }
 ]
 
 
 // =========================================================
-// MAPEAMENTO DE CAMPOS
+// CAMPOS DISPONÍVEIS
 // =========================================================
 export const CAMPOS_LABEL = {
-    entrada:        "Entrada",
-    inicio_almoco:  "Almoço",
-    fim_almoco:     "Volta",
-    saida:          "Saída"
+    entrada:        { label: "Entrada",  icone: "entrada" },
+    inicio_almoco:  { label: "Almoço",   icone: "almoço" },
+    fim_almoco:     { label: "Volta",    icone: "volta" },
+    saida:          { label: "Saída",    icone: "saida" }
 }
 
 
@@ -106,12 +156,10 @@ export function criar_modal_ajuste() {
 
 
 // =========================================================
-// ABRE MODAL — AJUSTE SIMPLES
+// ABRE MODAL — AJUSTE SIMPLES (COM DROPDOWN DE CAMPO)
 // =========================================================
 export function abrir_modal_ajuste_simples({
-    data,
-    campo,
-    valor_atual,
+    register,
     employee_name,
     on_success
 }) {
@@ -124,9 +172,13 @@ export function abrir_modal_ajuste_simples({
     
     title.textContent = "Solicitar Ajuste"
     
+    const data = register.date
     const [ano, mes, dia] = data.split("-")
     const data_formatada = `${dia}/${mes}/${ano}`
-    const campo_label = CAMPOS_LABEL[campo] || campo
+    
+    // Detecta o campo sugerido (primeiro que estiver vazio ou o que faz mais sentido)
+    const campo_sugerido = detectar_campo_sugerido(register)
+    const valor_atual_inicial = register[campo_sugerido] || ""
     
     body.innerHTML = `
         <div class="adjust-field">
@@ -144,9 +196,20 @@ export function abrir_modal_ajuste_simples({
                 ${icone("campo", "adjust-label-icon")}
                 Campo
             </span>
-            <div class="adjust-value-info">
-                <span class="adjust-value-new">${campo_label}</span>
-            </div>
+            <select class="adjust-select" id="adjust-select-field">
+                <option value="entrada" ${campo_sugerido === "entrada" ? "selected" : ""}>
+                    ⏰ Entrada
+                </option>
+                <option value="inicio_almoco" ${campo_sugerido === "inicio_almoco" ? "selected" : ""}>
+                    🍽️ Almoço
+                </option>
+                <option value="fim_almoco" ${campo_sugerido === "fim_almoco" ? "selected" : ""}>
+                    🔄 Volta
+                </option>
+                <option value="saida" ${campo_sugerido === "saida" ? "selected" : ""}>
+                    🏁 Saída
+                </option>
+            </select>
         </div>
 
         <div class="adjust-field">
@@ -155,7 +218,7 @@ export function abrir_modal_ajuste_simples({
                 Novo horário
             </span>
             <div class="adjust-value-info">
-                <span class="adjust-value-old">${valor_atual || "--:--"}</span>
+                <span class="adjust-value-old" id="adjust-value-old">${valor_atual_inicial || "--:--"}</span>
                 <span class="adjust-value-arrow">→</span>
                 <input 
                     type="text" 
@@ -179,7 +242,7 @@ export function abrir_modal_ajuste_simples({
             </span>
             <select class="adjust-select" id="adjust-select-category">
                 ${CATEGORIAS.map(cat => 
-                    `<option value="${cat.id}">${cat.icone} ${cat.label}</option>`
+                    `<option value="${cat.id}">${cat.emoji} ${cat.label}</option>`
                 ).join("")}
             </select>
         </div>
@@ -201,13 +264,37 @@ export function abrir_modal_ajuste_simples({
         </div>
     `
     
-    modal.dataset.target_date = data
-    modal.dataset.target_field = campo
-    modal.dataset.original_value = valor_atual || ""
+    // 🔑 Guarda o register completo no dataset
     modal.dataset.mode = "simple"
+    modal.dataset.target_date = data
+    modal.dataset.target_field = campo_sugerido
+    modal.dataset.original_value = valor_atual_inicial
     modal.dataset.employee_name = employee_name || ""
     
+    // 🔑 Guarda todos os valores do register num JSON
+    modal.dataset.register_json = JSON.stringify({
+        entrada: register.entrada || "",
+        inicio_almoco: register.inicio_almoco || "",
+        fim_almoco: register.fim_almoco || "",
+        saida: register.saida || ""
+    })
+    
     modal.classList.add("active")
+    
+    // 🔑 Listener do dropdown de campo
+    const select_field = document.getElementById("adjust-select-field")
+    const value_old = document.getElementById("adjust-value-old")
+    
+    select_field.addEventListener("change", function() {
+        const novo_campo = select_field.value
+        const valores = JSON.parse(modal.dataset.register_json)
+        const valor_do_campo = valores[novo_campo] || ""
+        
+        // Atualiza o "valor atual" e o dataset
+        value_old.textContent = valor_do_campo || "--:--"
+        modal.dataset.target_field = novo_campo
+        modal.dataset.original_value = valor_do_campo
+    })
     
     setTimeout(() => {
         const input = document.getElementById("adjust-input-value")
@@ -215,6 +302,27 @@ export function abrir_modal_ajuste_simples({
     }, 100)
     
     modal._on_success = on_success
+}
+
+
+// =========================================================
+// DETECTA O CAMPO SUGERIDO BASEADO NO REGISTRO
+// =========================================================
+function detectar_campo_sugerido(register) {
+    // Se não tem entrada → sugere entrada
+    if (!register.entrada) return "entrada"
+    
+    // Se tem entrada mas não tem almoço → sugere almoço
+    if (!register.inicio_almoco) return "inicio_almoco"
+    
+    // Se tem almoço mas não tem volta → sugere volta
+    if (!register.fim_almoco) return "fim_almoco"
+    
+    // Se tem volta mas não tem saída → sugere saída
+    if (!register.saida) return "saida"
+    
+    // Se tem tudo → sugere entrada (padrão)
+    return "entrada"
 }
 
 
@@ -322,7 +430,7 @@ export function abrir_modal_ponto_esquecido({
             </span>
             <select class="adjust-select" id="adjust-select-category">
                 ${CATEGORIAS.map(cat => 
-                    `<option value="${cat.id}">${cat.icone} ${cat.label}</option>`
+                    `<option value="${cat.id}">${cat.emoji} ${cat.label}</option>`
                 ).join("")}
             </select>
         </div>
@@ -464,7 +572,7 @@ async function enviar_solicitacao_simples() {
     const target_date = modal.dataset.target_date
     const target_field = modal.dataset.target_field
     const original_value = modal.dataset.original_value
-    const campo_label = CAMPOS_LABEL[target_field] || target_field
+    const campo_label = CAMPOS_LABEL[target_field]?.label || target_field
     
     const [ano, mes, dia] = target_date.split("-")
     const data_formatada = `${dia}/${mes}/${ano}`
@@ -508,7 +616,7 @@ async function enviar_solicitacao_simples() {
         })
         
         fechar_modal_ajuste()
-        mostrar_banner("✅ Solicitação enviada! O RH será notificado.", "success")
+        mostrar_banner("Solicitação enviada! O RH será notificado.", "success")
         
         if (typeof modal._on_success === "function") {
             modal._on_success()
@@ -516,7 +624,7 @@ async function enviar_solicitacao_simples() {
         
     } catch (error) {
         console.error("❌ Erro ao enviar:", error)
-        mostrar_banner("❌ Erro ao enviar. Tente novamente.", "error")
+        mostrar_banner("Erro ao enviar. Tente novamente.", "error")
     } finally {
         btn_submit.disabled = false
         btn_submit.textContent = "Enviar"
@@ -627,7 +735,7 @@ async function enviar_solicitacao_esquecido() {
         })
         
         fechar_modal_ajuste()
-        mostrar_banner("✅ Solicitação enviada! O RH será notificado.", "success")
+        mostrar_banner("Solicitação enviada! O RH será notificado.", "success")
         
         if (typeof modal._on_success === "function") {
             modal._on_success()
@@ -635,7 +743,7 @@ async function enviar_solicitacao_esquecido() {
         
     } catch (error) {
         console.error("❌ Erro ao enviar:", error)
-        mostrar_banner("❌ Erro ao enviar. Tente novamente.", "error")
+        mostrar_banner("Erro ao enviar. Tente novamente.", "error")
     } finally {
         btn_submit.disabled = false
         btn_submit.textContent = "Enviar"
@@ -648,7 +756,7 @@ async function enviar_solicitacao_esquecido() {
 // =========================================================
 function obter_label_categoria(id) {
     const cat = CATEGORIAS.find(c => c.id === id)
-    return cat ? `${cat.icone} ${cat.label}` : id
+    return cat ? `${cat.emoji} ${cat.label}` : id
 }
 
 
