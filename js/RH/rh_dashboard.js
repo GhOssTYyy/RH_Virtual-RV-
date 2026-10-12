@@ -1,6 +1,13 @@
 import { auth, db } from "../firebase_config.js"
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
-import { collection, query, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
+import {
+    collection,
+    query,
+    getDocs,
+    orderBy,
+    limit,
+    where
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 
 
 // ============================================
@@ -30,6 +37,15 @@ const total_extras = document.getElementById("total-extras")
 
 
 // ============================================
+// REFERÊNCIAS — BOTTOM TABS DO RH
+// ============================================
+// Referências das bottom tabs do RH
+const rh_tabs = document.querySelectorAll(".tab")
+const tab_approvals_badge = document.getElementById("tab-approvals-badge")
+const header_back_button = document.getElementById("header-back-button")
+
+
+// ============================================
 // ESTADO
 // ============================================
 let todos_registros = []
@@ -53,10 +69,79 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    console.log("✅ RH autenticado:", user.email)
-    
-    buscar_todos_registros()
+console.log("✅ RH autenticado:", user.email)
+
+// 🔑 Seta de voltar no header
+if (header_back_button) {
+    header_back_button.addEventListener("click", function() {
+        window.location.href = "/pages/employees/main-page.html"
+    })
+}
+
+// 🔑 Configura as bottom tabs do RH
+configurar_tabs_rh()
+
+// 🔑 Carrega contador de ajustes pendentes
+carregar_contador_ajustes()
+
+buscar_todos_registros()
 })
+
+
+// ============================================
+// NAVEGAÇÃO DAS TABS DO RH
+// ============================================
+function configurar_tabs_rh() {
+    
+    rh_tabs.forEach(function(tab) {
+        tab.addEventListener("click", function() {
+            const target = tab.dataset.tab
+            
+            console.log("🚀 Tab RH clicada:", target)
+            
+        if (target === "dashboard") {
+            return
+        } else if (target === "approvals") {
+            window.location.href = "/pages/RH/rh-approvals.html"
+        } else if (target === "employees") {
+            alert("Em breve: Funcionários")
+        } else if (target === "settings") {
+            alert("Em breve: Configurações")
+        } else if (target === "back") {
+            window.location.href = "/pages/employees/main-page.html"
+        }
+        })
+    })
+}
+
+
+// ============================================
+// CARREGA O CONTADOR DE AJUSTES PENDENTES
+// ============================================
+async function carregar_contador_ajustes() {
+    
+    if (!tab_approvals_badge) return
+    
+    try {
+        const colecao = collection(db, "Clock_in_adjustments")
+        const consulta = query(colecao, where("status", "==", "pending"))
+        const resultado = await getDocs(consulta)
+        
+        const pendentes = resultado.size
+        
+        console.log("📋 Ajustes pendentes:", pendentes)
+        
+        if (pendentes > 0) {
+            tab_approvals_badge.textContent = pendentes > 99 ? "99+" : pendentes
+            tab_approvals_badge.style.display = "inline-block"
+        } else {
+            tab_approvals_badge.style.display = "none"
+        }
+        
+    } catch (error) {
+        console.log("⚠️ Erro ao carregar contador:", error.code, error.message)
+    }
+}
 
 
 // ============================================
@@ -156,7 +241,6 @@ function formatar_distancia(metros) {
         return `${metros}m`
     }
     
-    // Converte pra km com 1 casa decimal
     const km = (metros / 1000).toFixed(1)
     return `${km}km`
 }
@@ -255,8 +339,14 @@ function renderizar_tabela() {
         // Badge de localização
         const badge_local = montar_badge_localizacao(registro)
         
+        // 🔑 Badge "ajustado" (se o registro foi ajustado)
+        let ajustado_badge = ""
+        if (registro.adjusted) {
+            ajustado_badge = `<span class="adjust-badge adjust-badge-approved" title="Este registro foi ajustado via solicitação aprovada">AJUSTADO</span>`
+        }
+        
         linha.innerHTML = `
-            <td data-label="Funcionário">${nome}</td>
+            <td data-label="Funcionário">${nome}${ajustado_badge}</td>
             <td data-label="Data">${registro.date || "-"}</td>
             <td data-label="Entrada">${registro.entrada || "-"}</td>
             <td data-label="Almoço">${registro.inicio_almoco || "-"}</td>
@@ -312,7 +402,7 @@ btn_exportar.addEventListener("click", function() {
     }
     
     // Cabeçalho do CSV (com coluna Local)
-    let csv = "Funcionário,Data,Entrada,Almoço,Volta,Saída,Horas,Extras,Local,Distância,Latitude,Longitude\n"
+    let csv = "Funcionário,Data,Entrada,Almoço,Volta,Saída,Horas,Extras,Local,Distância,Latitude,Longitude,Ajustado\n"
     
     // Dados
     registros_filtrados.forEach(function(r) {
@@ -325,7 +415,9 @@ btn_exportar.addEventListener("click", function() {
         const lat = r.latitude !== null && r.latitude !== undefined ? r.latitude : ""
         const lon = r.longitude !== null && r.longitude !== undefined ? r.longitude : ""
         
-        csv += `${nome},${r.date || ""},${r.entrada || ""},${r.inicio_almoco || ""},${r.fim_almoco || ""},${r.saida || ""},${r.hours_worked || ""},${r.extra_hours || ""},${r.location_status || ""},${dist},${lat},${lon}\n`
+        const ajustado = r.adjusted ? "Sim" : "Não"
+        
+        csv += `${nome},${r.date || ""},${r.entrada || ""},${r.inicio_almoco || ""},${r.fim_almoco || ""},${r.saida || ""},${r.hours_worked || ""},${r.extra_hours || ""},${r.location_status || ""},${dist},${lat},${lon},${ajustado}\n`
     })
     
     // Cria o arquivo e baixa

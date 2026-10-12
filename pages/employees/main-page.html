@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,77 +10,63 @@
 
     <header class="header">
         <div class="header-actions">
-            
             <button class="settings-button" id="settings-button" title="Configurações">
-                <img src="/assets/icons/settings_button_icon.svg" alt="⚙️" class="button-icon" onerror="this.replaceWith('⚙️')">
+                <img src="" alt="⚙️" class="button-icon" onerror="this.replaceWith('⚙️')">
             </button>
-            
             <div class="profile-picture" id="profile-picture" title="Meu perfil">
                 <img src="" alt="👤" class="button-icon" onerror="this.replaceWith('👤')">
             </div>
-            
         </div>
     </header>
 
     <main class="main-content">
 
-        <!-- Saudação -->
         <div class="welcome-section">
-            <h1 id="welcome-name">Olá!</h1>
+            <h1 id="welcome-name">👋 Olá!</h1>
             <p id="welcome-date">Carregando...</p>
         </div>
 
-        <!-- Card Próxima Ação -->
         <div class="next-action-card" id="next-action-card">
-            
             <div class="next-action-icon" id="next-action-icon">
                 <img src="" alt="⏰" class="icon-img" onerror="this.replaceWith('⏰')">
             </div>
-            
             <div class="next-action-info">
                 <span class="next-action-label">Próxima ação</span>
                 <h2 class="next-action-title" id="next-action-title">Carregando...</h2>
                 <p class="next-action-subtitle" id="next-action-subtitle">Aguarde...</p>
             </div>
-
             <button class="next-action-button" id="next-action-button">
                 Ir para o Ponto
             </button>
-
         </div>
 
     </main>
 
     <nav class="bottom-tabs">
-        
         <button class="tab active" data-tab="home">
-            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
+            <img src="" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
-
         <button class="tab" data-tab="point">
-            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
+            <img src="" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
-
         <button class="tab" data-tab="historic">
-            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
+            <img src="" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
-
         <button class="tab" data-tab="holiday">
-            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
+            <img src="" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
-
         <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
-            <img src="/assets/icons/statistics_button_rh_icon.svg" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
+            <img src="" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
             <span class="tab-label">RH</span>
         </button>
-
     </nav>
 
     <script type="module" src="/js/auto_guard.js"></script>
+    <script type="module" src="/js/RH/rh_tab_guard.js"></script>
     <script type="module" src="/js/employees/main_page.js"></script>
 
 </body>

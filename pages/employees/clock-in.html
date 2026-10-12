@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Ponto - RH Virtual</title>
     <link rel="stylesheet" href="/css/employees/clock-in.css">
+    <link rel="stylesheet" href="/css/employees/clock-in-adjust.css">
 </head>
 <body>
 
     <header class="header">
-        <button class="header-back" id="header-back-button">
-            <img src="/assets/icons/arrow_back_page.svg" alt="⬅️" class="header-back-icon" onerror="this.replaceWith('⬅️')">
-        </button>
+        <button class="header-back" id="header-back-button">‹</button>
         <h1 class="header-title">Registro de Ponto</h1>
         <div class="header-spacer"></div>
     </header>
@@ -33,19 +32,11 @@
 
         <!-- Card Principal do Ponto -->
         <div class="card card-clock">
-            
             <div class="big-clock" id="clock-time-screen">09:46:32</div>
-            
-            <p class="clock-date" id="clock-date-screen">
-                Quinta-feira · 27/08/2026
-            </p>
-            
-            <p class="location">
-                Empresa XYZ — Campina Grande, PB
-            </p>
-            
+            <p class="clock-date" id="clock-date-screen">Quinta-feira · 27/08/2026</p>
+            <p class="location">Empresa XYZ — Campina Grande, PB</p>
             <p class="location-status" id="location-status-text">
-                Localização será verificada ao registrar...
+                📍 Localização será verificada no registro
             </p>
 
             <button class="register-button" id="clock-in-register-button">
@@ -54,105 +45,88 @@
             </button>
 
             <div class="message" id="clock-in-message"></div>
-
         </div>
 
         <!-- Card Resumo do Dia -->
         <div class="card card-summary">
-            
             <div class="summary-header">
                 <h3>Resumo de hoje</h3>
             </div>
-
             <div class="summary-grid">
-                
                 <div class="summary-item">
                     <span class="summary-title">Entrada</span>
                     <span class="summary-value" id="entry-clock-in-register">--:--</span>
                     <span class="summary-status" id="entry-status">Pendente</span>
                 </div>
-
                 <div class="summary-item">
                     <span class="summary-title">Almoço</span>
                     <span class="summary-value" id="begin-dinner-clock-in-register">--:--</span>
                     <span class="summary-status" id="begin-dinner-status">Pendente</span>
                 </div>
-
                 <div class="summary-item">
                     <span class="summary-title">Volta</span>
                     <span class="summary-value" id="ending-dinner-clock-in-register">--:--</span>
                     <span class="summary-status" id="ending-dinner-status">Pendente</span>
                 </div>
-
                 <div class="summary-item">
                     <span class="summary-title">Saída</span>
                     <span class="summary-value" id="exit-clock-in-register">--:--</span>
                     <span class="summary-status pending" id="exit-status">Pendente</span>
                 </div>
-
             </div>
-
         </div>
 
         <!-- Card Saldo do Dia -->
         <div class="card card-balance">
-            
             <div class="balance-header">
-                <div class="balance-icon">
-                    <img src="" alt="📊" class="icon-img" onerror="this.replaceWith('📊')">
-                </div>
+                <div class="balance-icon">📊</div>
                 <div class="balance-info">
                     <h3>Saldo do dia</h3>
                     <p>Banco de horas</p>
                 </div>
             </div>
-
             <div class="balance-grid">
-                
                 <div class="balance-item">
                     <span class="balance-title">Trabalhadas</span>
                     <span class="balance-value" id="worked-hours-balance">00:00</span>
                     <span class="balance-status" id="worked-hours-status">até agora</span>
                 </div>
-
                 <div class="balance-item">
                     <span class="balance-title">Extras</span>
                     <span class="balance-value" id="extra-hours-balance">+00:00</span>
                     <span class="balance-status" id="extra-hours-status">neutro</span>
                 </div>
-
             </div>
-
         </div>
 
     </main>
 
     <!-- Menu Inferior -->
     <nav class="bottom-tabs">
-        
         <button class="tab" data-tab="home">
-            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
+            <img src="" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
-
         <button class="tab active" data-tab="point">
-            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
+            <img src="" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
-
         <button class="tab" data-tab="historic">
-            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
+            <img src="" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
-
         <button class="tab" data-tab="holiday">
-            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
+            <img src="" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
-
+        <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
+            <img src="" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
+            <span class="tab-label">RH</span>
+        </button>
     </nav>
 
     <script type="module" src="/js/auto_guard.js"></script>
+    <script type="module" src="/js/RH/rh_tab_guard.js"></script>
     <script type="module" src="/js/employees/clock_in_display.js"></script>
 
 </body>

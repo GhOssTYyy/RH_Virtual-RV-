@@ -531,7 +531,7 @@ function restaurar_status_localizacao() {
         // Sem status salvo → mostra mensagem neutra
         if (!salvo) {
             if (location_status_text) {
-                location_status_text.textContent = "Localização será verificada no registro"
+                location_status_text.textContent = "📍 Localização será verificada no registro"
                 location_status_text.className = "location-status"
             }
             return
@@ -550,7 +550,7 @@ function restaurar_status_localizacao() {
         console.log("⚠️ Erro ao restaurar status:", error)
         
         if (location_status_text) {
-            location_status_text.textContent = "Localização será verificada no registro"
+            location_status_text.textContent = " Localização será verificada no registro"
             location_status_text.className = "location-status"
         }
     }
@@ -567,7 +567,7 @@ function update_location_display(location_result) {
     location_status_text.className = "location-status"
     
     if (!location_result) {
-        location_status_text.textContent = "Verificando localização..."
+        location_status_text.textContent = "📍 Verificando localização..."
         return
     }
     
@@ -758,6 +758,9 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
+        // 🔑 Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
+        if (target === "rh") return
+        
         if (target === "home") {
             window.location.href = "/pages/employees/main-page.html"
         } else if (target === "historic") {
@@ -770,9 +773,6 @@ tabs.forEach(function(tab) {
 })
 
 
-// ============================================
-// INICIALIZAÇÃO
-// ============================================
 // ============================================
 // INICIALIZAÇÃO
 // ============================================

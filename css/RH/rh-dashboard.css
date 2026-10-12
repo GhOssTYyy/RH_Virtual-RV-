@@ -593,3 +593,263 @@ body {
         padding: 3px 8px;
     }
 }
+
+/* =========================================================
+   BOTTOM TABS DO RH
+========================================================= */
+.bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px;
+    box-shadow: 0 -2px 12px rgba(30, 58, 95, 0.08);
+    z-index: 100;
+    border-top: 1px solid #D6E0EB;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #7A8BA3;
+    transition: 0.2s ease;
+    max-width: 100px;
+    font-family: inherit;
+    position: relative;
+}
+
+.tab:hover {
+    color: #2E5A8E;
+}
+
+.tab.active {
+    background: #E8F0F8;
+    color: #1E3A5F;
+}
+
+.tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* Badge de pendentes (na tab Aprovações) */
+.tab-badge {
+    position: absolute;
+    top: 2px;
+    right: 15%;
+    background: #F59E0B;
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 16px;
+    text-align: center;
+    line-height: 1.4;
+    display: inline-block;
+}
+
+/* =========================================================
+   BADGE "AJUSTADO" (nos registros da tabela)
+========================================================= */
+.adjust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.adjust-badge-approved {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+/* =========================================================
+   ESPAÇO PRO CONTEÚDO NÃO FICAR EMBAIXO DAS TABS
+========================================================= */
+body {
+    padding-bottom: 90px !important;
+}
+
+.main-content {
+    padding-bottom: 100px !important;
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+@media (min-width: 768px) {
+    .bottom-tabs {
+        max-width: 1200px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
+}
+/* =========================================================
+   HEADER COM SETA DE VOLTAR
+========================================================= */
+.header-back {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: #1E3A5F;
+    font-size: 22px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    flex-shrink: 0;
+}
+
+.header-back:hover {
+    background: rgba(30, 58, 95, 0.08);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-title {
+    flex: 1;
+}
+
+/* =========================================================
+   BOTTOM TABS DO RH
+========================================================= */
+.bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px;
+    box-shadow: 0 -2px 12px rgba(30, 58, 95, 0.08);
+    z-index: 100;
+    border-top: 1px solid #D6E0EB;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #7A8BA3;
+    transition: 0.2s ease;
+    max-width: 100px;
+    font-family: inherit;
+    position: relative;
+}
+
+.tab:hover {
+    color: #2E5A8E;
+}
+
+.tab.active {
+    background: #E8F0F8;
+    color: #1E3A5F;
+}
+
+.tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.tab-badge {
+    position: absolute;
+    top: 2px;
+    right: 15%;
+    background: #F59E0B;
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 16px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   BADGE "AJUSTADO"
+========================================================= */
+.adjust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.adjust-badge-approved {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+/* =========================================================
+   ESPAÇO PRO RODAPÉ
+========================================================= */
+body {
+    padding-bottom: 90px !important;
+}
+
+.main-content {
+    padding-bottom: 100px !important;
+}
+
+@media (min-width: 768px) {
+    .bottom-tabs {
+        max-width: 1200px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
+}

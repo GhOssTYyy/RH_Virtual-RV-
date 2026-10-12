@@ -1,0 +1,470 @@
+/* =========================================================
+   CLOCK-IN-ADJUST — Modal de Ajuste de Ponto
+========================================================= */
+
+/* =========================================================
+   OVERLAY (fundo escuro do modal)
+========================================================= */
+.adjust-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 58, 95, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.adjust-modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* =========================================================
+   MODAL (a caixa branca)
+========================================================= */
+.adjust-modal {
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(30, 58, 95, 0.35);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   HEADER DO MODAL
+========================================================= */
+.adjust-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #D6E0EB;
+    flex-shrink: 0;
+}
+
+.adjust-modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1E3A5F;
+    margin: 0;
+}
+
+.adjust-modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #7A8BA3;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.adjust-modal-close:hover {
+    background: #F4F7FA;
+    color: #1E3A5F;
+}
+
+/* =========================================================
+   CORPO DO MODAL
+========================================================= */
+.adjust-modal-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* =========================================================
+   CAMPOS DO FORMULÁRIO
+========================================================= */
+.adjust-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.adjust-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7A8BA3;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.adjust-label-icon {
+    font-size: 14px;
+}
+
+.adjust-input,
+.adjust-select,
+.adjust-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #D6E0EB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #1A2942;
+    font-size: 14px;
+    font-family: inherit;
+    transition: 0.2s ease;
+    outline: none;
+}
+
+.adjust-input:focus,
+.adjust-select:focus,
+.adjust-textarea:focus {
+    border-color: #1E3A5F;
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+}
+
+.adjust-input:disabled {
+    background: #F4F7FA;
+    color: #7A8BA3;
+    cursor: not-allowed;
+}
+
+.adjust-select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231E3A5F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+.adjust-textarea {
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.adjust-hint {
+    font-size: 11px;
+    color: #7A8BA3;
+    font-style: italic;
+}
+
+.adjust-error {
+    font-size: 11px;
+    color: #EF4444;
+    font-weight: 600;
+    display: none;
+}
+
+.adjust-error.visible {
+    display: block;
+}
+
+/* =========================================================
+   INFO DE VALOR ATUAL vs NOVO
+========================================================= */
+.adjust-value-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px;
+    background: #E8F0F8;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.adjust-value-old {
+    color: #7A8BA3;
+    text-decoration: line-through;
+}
+
+.adjust-value-arrow {
+    color: #2E5A8E;
+    font-size: 18px;
+}
+
+.adjust-value-new {
+    color: #1E3A5F;
+    font-weight: 700;
+}
+
+/* =========================================================
+   GRID DE HORÁRIOS (pra "ponto esquecido")
+========================================================= */
+.adjust-time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.adjust-time-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.adjust-time-item label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7A8BA3;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   FOOTER DO MODAL (botões)
+========================================================= */
+.adjust-modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 16px 24px 20px;
+    border-top: 1px solid #D6E0EB;
+    flex-shrink: 0;
+}
+
+.adjust-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.adjust-btn-secondary {
+    background: #F4F7FA;
+    color: #7A8BA3;
+    border: 2px solid #D6E0EB;
+}
+
+.adjust-btn-secondary:hover {
+    background: #E8F0F8;
+    color: #1E3A5F;
+}
+
+.adjust-btn-primary {
+    background: #1E3A5F;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.25);
+}
+
+.adjust-btn-primary:hover:not(:disabled) {
+    background: #2E5A8E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 58, 95, 0.35);
+}
+
+.adjust-btn-primary:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.adjust-btn-primary:disabled {
+    background: #D6E0EB;
+    color: #7A8BA3;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* =========================================================
+   BOTÃO "AJUSTAR" NA TABELA DO HISTÓRICO
+========================================================= */
+.adjust-row-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: #E8F0F8;
+    color: #1E3A5F;
+    border: 1px solid #D6E0EB;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.adjust-row-button:hover {
+    background: #1E3A5F;
+    color: #FFFFFF;
+    border-color: #1E3A5F;
+}
+
+.adjust-row-button-icon {
+    font-size: 13px;
+}
+
+/* =========================================================
+   BOTÃO "ADICIONAR PONTO ESQUECIDO"
+========================================================= */
+.adjust-add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    background: #FFFFFF;
+    color: #1E3A5F;
+    border: 2px dashed #D6E0EB;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-family: inherit;
+    margin-top: 12px;
+}
+
+.adjust-add-button:hover {
+    border-color: #1E3A5F;
+    background: #E8F0F8;
+    transform: translateY(-2px);
+}
+
+.adjust-add-button-icon {
+    font-size: 16px;
+}
+
+/* =========================================================
+   BANNER DE CONFIRMAÇÃO (toast no topo)
+========================================================= */
+.adjust-banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #22C55E;
+    color: #FFFFFF;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2000;
+    max-width: 90%;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+.adjust-banner.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+.adjust-banner-icon {
+    font-size: 18px;
+}
+
+.adjust-banner.adjust-banner-error {
+    background: #EF4444;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+}
+
+/* =========================================================
+   BADGE "AJUSTADO" NA TABELA
+========================================================= */
+.adjust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-left: 4px;
+}
+
+.adjust-badge-approved {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.adjust-badge-pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+@media (max-width: 480px) {
+
+    .adjust-modal-header {
+        padding: 16px 20px 12px;
+    }
+
+    .adjust-modal-title {
+        font-size: 15px;
+    }
+
+    .adjust-modal-body {
+        padding: 16px 20px;
+    }
+
+    .adjust-modal-footer {
+        padding: 14px 20px 16px;
+        flex-direction: column-reverse;
+    }
+
+    .adjust-btn {
+        padding: 12px 16px;
+    }
+
+    .adjust-time-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .adjust-banner {
+        font-size: 12px;
+        padding: 12px 16px;
+        top: 12px;
+    }
+}
