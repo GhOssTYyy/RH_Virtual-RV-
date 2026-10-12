@@ -98,6 +98,32 @@
 
     </main>
 
+    <!-- Menu Inferior do RH -->
+    <nav class="bottom-tabs">
+        
+        <button class="tab active" data-tab="dashboard">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Dashboard</span>
+        </button>
+
+        <button class="tab" data-tab="approvals" id="tab-approvals">
+            <span class="tab-icon">✅</span>
+            <span class="tab-label">Aprovações</span>
+            <span class="tab-badge" id="tab-approvals-badge" style="display: none;">0</span>
+        </button>
+
+        <button class="tab" data-tab="employees">
+            <span class="tab-icon">👥</span>
+            <span class="tab-label">Funcionários</span>
+        </button>
+
+        <button class="tab" data-tab="settings">
+            <span class="tab-icon">⚙️</span>
+            <span class="tab-label">Config.</span>
+        </button>
+
+    </nav>
+
     <script type="module" src="/js/RH/rh_dashboard.js"></script>
 
 </body>
