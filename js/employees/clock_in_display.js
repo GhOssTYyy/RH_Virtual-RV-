@@ -586,27 +586,27 @@ function update_location_display(location_result) {
     let nova_classe = ""
     
     if (status === "dentro") {
-        novo_texto = `✅ Dentro da área (${formatar_distancia(distance)})`
+        novo_texto = `Dentro da área (${formatar_distancia(distance)})`
         nova_classe = "status-dentro"
         
     } else if (status === "fora") {
-        novo_texto = `⚠️ Fora da área (${formatar_distancia(distance)})`
+        novo_texto = `Fora da área (${formatar_distancia(distance)})`
         nova_classe = "status-fora"
         
     } else if (status === "impreciso") {
-        novo_texto = `📡 GPS impreciso (±${accuracy}m)`
+        novo_texto = `GPS impreciso (±${accuracy}m)`
         nova_classe = "status-impreciso"
         
     } else if (status === "sem_gps") {
-        novo_texto = `❓ Localização indisponível`
+        novo_texto = `Localização indisponível`
         nova_classe = "status-sem-gps"
         
     } else if (status === "sem_config") {
-        novo_texto = `⚙️ Configuração da empresa não encontrada`
+        novo_texto = `Configuração da empresa não encontrada`
         nova_classe = "status-erro"
         
     } else {
-        novo_texto = `📍 Localização registrada`
+        novo_texto = `Localização registrada`
     }
     
     // Atualiza a tela
