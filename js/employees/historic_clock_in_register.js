@@ -1,6 +1,13 @@
 import { auth, db } from "../firebase_config.js"
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+import {
+    criar_modal_ajuste,
+    configurar_eventos_modal,
+    abrir_modal_ajuste_simples,
+    abrir_modal_ponto_esquecido,
+    mostrar_banner
+} from "./clock_in_adjust.js"
 
 
 // ============================================
@@ -19,12 +26,20 @@ const container_el = document.getElementById("historic-clock-in-register-contain
 
 
 // ============================================
+// REFERÊNCIAS — BOTÕES DE AJUSTE
+// ============================================
+const adjust_add_button = document.getElementById("adjust-add-button")
+const adjust_my_requests_button = document.getElementById("adjust-my-requests-button")
+
+
+// ============================================
 // ESTADO
 // ============================================
 let usuario_atual = null
 let meses_disponiveis = []
 let ano_ativo = null
 let mes_ativo = null
+let employee_name = ""
 
 
 // ============================================
@@ -112,8 +127,67 @@ onAuthStateChanged(auth, async function(user) {
     
     usuario_atual = user
     
+    // 🔑 Cria o modal de ajuste (uma vez)
+    criar_modal_ajuste()
+    configurar_eventos_modal()
+    
+    // 🔑 Carrega o nome do funcionário
+    await carregar_nome_funcionario(user)
+    
+    // 🔑 Configura os botões de ajuste
+    configurar_botoes_ajuste()
+    
+    // Carrega o histórico
     await carregar_indice_de_meses()
 })
+
+
+// ============================================
+// CARREGA O NOME DO FUNCIONÁRIO (do Firestore)
+// ============================================
+async function carregar_nome_funcionario(user) {
+    try {
+        const snap = await getDoc(doc(db, "employees", user.uid))
+        if (snap.exists()) {
+            const dados = snap.data()
+            employee_name = dados.name || user.email.split("@")[0]
+        } else {
+            employee_name = user.email.split("@")[0]
+        }
+        console.log("👤 Nome do funcionário:", employee_name)
+    } catch (error) {
+        console.log("⚠️ Erro ao buscar nome:", error)
+        employee_name = user.email.split("@")[0]
+    }
+}
+
+
+// ============================================
+// CONFIGURA OS BOTÕES DE AJUSTE
+// ============================================
+function configurar_botoes_ajuste() {
+    
+    // Botão "Adicionar ponto esquecido"
+    if (adjust_add_button) {
+        adjust_add_button.addEventListener("click", function() {
+            abrir_modal_ponto_esquecido({
+                employee_name: employee_name,
+                on_success: function() {
+                    // Recarrega o mês depois
+                    carregar_mes(ano_ativo, mes_ativo)
+                }
+            })
+        })
+    }
+    
+    // Botão "Meus ajustes"
+    if (adjust_my_requests_button) {
+        adjust_my_requests_button.addEventListener("click", function() {
+            mostrar_banner("📋 Em breve: lista de ajustes", "success")
+            // TODO: implementar tela de ajustes pendentes
+        })
+    }
+}
 
 
 // ============================================
@@ -141,7 +215,7 @@ async function carregar_indice_de_meses() {
             return
         }
         
-        // Mês mais recente (já vem ordenado desc do Firestore)
+        // Mês mais recente (já vem ordenado desc)
         const mes_mais_recente = meses_disponiveis[0]
         const [ano, mes] = mes_mais_recente.split("-")
         
@@ -292,6 +366,7 @@ async function buscar_registros_do_mes(user, ano, mes) {
                 if (snapshot.exists()) {
                     return {
                         day: dia_fmt,
+                        date: data_str,
                         ...snapshot.data()
                     }
                 }
@@ -302,6 +377,36 @@ async function buscar_registros_do_mes(user, ano, mes) {
     
     const resultados = await Promise.all(promises)
     return resultados.filter(r => r !== null)
+}
+
+
+// ============================================
+// CRIA O BOTÃO "AJUSTAR" DA LINHA
+// ============================================
+function criar_botao_ajustar(register) {
+    
+    const botao = document.createElement("button")
+    botao.className = "adjust-row-button"
+    botao.innerHTML = `
+        <span class="adjust-row-button-icon">✏️</span>
+        <span>Ajustar</span>
+    `
+    
+    botao.addEventListener("click", function() {
+        
+        // Abre o modal com o campo "entrada" por padrão
+        abrir_modal_ajuste_simples({
+            data: register.date,
+            campo: "entrada",
+            valor_atual: register.entrada || "",
+            employee_name: employee_name,
+            on_success: function() {
+                carregar_mes(ano_ativo, mes_ativo)
+            }
+        })
+    })
+    
+    return botao
 }
 
 
@@ -325,6 +430,7 @@ function renderizar_historico(registros, container) {
                 <th>Saída</th>
                 <th>Horas</th>
                 <th>Extras</th>
+                <th>Ação</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -357,7 +463,13 @@ function renderizar_historico(registros, container) {
             <td>${register.saida || "-"}</td>
             <td>${register.hours_worked || "-"}</td>
             <td class="${extra_class}">${extra_text}</td>
+            <td class="adjust-action-cell"></td>
         `
+        
+        // Adiciona o botão na última célula
+        const celula_acao = line.querySelector(".adjust-action-cell")
+        const botao = criar_botao_ajustar(register)
+        celula_acao.appendChild(botao)
         
         tbody.appendChild(line)
     })
