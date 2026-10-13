@@ -219,11 +219,32 @@ body {
     font-weight: 500;
 }
 
+/* =========================================================
+   STATUS DE LOCALIZAÇÃO (dinâmico)
+========================================================= */
 .location-status {
     font-size: 12px;
-    color: var(--verde);
     font-weight: 600;
+    color: var(--texto-secundario);
     margin-bottom: 22px;
+    transition: color 0.3s ease;
+}
+
+.location-status.status-dentro {
+    color: var(--verde);
+}
+
+.location-status.status-fora {
+    color: #D97706;
+}
+
+.location-status.status-impreciso,
+.location-status.status-sem-gps {
+    color: var(--texto-secundario);
+}
+
+.location-status.status-erro {
+    color: var(--vermelho);
 }
 
 /* =========================================================
@@ -491,36 +512,6 @@ body {
 .tab-label {
     font-size: 10px;
     font-weight: 600;
-}
-
-/* =========================================================
-   ÍCONES (imagens com fallback)
-========================================================= */
-.header-back-icon {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    display: block;
-}
-
-.icon-img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    display: block;
-}
-
-.balance-icon .icon-img {
-    width: 22px;
-    height: 22px;
-}
-
-.tab-icon-img {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    display: block;
-    line-height: 1;
 }
 
 /* =========================================================

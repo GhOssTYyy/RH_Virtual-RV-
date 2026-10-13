@@ -26,6 +26,7 @@ const status_text = document.getElementById("status-text")
 const clock_time_screen = document.getElementById("clock-time-screen")
 const clock_date_screen = document.getElementById("clock-date-screen")
 const clock_in_message = document.getElementById("clock-in-message")
+const location_status_text = document.getElementById("location-status-text")
 
 
 // ============================================
@@ -402,10 +403,13 @@ async function save_clock_in_to_database(clock_in_type, time) {
         return null
     }
     
-    // 🔑 NOVO: verifica a localização antes de salvar
+    // 🔑 Verifica a localização antes de salvar
     console.log("📍 Verificando localização...")
     const location = await verify_location()
     console.log("📍 Resultado:", location.status, "-", location.message)
+    
+    // 🔑 Atualiza o texto na tela com o status
+    update_location_display(location)
     
     const current_date_formatted = new Date().toISOString().split('T')[0]
     const document_id = current_date_formatted + "_" + user.uid
@@ -418,7 +422,7 @@ async function save_clock_in_to_database(clock_in_type, time) {
             date: current_date_formatted,
             [clock_in_type]: time,
             
-            // 🔑 NOVO: campos de localização
+            // Campos de localização
             latitude: location.latitude,
             longitude: location.longitude,
             accuracy: location.accuracy,
@@ -433,12 +437,11 @@ async function save_clock_in_to_database(clock_in_type, time) {
             await atualizar_indice_de_meses(user, current_date_formatted)
         }
         
-        // 🔑 NOVO: retorna o status da localização
         return location
         
     } catch (error) {
         console.log("❌ Erro ao salvar ponto:", error.code, error.message)
-        return location // ainda retorna, pra mostrar a mensagem
+        return location
     }
 }
 
@@ -516,12 +519,118 @@ async function save_hours_to_database(result) {
 
 
 // ============================================
-// MOSTRA MENSAGEM DE FEEDBACK (COM COR POR LOCALIZAÇÃO)
+// RESTAURA O ÚLTIMO STATUS DE LOCALIZAÇÃO
+// ============================================
+// Lê o localStorage e mostra o último status salvo.
+// NÃO verifica o GPS (respeitando a privacidade).
+function restaurar_status_localizacao() {
+    
+    try {
+        const salvo = localStorage.getItem("last_location_status")
+        
+        // Sem status salvo → mostra mensagem neutra
+        if (!salvo) {
+            if (location_status_text) {
+                location_status_text.textContent = "📍 Localização será verificada no registro"
+                location_status_text.className = "location-status"
+            }
+            return
+        }
+        
+        const dados = JSON.parse(salvo)
+        
+        if (location_status_text) {
+            location_status_text.textContent = dados.text
+            location_status_text.className = "location-status " + (dados.classe || "")
+        }
+        
+        console.log("📍 Status restaurado do localStorage:", dados.text)
+        
+    } catch (error) {
+        console.log("⚠️ Erro ao restaurar status:", error)
+        
+        if (location_status_text) {
+            location_status_text.textContent = "Localização será verificada no registro"
+            location_status_text.className = "location-status"
+        }
+    }
+}
+
+// ============================================
+// ATUALIZA O STATUS DE LOCALIZAÇÃO NA TELA
+// ============================================
+function update_location_display(location_result) {
+    
+    if (!location_status_text) return
+    
+    // Limpa classes antigas
+    location_status_text.className = "location-status"
+    
+    if (!location_result) {
+        location_status_text.textContent = "📍 Verificando localização..."
+        return
+    }
+    
+    const status = location_result.status
+    const distance = location_result.distance
+    const accuracy = location_result.accuracy
+    
+    // Formata distância (m ou km)
+    function formatar_distancia(m) {
+        if (m === null || m === undefined) return ""
+        if (m < 1000) return `${m}m`
+        return `${(m / 1000).toFixed(1)}km`
+    }
+    
+    let novo_texto = ""
+    let nova_classe = ""
+    
+    if (status === "dentro") {
+        novo_texto = `✅ Dentro da área (${formatar_distancia(distance)})`
+        nova_classe = "status-dentro"
+        
+    } else if (status === "fora") {
+        novo_texto = `⚠️ Fora da área (${formatar_distancia(distance)})`
+        nova_classe = "status-fora"
+        
+    } else if (status === "impreciso") {
+        novo_texto = `📡 GPS impreciso (±${accuracy}m)`
+        nova_classe = "status-impreciso"
+        
+    } else if (status === "sem_gps") {
+        novo_texto = `❓ Localização indisponível`
+        nova_classe = "status-sem-gps"
+        
+    } else if (status === "sem_config") {
+        novo_texto = `⚙️ Configuração da empresa não encontrada`
+        nova_classe = "status-erro"
+        
+    } else {
+        novo_texto = `📍 Localização registrada`
+    }
+    
+    // Atualiza a tela
+    location_status_text.textContent = novo_texto
+    location_status_text.classList.add(nova_classe)
+    
+    // 🔑 Salva no localStorage pra persistir
+    localStorage.setItem("last_location_status", JSON.stringify({
+        text: novo_texto,
+        classe: nova_classe,
+        timestamp: Date.now()
+    }))
+    
+    console.log("✅ Status de localização salvo no localStorage")
+}
+
+
+// ============================================
+// MOSTRA MENSAGEM DE FEEDBACK
 // ============================================
 function show_message(text, location_status) {
     clock_in_message.textContent = text
     
-    // 🔑 NOVO: muda a cor do fundo conforme o status da localização
+    // Muda a cor do fundo conforme o status da localização
     if (location_status === "dentro") {
         clock_in_message.style.background = "#E8F5EE"
         clock_in_message.style.color = "#166534"
@@ -664,6 +773,9 @@ tabs.forEach(function(tab) {
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
 onAuthStateChanged(auth, function(user) {
     
     if (!user) {
@@ -682,8 +794,11 @@ onAuthStateChanged(auth, function(user) {
     // Atualiza avatar
     avatar.textContent = user_name.substring(0, 2).toUpperCase()
     
-    // Restaura
+    // Restaura os pontos do dia (localStorage)
     restore_clock_in_from_local_storage()
+    
+    // 🔑 NOVO: restaura o último status de localização (sem verificar GPS)
+    restaurar_status_localizacao()
     
     // Relógio
     update_clock()
