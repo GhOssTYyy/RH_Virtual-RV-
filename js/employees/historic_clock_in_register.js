@@ -391,13 +391,11 @@ function criar_botao_ajustar(register) {
     const botao = document.createElement("button")
     botao.className = "adjust-row-button"
     botao.innerHTML = `
-        <span class="adjust-row-button-icon">✏️</span>
+        <img src="/assets/icons/edit_icon.svg" alt="✏️" class="adjust-row-button-icon" onerror="this.replaceWith('✏️')">
         <span>Ajustar</span>
     `
     
     botao.addEventListener("click", function() {
-        
-        // Abre o modal com o campo "entrada" por padrão
         abrir_modal_ajuste_simples({
             data: register.date,
             campo: "entrada",

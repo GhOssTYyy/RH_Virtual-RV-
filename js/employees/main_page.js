@@ -3,6 +3,29 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/fi
 
 
 // ============================================
+// MAPA DE ÍCONES DO CARD PRÓXIMA AÇÃO
+// ============================================
+const ICONES_PROXIMA_ACAO = {
+    "⏰": { arquivo: "/assets/icons/clock-in-button-icon.svg", emoji: "⏰" },
+    "🍽️": { arquivo: "/assets/icons/dining_icon.svg",           emoji: "🍽️" },
+    "🔄": { arquivo: "/assets/icons/return_icon.svg",          emoji: "🔄" },
+    "🏁": { arquivo: "/assets/icons/exit_icon.svg",          emoji: "🏁" },
+    "✅": { arquivo: "/assets/icons/check_icon.svg",           emoji: "✅" }
+}
+
+
+// ============================================
+// HELPER — Gera o HTML do ícone
+// ============================================
+function icone_proxima_acao(emoji) {
+    const item = ICONES_PROXIMA_ACAO[emoji]
+    if (!item) return ""
+    
+    return `<img src="${item.arquivo}" alt="${item.emoji}" class="icon-img" onerror="this.replaceWith('${item.emoji}')">`
+}
+
+
+// ============================================
 // REFERÊNCIAS DO DOM
 // ============================================
 const welcome_name = document.getElementById("welcome-name")
@@ -26,7 +49,7 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
-        // 🔑 Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
+        // Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
         if (target === "rh") return
         
         tabs.forEach(t => t.classList.remove("active"))
@@ -140,35 +163,19 @@ function gerar_proxima_acao() {
 
 
 // ============================================
-// ATUALIZA PRÓXIMA AÇÃO
+// ATUALIZA PRÓXIMA AÇÃO (COM IMAGEM)
 // ============================================
-const MAPA_ICONES = {
-    "⏰": "/assets/icons/clock-in-button-icon.svg",
-    "🍽️": "lunch.svg",
-    "🔄": "return.svg",
-    "🏁": "finish.svg",
-    "✅": "check.svg"
-}
-
 function atualizar_proxima_acao() {
     
     const acao = gerar_proxima_acao()
     
-    // Descobre o arquivo do ícone baseado no emoji
-    const arquivo_icone = MAPA_ICONES[acao.icon] || ""
-    const caminho_icone = arquivo_icone ? `/assets/icons/${arquivo_icone}` : ""
+    // Renderiza o ícone com imagem + fallback
+    next_action_icon.innerHTML = icone_proxima_acao(acao.icon)
     
-    next_action_icon.innerHTML = `
-        <img 
-            src="${caminho_icone}" 
-            alt="${acao.icon}" 
-            class="icon-img" 
-            onerror="this.replaceWith('${acao.icon}')"
-        >
-    `
     next_action_title.textContent = acao.title
     next_action_subtitle.textContent = acao.subtitle
 }
+
 
 // ============================================
 // INICIALIZAÇÃO

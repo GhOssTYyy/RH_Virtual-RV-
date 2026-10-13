@@ -3,11 +3,39 @@ import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/fir
 
 
 // =========================================================
+// MAPA DE ÍCONES
+// =========================================================
+const ICONES = {
+    dia:          { emoji: "📅", arquivo: "/assets/icons/calendar_icon.svg" },
+    campo:        { emoji: "⏰", arquivo: "/assets/icons/clock-in-button-icon.svg" },
+    horario:      { emoji: "📝", arquivo: "/assets/icons/edit_icon.svg" },
+    categoria:    { emoji: "📋", arquivo: "/assets/icons/content_paste_icon.svg" },
+    motivo:       { emoji: "💬", arquivo: "/assets/icons/message_icon.svg" },
+    
+    entrada:      { emoji: "⏰", arquivo: "/assets/icons/clock-in-button-icon.svg" },
+    almoço:       { emoji: "🍽️", arquivo: "/assets/icons/dining_icon.svg" },
+    volta:        { emoji: "🔄", arquivo: "/assets/icons/return_icon.svg" },
+    saida:        { emoji: "🏁", arquivo: "/assets/icons/exit_icon.svg" },
+    
+    sucesso:      { emoji: "✅", arquivo: "/assets/icons/check_icon.svg" },
+    erro:         { emoji: "❌", arquivo: "/assets/icons/close_icon.svg" }
+}
+
+
+// =========================================================
+// HELPER — Gera o HTML do ícone
+// =========================================================
+function icone(nome, classe = "icon-img") {
+    const item = ICONES[nome]
+    if (!item) return ""
+    
+    return `<img src="${item.arquivo}" alt="${item.emoji}" class="${classe}" onerror="this.replaceWith('${item.emoji}')">`
+}
+
+
+// =========================================================
 // CATEGORIAS DISPONÍVEIS
 // =========================================================
-// Cada categoria tem: id (vai pro Firestore), label (mostrado), 
-// icone (visual), exige_motivo (se é obrigatório detalhar)
-
 export const CATEGORIAS = [
     { id: "esquecimento",       label: "Esquecimento",                icone: "📌" },
     { id: "erro",               label: "Erro de digitação",           icone: "❌" },
@@ -23,7 +51,7 @@ export const CATEGORIAS = [
 
 
 // =========================================================
-// MAPEAMENTO DE CAMPOS (pra exibição)
+// MAPEAMENTO DE CAMPOS
 // =========================================================
 export const CAMPOS_LABEL = {
     entrada:        "Entrada",
@@ -38,15 +66,13 @@ export const CAMPOS_LABEL = {
 // =========================================================
 export function validar_horario(valor) {
     if (!valor) return false
-    
-    // Regex: 00:00 até 23:59
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/
     return regex.test(valor)
 }
 
 
 // =========================================================
-// CRIA O HTML DO MODAL DE AJUSTE
+// CRIA O MODAL
 // =========================================================
 export function criar_modal_ajuste() {
     
@@ -56,18 +82,13 @@ export function criar_modal_ajuste() {
     
     modal.innerHTML = `
         <div class="adjust-modal" id="adjust-modal">
-            
             <div class="adjust-modal-header">
                 <h3 class="adjust-modal-title" id="adjust-modal-title">
                     Solicitar Ajuste
                 </h3>
                 <button class="adjust-modal-close" id="adjust-modal-close">✕</button>
             </div>
-
-            <div class="adjust-modal-body" id="adjust-modal-body">
-                <!-- preenchido via JS -->
-            </div>
-
+            <div class="adjust-modal-body" id="adjust-modal-body"></div>
             <div class="adjust-modal-footer">
                 <button class="adjust-btn adjust-btn-secondary" id="adjust-modal-cancel">
                     Cancelar
@@ -76,18 +97,16 @@ export function criar_modal_ajuste() {
                     Enviar
                 </button>
             </div>
-
         </div>
     `
     
     document.body.appendChild(modal)
-    
     return modal
 }
 
 
 // =========================================================
-// ABRE O MODAL — AJUSTE DE CAMPO ESPECÍFICO
+// ABRE MODAL — AJUSTE SIMPLES
 // =========================================================
 export function abrir_modal_ajuste_simples({
     data,
@@ -101,25 +120,18 @@ export function abrir_modal_ajuste_simples({
     const body = document.getElementById("adjust-modal-body")
     const title = document.getElementById("adjust-modal-title")
     
-    if (!modal || !body) {
-        console.error("❌ Modal não encontrado no DOM")
-        return
-    }
+    if (!modal || !body) return
     
     title.textContent = "Solicitar Ajuste"
     
-    // Formata a data pra exibição (DD/MM/YYYY)
     const [ano, mes, dia] = data.split("-")
     const data_formatada = `${dia}/${mes}/${ano}`
-    
-    // Campo por extenso
     const campo_label = CAMPOS_LABEL[campo] || campo
     
     body.innerHTML = `
-        <!-- Info do dia -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">📅</span>
+                ${icone("dia", "adjust-label-icon")}
                 Dia
             </span>
             <div class="adjust-value-info">
@@ -127,10 +139,9 @@ export function abrir_modal_ajuste_simples({
             </div>
         </div>
 
-        <!-- Campo a ajustar -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">⏰</span>
+                ${icone("campo", "adjust-label-icon")}
                 Campo
             </span>
             <div class="adjust-value-info">
@@ -138,10 +149,9 @@ export function abrir_modal_ajuste_simples({
             </div>
         </div>
 
-        <!-- Valor atual → novo -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">📝</span>
+                ${icone("horario", "adjust-label-icon")}
                 Novo horário
             </span>
             <div class="adjust-value-info">
@@ -162,10 +172,9 @@ export function abrir_modal_ajuste_simples({
             </span>
         </div>
 
-        <!-- Categoria -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">📋</span>
+                ${icone("categoria", "adjust-label-icon")}
                 Categoria
             </span>
             <select class="adjust-select" id="adjust-select-category">
@@ -175,10 +184,9 @@ export function abrir_modal_ajuste_simples({
             </select>
         </div>
 
-        <!-- Motivo (obrigatório) -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">💬</span>
+                ${icone("motivo", "adjust-label-icon")}
                 Motivo *
             </span>
             <textarea 
@@ -193,30 +201,25 @@ export function abrir_modal_ajuste_simples({
         </div>
     `
     
-    // Guarda referências dos valores
     modal.dataset.target_date = data
     modal.dataset.target_field = campo
     modal.dataset.original_value = valor_atual || ""
     modal.dataset.mode = "simple"
     modal.dataset.employee_name = employee_name || ""
     
-    // Abre o modal
     modal.classList.add("active")
     
-    // Foca no input
     setTimeout(() => {
         const input = document.getElementById("adjust-input-value")
         if (input) input.focus()
     }, 100)
     
-    // Callback de sucesso
-    modal.dataset.on_success = "true"
     modal._on_success = on_success
 }
 
 
 // =========================================================
-// ABRE O MODAL — PONTO ESQUECIDO (dia inteiro)
+// ABRE MODAL — PONTO ESQUECIDO
 // =========================================================
 export function abrir_modal_ponto_esquecido({
     employee_name,
@@ -227,21 +230,16 @@ export function abrir_modal_ponto_esquecido({
     const body = document.getElementById("adjust-modal-body")
     const title = document.getElementById("adjust-modal-title")
     
-    if (!modal || !body) {
-        console.error("❌ Modal não encontrado no DOM")
-        return
-    }
+    if (!modal || !body) return
     
     title.textContent = "Adicionar Ponto Esquecido"
     
-    // Data de hoje em formato YYYY-MM-DD (default)
     const hoje = new Date().toISOString().split("T")[0]
     
     body.innerHTML = `
-        <!-- Data -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">📅</span>
+                ${icone("dia", "adjust-label-icon")}
                 Data do ponto esquecido
             </span>
             <input 
@@ -256,15 +254,16 @@ export function abrir_modal_ponto_esquecido({
             </span>
         </div>
 
-        <!-- Horários -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">⏰</span>
+                ${icone("campo", "adjust-label-icon")}
                 Horários trabalhados
             </span>
             <div class="adjust-time-grid">
                 <div class="adjust-time-item">
-                    <label for="adjust-input-entrada">Entrada</label>
+                    <label for="adjust-input-entrada">
+                        ${icone("entrada", "time-label-icon")} Entrada
+                    </label>
                     <input 
                         type="text" 
                         class="adjust-input" 
@@ -274,7 +273,9 @@ export function abrir_modal_ponto_esquecido({
                     >
                 </div>
                 <div class="adjust-time-item">
-                    <label for="adjust-input-inicio_almoco">Almoço</label>
+                    <label for="adjust-input-inicio_almoco">
+                        ${icone("almoço", "time-label-icon")} Almoço
+                    </label>
                     <input 
                         type="text" 
                         class="adjust-input" 
@@ -284,7 +285,9 @@ export function abrir_modal_ponto_esquecido({
                     >
                 </div>
                 <div class="adjust-time-item">
-                    <label for="adjust-input-fim_almoco">Volta</label>
+                    <label for="adjust-input-fim_almoco">
+                        ${icone("volta", "time-label-icon")} Volta
+                    </label>
                     <input 
                         type="text" 
                         class="adjust-input" 
@@ -294,7 +297,9 @@ export function abrir_modal_ponto_esquecido({
                     >
                 </div>
                 <div class="adjust-time-item">
-                    <label for="adjust-input-saida">Saída</label>
+                    <label for="adjust-input-saida">
+                        ${icone("saida", "time-label-icon")} Saída
+                    </label>
                     <input 
                         type="text" 
                         class="adjust-input" 
@@ -310,10 +315,9 @@ export function abrir_modal_ponto_esquecido({
             </span>
         </div>
 
-        <!-- Categoria -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">📋</span>
+                ${icone("categoria", "adjust-label-icon")}
                 Categoria
             </span>
             <select class="adjust-select" id="adjust-select-category">
@@ -323,10 +327,9 @@ export function abrir_modal_ponto_esquecido({
             </select>
         </div>
 
-        <!-- Motivo -->
         <div class="adjust-field">
             <span class="adjust-label">
-                <span class="adjust-label-icon">💬</span>
+                ${icone("motivo", "adjust-label-icon")}
                 Motivo *
             </span>
             <textarea 
@@ -367,50 +370,36 @@ export function fechar_modal_ajuste() {
 
 
 // =========================================================
-// CONFIGURA OS EVENTOS DO MODAL (chamado UMA vez)
+// CONFIGURA OS EVENTOS DO MODAL
 // =========================================================
 export function configurar_eventos_modal() {
     
     const modal = document.getElementById("adjust-modal-overlay")
     if (!modal) return
     
-    // Fechar (X)
     const btn_close = document.getElementById("adjust-modal-close")
-    if (btn_close) {
-        btn_close.addEventListener("click", fechar_modal_ajuste)
-    }
+    if (btn_close) btn_close.addEventListener("click", fechar_modal_ajuste)
     
-    // Cancelar
     const btn_cancel = document.getElementById("adjust-modal-cancel")
-    if (btn_cancel) {
-        btn_cancel.addEventListener("click", fechar_modal_ajuste)
-    }
+    if (btn_cancel) btn_cancel.addEventListener("click", fechar_modal_ajuste)
     
-    // Fechar ao clicar fora
     modal.addEventListener("click", function(e) {
-        if (e.target === modal) {
-            fechar_modal_ajuste()
-        }
+        if (e.target === modal) fechar_modal_ajuste()
     })
     
-    // Fechar com ESC
     document.addEventListener("keydown", function(e) {
         if (e.key === "Escape" && modal.classList.contains("active")) {
             fechar_modal_ajuste()
         }
     })
     
-    // Enviar
     const btn_submit = document.getElementById("adjust-modal-submit")
-    if (btn_submit) {
-        btn_submit.addEventListener("click", enviar_solicitacao)
-    }
+    if (btn_submit) btn_submit.addEventListener("click", enviar_solicitacao)
     
-    // Formatação automática dos inputs de horário (adiciona ":")
+    // Formatação automática dos inputs de horário
     document.addEventListener("input", function(e) {
         if (e.target.classList && e.target.classList.contains("adjust-input")) {
-            const tipo = e.target.type
-            if (tipo === "text" && e.target.maxLength === 5) {
+            if (e.target.type === "text" && e.target.maxLength === 5) {
                 let valor = e.target.value.replace(/\D/g, "")
                 if (valor.length > 2) {
                     valor = valor.substring(0, 2) + ":" + valor.substring(2, 4)
@@ -423,10 +412,9 @@ export function configurar_eventos_modal() {
 
 
 // =========================================================
-// ENVIA A SOLICITAÇÃO (valida + salva)
+// ENVIA A SOLICITAÇÃO
 // =========================================================
 async function enviar_solicitacao() {
-    
     const modal = document.getElementById("adjust-modal-overlay")
     const mode = modal.dataset.mode
     
@@ -452,13 +440,11 @@ async function enviar_solicitacao_simples() {
     
     let has_error = false
     
-    // Limpa erros
     error_value.classList.remove("visible")
     error_reason.classList.remove("visible")
     input_value.style.borderColor = ""
     textarea_reason.style.borderColor = ""
     
-    // Valida horário
     const novo_valor = input_value.value.trim()
     if (!validar_horario(novo_valor)) {
         error_value.classList.add("visible")
@@ -466,7 +452,6 @@ async function enviar_solicitacao_simples() {
         has_error = true
     }
     
-    // Valida motivo
     const motivo = textarea_reason.value.trim()
     if (motivo.length < 5) {
         error_reason.classList.add("visible")
@@ -476,7 +461,6 @@ async function enviar_solicitacao_simples() {
     
     if (has_error) return
     
-    // 📝 Confirmação "Tem certeza?"
     const target_date = modal.dataset.target_date
     const target_field = modal.dataset.target_field
     const original_value = modal.dataset.original_value
@@ -497,7 +481,6 @@ async function enviar_solicitacao_simples() {
     
     if (!ok) return
     
-    // Desabilita botão
     const btn_submit = document.getElementById("adjust-modal-submit")
     btn_submit.disabled = true
     btn_submit.textContent = "Enviando..."
@@ -510,18 +493,14 @@ async function enviar_solicitacao_simples() {
             employee_id: user.uid,
             employee_email: user.email,
             employee_name: modal.dataset.employee_name || user.email.split("@")[0],
-            
             target_date: target_date,
             target_field: target_field,
             original_value: original_value || null,
             requested_value: novo_valor,
-            
             reason: motivo,
             category: select_category.value,
-            
             status: "pending",
             requested_at: serverTimestamp(),
-            
             reviewed_by: null,
             reviewed_by_email: null,
             reviewed_at: null,
@@ -531,7 +510,6 @@ async function enviar_solicitacao_simples() {
         fechar_modal_ajuste()
         mostrar_banner("✅ Solicitação enviada! O RH será notificado.", "success")
         
-        // Callback de sucesso
         if (typeof modal._on_success === "function") {
             modal._on_success()
         }
@@ -565,29 +543,23 @@ async function enviar_solicitacao_esquecido() {
     
     let has_error = false
     
-    // Limpa erros
     error_date.classList.remove("visible")
     error_times.classList.remove("visible")
     error_reason.classList.remove("visible")
     
-    // Valida data
     const data = input_date.value
     if (!data) {
         error_date.classList.add("visible")
         has_error = true
     }
     
-    // Valida horários
     const entrada = input_entrada.value.trim()
     const ini_almoco = input_ini_almoco.value.trim()
     const fim_almoco = input_fim_almoco.value.trim()
     const saida = input_saida.value.trim()
     
-    // Entrada e saída são obrigatórios
     const entrada_ok = validar_horario(entrada)
     const saida_ok = validar_horario(saida)
-    
-    // Almoço é opcional, mas se preenchido, tem que ser válido
     const ini_almoco_ok = !ini_almoco || validar_horario(ini_almoco)
     const fim_almoco_ok = !fim_almoco || validar_horario(fim_almoco)
     
@@ -596,7 +568,6 @@ async function enviar_solicitacao_esquecido() {
         has_error = true
     }
     
-    // Valida motivo
     const motivo = textarea_reason.value.trim()
     if (motivo.length < 5) {
         error_reason.classList.add("visible")
@@ -606,7 +577,6 @@ async function enviar_solicitacao_esquecido() {
     
     if (has_error) return
     
-    // Confirmação
     const [ano, mes, dia] = data.split("-")
     const data_formatada = `${dia}/${mes}/${ano}`
     
@@ -625,7 +595,6 @@ async function enviar_solicitacao_esquecido() {
     
     if (!ok) return
     
-    // Desabilita botão
     const btn_submit = document.getElementById("adjust-modal-submit")
     btn_submit.disabled = true
     btn_submit.textContent = "Enviando..."
@@ -638,7 +607,6 @@ async function enviar_solicitacao_esquecido() {
             employee_id: user.uid,
             employee_email: user.email,
             employee_name: modal.dataset.employee_name || user.email.split("@")[0],
-            
             target_date: data,
             target_field: "all",
             original_value: null,
@@ -648,13 +616,10 @@ async function enviar_solicitacao_esquecido() {
                 fim_almoco: fim_almoco || null,
                 saida: saida
             },
-            
             reason: motivo,
             category: select_category.value,
-            
             status: "pending",
             requested_at: serverTimestamp(),
-            
             reviewed_by: null,
             reviewed_by_email: null,
             reviewed_at: null,
@@ -688,13 +653,12 @@ function obter_label_categoria(id) {
 
 
 // =========================================================
-// MODAL DE CONFIRMAÇÃO ("Tem certeza?")
+// MODAL DE CONFIRMAÇÃO
 // =========================================================
 function mostrar_confirmacao({ titulo, linhas, aviso }) {
     
     return new Promise((resolve) => {
         
-        // Cria overlay de confirmação
         const overlay = document.createElement("div")
         overlay.className = "adjust-modal-overlay active"
         overlay.style.zIndex = "1500"
@@ -750,11 +714,10 @@ function mostrar_confirmacao({ titulo, linhas, aviso }) {
 
 
 // =========================================================
-// BANNER DE CONFIRMAÇÃO (toast no topo)
+// BANNER DE FEEDBACK
 // =========================================================
 export function mostrar_banner(texto, tipo = "success") {
     
-    // Remove banner antigo se existir
     const antigo = document.getElementById("adjust-banner")
     if (antigo) antigo.remove()
     
@@ -766,19 +729,17 @@ export function mostrar_banner(texto, tipo = "success") {
         banner.classList.add("adjust-banner-error")
     }
     
-    const icone = tipo === "success" ? "✅" : "❌"
+    const icone_nome = tipo === "success" ? "sucesso" : "erro"
     
     banner.innerHTML = `
-        <span class="adjust-banner-icon">${icone}</span>
+        ${icone(icone_nome, "adjust-banner-icon")}
         <span>${texto}</span>
     `
     
     document.body.appendChild(banner)
     
-    // Anima entrada
     setTimeout(() => banner.classList.add("active"), 50)
     
-    // Remove depois de 4s
     setTimeout(() => {
         banner.classList.remove("active")
         setTimeout(() => banner.remove(), 400)
