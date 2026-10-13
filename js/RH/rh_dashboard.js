@@ -99,17 +99,13 @@ function configurar_tabs_rh() {
             
             console.log("🚀 Tab RH clicada:", target)
             
-        if (target === "dashboard") {
-            return
-        } else if (target === "approvals") {
-            window.location.href = "/pages/RH/rh-approvals.html"
-        } else if (target === "employees") {
-            alert("Em breve: Funcionários")
-        } else if (target === "settings") {
-            alert("Em breve: Configurações")
-        } else if (target === "back") {
-            window.location.href = "/pages/employees/main-page.html"
-        }
+            if (target === "dashboard") {
+                return
+            } else if (target === "approvals") {
+                window.location.href = "/pages/RH/rh-approvals.html"
+            } else if (target === "home") {
+                window.location.href = "/pages/employees/main-page.html"
+            }
         })
     })
 }

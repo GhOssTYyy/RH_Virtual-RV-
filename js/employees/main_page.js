@@ -142,17 +142,33 @@ function gerar_proxima_acao() {
 // ============================================
 // ATUALIZA PRÓXIMA AÇÃO
 // ============================================
+const MAPA_ICONES = {
+    "⏰": "/assets/icons/clock-in-button-icon.svg",
+    "🍽️": "lunch.svg",
+    "🔄": "return.svg",
+    "🏁": "finish.svg",
+    "✅": "check.svg"
+}
+
 function atualizar_proxima_acao() {
     
     const acao = gerar_proxima_acao()
     
+    // Descobre o arquivo do ícone baseado no emoji
+    const arquivo_icone = MAPA_ICONES[acao.icon] || ""
+    const caminho_icone = arquivo_icone ? `/assets/icons/${arquivo_icone}` : ""
+    
     next_action_icon.innerHTML = `
-        <img src="" alt="${acao.icon}" class="icon-img" onerror="this.replaceWith('${acao.icon}')">
+        <img 
+            src="${caminho_icone}" 
+            alt="${acao.icon}" 
+            class="icon-img" 
+            onerror="this.replaceWith('${acao.icon}')"
+        >
     `
     next_action_title.textContent = acao.title
     next_action_subtitle.textContent = acao.subtitle
 }
-
 
 // ============================================
 // INICIALIZAÇÃO

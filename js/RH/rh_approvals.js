@@ -755,11 +755,7 @@ tabs.forEach(function(tab) {
             window.location.href = "/pages/RH/rh-dashboard.html"
         } else if (target === "approvals") {
             // Já estamos aqui
-        } else if (target === "employees") {
-            alert("Em breve: Funcionários")
-        } else if (target === "settings") {
-            alert("Em breve: Configurações")
-        } else if (target === "back") {
+        } else if (target === "home") {
             window.location.href = "/pages/employees/main-page.html"
         }
     })
