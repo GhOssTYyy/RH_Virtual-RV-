@@ -359,15 +359,22 @@ function renderizar_tabela() {
         
         const badge_local = montar_badge_localizacao(registro)
         
+        // Badge "ajustado"
         let ajustado_badge = ""
         if (registro.adjusted) {
             ajustado_badge = `<span class="adjust-badge adjust-badge-approved" title="Este registro foi ajustado via solicitação aprovada">AJUSTADO</span>`
         }
         
+        // 🔑 NOVO: badge "atrasado"
+        let atrasado_badge = ""
+        if (registro.is_late) {
+            atrasado_badge = `<span class="late-badge" title="Entrada registrada após a tolerância de atraso">⚠️ ATRASADO</span>`
+        }
+        
         linha.innerHTML = `
             <td data-label="Funcionário">${nome}${ajustado_badge}</td>
             <td data-label="Data">${registro.date || "-"}</td>
-            <td data-label="Entrada">${registro.entrada || "-"}</td>
+            <td data-label="Entrada">${registro.entrada || "-"}${atrasado_badge}</td>
             <td data-label="Almoço">${registro.inicio_almoco || "-"}</td>
             <td data-label="Volta">${registro.fim_almoco || "-"}</td>
             <td data-label="Saída">${registro.saida || "-"}</td>

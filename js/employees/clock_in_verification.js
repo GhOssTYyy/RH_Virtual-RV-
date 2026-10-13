@@ -65,14 +65,18 @@ function discover_actual_clock_in_period(){
 
 
     const start_entry_tolerance = entry - times_of_clock_in.tolerance.start_entry_tolerance
-    const entry_arrive_late_tolerance = entry + times_of_clock_in.tolerance.entry_arrive_late
     const extra_hours = exit + times_of_clock_in.tolerance.extra_hours
     const begin_dinner_tolerance = begin_dinner + times_of_clock_in.tolerance.begin_dinner_tolerance
     const ending_dinner_tolerance = ending_dinner + times_of_clock_in.tolerance.ending_dinner_tolerance
 
+    // 🔑 MUDANÇA 1: Permite registrar entrada a qualquer momento até o almoço
+    // (antes era só até 8h10, agora é até 12h)
+    
     if (actual_time_in_minutes < start_entry_tolerance) return "muito_cedo";
-    if (actual_time_in_minutes <= entry_arrive_late_tolerance) return "periodo_entrada";
-    if (actual_time_in_minutes < begin_dinner) return "trabalhando_manha";
+    
+    // 🔑 Período de entrada vai até o início do almoço
+    if (actual_time_in_minutes < begin_dinner) return "periodo_entrada";
+    
     if (actual_time_in_minutes <= begin_dinner_tolerance) return "periodo_almoco";
     if (actual_time_in_minutes < ending_dinner) return "em_almoco";
     if (actual_time_in_minutes <= ending_dinner_tolerance) return "periodo_volta";
@@ -83,4 +87,26 @@ function discover_actual_clock_in_period(){
 }
 
 
-export {discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours}
+
+// ============================================
+// VERIFICA SE A ENTRADA ESTÁ ATRASADA
+// ============================================
+// Retorna true se o horário atual for depois da tolerância
+// de atraso (8h + 10min = 8h10)
+
+function is_entry_late() {
+    const actual_time_in_minutes = get_actual_minutes()
+    const entry = convert_time_to_minutes(times_of_clock_in.fixed_times.entry)
+    const entry_arrive_late_tolerance = entry + times_of_clock_in.tolerance.entry_arrive_late
+    
+    return actual_time_in_minutes > entry_arrive_late_tolerance
+}
+
+
+
+export {
+    discover_actual_clock_in_period,
+    convert_time_to_minutes,
+    convert_minutes_to_hours,
+    is_entry_late
+}
