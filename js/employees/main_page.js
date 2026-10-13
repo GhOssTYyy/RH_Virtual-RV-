@@ -1,5 +1,5 @@
 import { auth } from "../firebase_config.js"
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
 
 
 // ============================================
@@ -7,10 +7,10 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/fi
 // ============================================
 const ICONES_PROXIMA_ACAO = {
     "⏰": { arquivo: "/assets/icons/clock-in-button-icon.svg", emoji: "⏰" },
-    "🍽️": { arquivo: "/assets/icons/dining_icon.svg",           emoji: "🍽️" },
-    "🔄": { arquivo: "/assets/icons/return_icon.svg",          emoji: "🔄" },
-    "🏁": { arquivo: "/assets/icons/exit_icon.svg",          emoji: "🏁" },
-    "✅": { arquivo: "/assets/icons/check_icon.svg",           emoji: "✅" }
+    "🍽️": { arquivo: "/assets/icons/lunch-icon.svg",           emoji: "🍽️" },
+    "🔄": { arquivo: "/assets/icons/return-icon.svg",          emoji: "🔄" },
+    "🏁": { arquivo: "/assets/icons/finish-icon.svg",          emoji: "🏁" },
+    "✅": { arquivo: "/assets/icons/check-icon.svg",           emoji: "✅" }
 }
 
 
@@ -49,7 +49,6 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
-        // Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
         if (target === "rh") return
         
         tabs.forEach(t => t.classList.remove("active"))
@@ -75,13 +74,26 @@ next_action_button.addEventListener("click", function() {
 
 
 // ============================================
-// PERFIL E CONFIGURAÇÕES
+// PERFIL — Logout direto
 // ============================================
-profile_picture.addEventListener("click", function() {
-    alert("Em breve: Perfil do usuário!")
+profile_picture.addEventListener("click", async function() {
+    
+    const confirmar = confirm("Deseja realmente sair?")
+    if (!confirmar) return
+    
+    try {
+        await signOut(auth)
+        window.location.href = "/index.html"
+    } catch (error) {
+        console.error("❌ Erro ao sair:", error)
+        alert("Erro ao sair. Tente novamente.")
+    }
 })
 
 
+// ============================================
+// CONFIGURAÇÕES
+// ============================================
 settings_button.addEventListener("click", function() {
     alert("Em breve: Tela de configurações")
 })
@@ -169,7 +181,6 @@ function atualizar_proxima_acao() {
     
     const acao = gerar_proxima_acao()
     
-    // Renderiza o ícone com imagem + fallback
     next_action_icon.innerHTML = icone_proxima_acao(acao.icon)
     
     next_action_title.textContent = acao.title
