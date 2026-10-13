@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
 
     <header class="header">
         <button class="header-back" id="header-back-button">
-            <img src="" alt="⬅️" class="header-back-icon" onerror="this.replaceWith('⬅️')">
+            <img src="/assets/icons/arrow_back_page.svg" alt="⬅️" class="header-back-icon" onerror="this.replaceWith('⬅️')">
         </button>
         <h1 class="header-title">Histórico de Pontos</h1>
         <div class="header-spacer"></div>
@@ -25,7 +25,7 @@
         <div class="year-selector-wrapper">
             <label for="year-selector" class="year-selector-label">
                 <span class="year-selector-icon">
-                    <img src="" alt="📅" class="label-icon" onerror="this.replaceWith('📅')">
+                    <img src="/assets/icons/calendar_icon.svg" alt="📅" class="label-icon" onerror="this.replaceWith('📅')">
                 </span>
                 <span>Ano</span>
             </label>
@@ -51,38 +51,41 @@
 
         <!-- Botão "Adicionar ponto esquecido" -->
         <button class="adjust-add-button" id="adjust-add-button">
-            <span class="adjust-add-button-icon">➕</span>
+            <span class="adjust-add-button-icon"></span>
+            <img src="/assets/icons/sum_icon.svg" alt="">
             <span>Adicionar ponto esquecido</span>
         </button>
 
         <!-- Botão "Meus ajustes" -->
         <button class="adjust-add-button" id="adjust-my-requests-button">
-            <span class="adjust-add-button-icon">📋</span>
+            <span class="adjust-add-button-icon"></span>
+            <img src="/assets/icons/content_paste_icon.svg" alt="">
             <span>Meus ajustes</span>
         </button>
 
     </main>
 
     <nav class="bottom-tabs">
-        <button class="tab" data-tab="home">
-            <img src="" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
+        <button class="tab active" data-tab="home">
+            <img src="/assets/icons/home-button-icon.svg" alt="🏠" class="tab-icon-img" onerror="this.replaceWith('🏠')">
             <span class="tab-label">Início</span>
         </button>
         <button class="tab" data-tab="point">
-            <img src="" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
+            <img src="/assets/icons/clock-in-button-icon.svg" alt="⏰" class="tab-icon-img" onerror="this.replaceWith('⏰')">
             <span class="tab-label">Ponto</span>
         </button>
-        <button class="tab active" data-tab="historic">
-            <img src="" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
+        <button class="tab" data-tab="historic">
+            <img src="/assets/icons/bar-chart-icon.svg" alt="📊" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Histórico</span>
         </button>
         <button class="tab" data-tab="holiday">
-            <img src="" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
+            <img src="/assets/icons/flight_button_icon.svg" alt="🌴" class="tab-icon-img" onerror="this.replaceWith('🌴')">
             <span class="tab-label">Férias</span>
         </button>
         <button class="tab tab-rh" data-tab="rh" id="tab-rh" style="display: none;">
-            <img src="" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
+            <img src="/assets/icons/statistics_button_rh_icon.svg" alt="📈" class="tab-icon-img" onerror="this.replaceWith('📈')">
             <span class="tab-label">RH</span>
+        </button>
         </button>
     </nav>
 

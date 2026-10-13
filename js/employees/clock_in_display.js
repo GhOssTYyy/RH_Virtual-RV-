@@ -1,7 +1,12 @@
 import { auth, db } from "../firebase_config.js"
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
-import { discover_actual_clock_in_period, convert_time_to_minutes, convert_minutes_to_hours } from "./clock_in_verification.js"
+import { 
+    discover_actual_clock_in_period, 
+    convert_time_to_minutes, 
+    convert_minutes_to_hours,
+    is_entry_late
+} from "./clock_in_verification.js"
 import { verify_location } from "./clock_in_location.js"
 
 
@@ -77,7 +82,7 @@ let user_name = ""
 
 
 // ============================================
-// FUNÇÕES DE FORMATAÇÃO (datas/saudações)
+// FUNÇÕES DE FORMATAÇÃO
 // ============================================
 function generate_greeting() {
     const hour = new Date().getHours()
@@ -141,7 +146,7 @@ function update_clock() {
 
 
 // ============================================
-// STATUS DO FUNCIONÁRIO (badge)
+// STATUS DO FUNCIONÁRIO
 // ============================================
 function update_status() {
     const period = discover_actual_clock_in_period()
@@ -393,7 +398,7 @@ function restore_clock_in_from_local_storage() {
 
 
 // ============================================
-// SALVA PONTO NO FIRESTORE (COM LOCALIZAÇÃO)
+// SALVA PONTO NO FIRESTORE (COM LOCALIZAÇÃO + ATRASO)
 // ============================================
 async function save_clock_in_to_database(clock_in_type, time) {
     
@@ -411,12 +416,17 @@ async function save_clock_in_to_database(clock_in_type, time) {
     // 🔑 Atualiza o texto na tela com o status
     update_location_display(location)
     
+    // 🔑 NOVO: verifica se a entrada está atrasada
+    const atrasado = clock_in_type === "entrada" && is_entry_late()
+    console.log("⏰ Entrada atrasada?", atrasado)
+    
     const current_date_formatted = new Date().toISOString().split('T')[0]
     const document_id = current_date_formatted + "_" + user.uid
     const document_reference = doc(db, "Clock_in_registers_day", document_id)
     
     try {
-        await setDoc(document_reference, {
+        // Monta o objeto a ser salvo
+        const dados = {
             employee_id: user.uid,
             employee_email: user.email,
             date: current_date_formatted,
@@ -428,16 +438,26 @@ async function save_clock_in_to_database(clock_in_type, time) {
             accuracy: location.accuracy,
             distance_from_company: location.distance,
             location_status: location.status
-            
-        }, { merge: true })
+        }
         
-        console.log("✅ Ponto salvo:", clock_in_type, "| Localização:", location.status)
+        // 🔑 Se for entrada, salva o flag de atraso
+        if (clock_in_type === "entrada") {
+            dados.is_late = atrasado
+        }
+        
+        await setDoc(document_reference, dados, { merge: true })
+        
+        console.log("✅ Ponto salvo:", clock_in_type, "| Localização:", location.status, "| Atrasado:", atrasado)
         
         if (clock_in_type === "entrada") {
             await atualizar_indice_de_meses(user, current_date_formatted)
         }
         
-        return location
+        // 🔑 Retorna o status + info de atraso
+        return {
+            ...location,
+            is_late: atrasado
+        }
         
     } catch (error) {
         console.log("❌ Erro ao salvar ponto:", error.code, error.message)
@@ -519,51 +539,12 @@ async function save_hours_to_database(result) {
 
 
 // ============================================
-// RESTAURA O ÚLTIMO STATUS DE LOCALIZAÇÃO
-// ============================================
-// Lê o localStorage e mostra o último status salvo.
-// NÃO verifica o GPS (respeitando a privacidade).
-function restaurar_status_localizacao() {
-    
-    try {
-        const salvo = localStorage.getItem("last_location_status")
-        
-        // Sem status salvo → mostra mensagem neutra
-        if (!salvo) {
-            if (location_status_text) {
-                location_status_text.textContent = "📍 Localização será verificada no registro"
-                location_status_text.className = "location-status"
-            }
-            return
-        }
-        
-        const dados = JSON.parse(salvo)
-        
-        if (location_status_text) {
-            location_status_text.textContent = dados.text
-            location_status_text.className = "location-status " + (dados.classe || "")
-        }
-        
-        console.log("📍 Status restaurado do localStorage:", dados.text)
-        
-    } catch (error) {
-        console.log("⚠️ Erro ao restaurar status:", error)
-        
-        if (location_status_text) {
-            location_status_text.textContent = " Localização será verificada no registro"
-            location_status_text.className = "location-status"
-        }
-    }
-}
-
-// ============================================
 // ATUALIZA O STATUS DE LOCALIZAÇÃO NA TELA
 // ============================================
 function update_location_display(location_result) {
     
     if (!location_status_text) return
     
-    // Limpa classes antigas
     location_status_text.className = "location-status"
     
     if (!location_result) {
@@ -575,7 +556,6 @@ function update_location_display(location_result) {
     const distance = location_result.distance
     const accuracy = location_result.accuracy
     
-    // Formata distância (m ou km)
     function formatar_distancia(m) {
         if (m === null || m === undefined) return ""
         if (m < 1000) return `${m}m`
@@ -609,18 +589,51 @@ function update_location_display(location_result) {
         novo_texto = `📍 Localização registrada`
     }
     
-    // Atualiza a tela
     location_status_text.textContent = novo_texto
     location_status_text.classList.add(nova_classe)
     
-    // 🔑 Salva no localStorage pra persistir
+    // Salva no localStorage
     localStorage.setItem("last_location_status", JSON.stringify({
         text: novo_texto,
         classe: nova_classe,
         timestamp: Date.now()
     }))
+}
+
+
+// ============================================
+// RESTAURA O ÚLTIMO STATUS DE LOCALIZAÇÃO
+// ============================================
+function restaurar_status_localizacao() {
     
-    console.log("✅ Status de localização salvo no localStorage")
+    try {
+        const salvo = localStorage.getItem("last_location_status")
+        
+        if (!salvo) {
+            if (location_status_text) {
+                location_status_text.textContent = "📍 Localização será verificada no registro"
+                location_status_text.className = "location-status"
+            }
+            return
+        }
+        
+        const dados = JSON.parse(salvo)
+        
+        if (location_status_text) {
+            location_status_text.textContent = dados.text
+            location_status_text.className = "location-status " + (dados.classe || "")
+        }
+        
+        console.log("📍 Status restaurado:", dados.text)
+        
+    } catch (error) {
+        console.log("⚠️ Erro ao restaurar status:", error)
+        
+        if (location_status_text) {
+            location_status_text.textContent = "📍 Localização será verificada no registro"
+            location_status_text.className = "location-status"
+        }
+    }
 }
 
 
@@ -628,9 +641,19 @@ function update_location_display(location_result) {
 // MOSTRA MENSAGEM DE FEEDBACK
 // ============================================
 function show_message(text, location_status) {
-    clock_in_message.textContent = text
     
-    // Muda a cor do fundo conforme o status da localização
+    console.log("🎨 show_message:", { text, location_status })
+    
+    clock_in_message.textContent = text
+    clock_in_message.style.display = "block"
+    clock_in_message.style.marginTop = "14px"
+    clock_in_message.style.padding = "10px 14px"
+    clock_in_message.style.borderRadius = "10px"
+    clock_in_message.style.fontSize = "12px"
+    clock_in_message.style.fontWeight = "600"
+    clock_in_message.style.textAlign = "center"
+    
+    // 🔑 Muda a cor conforme o status
     if (location_status === "dentro") {
         clock_in_message.style.background = "#E8F5EE"
         clock_in_message.style.color = "#166534"
@@ -641,12 +664,13 @@ function show_message(text, location_status) {
         clock_in_message.style.background = "#F1F5F9"
         clock_in_message.style.color = "#475569"
     } else {
-        clock_in_message.style.background = ""
-        clock_in_message.style.color = ""
+        clock_in_message.style.background = "#E8F0F8"
+        clock_in_message.style.color = "#1E3A5F"
     }
     
     setTimeout(() => {
         clock_in_message.textContent = ""
+        clock_in_message.style.display = "none"
         clock_in_message.style.background = ""
         clock_in_message.style.color = ""
     }, 4000)
@@ -675,7 +699,12 @@ clock_in_register_button.addEventListener("click", async function() {
         const location = await save_clock_in_to_database("entrada", formatted_time)
         localStorage.setItem("entry_saved", formatted_time)
         
-        show_message(`✅ Entrada registrada às ${formatted_time}`, location?.status)
+        // 🔑 Mensagem diferente se estiver atrasado
+        if (location?.is_late) {
+            show_message(`⚠️ Entrada registrada às ${formatted_time} (atrasado)`, location?.status)
+        } else {
+            show_message(`✅ Entrada registrada às ${formatted_time}`, location?.status)
+        }
         
         entry_registered = true
         registered_something = true
@@ -741,7 +770,7 @@ clock_in_register_button.addEventListener("click", async function() {
 
 
 // ============================================
-// BOTÃO VOLTAR (HEADER)
+// BOTÃO VOLTAR
 // ============================================
 header_back_button.addEventListener("click", function() {
     window.location.href = "/pages/employees/main-page.html"
@@ -749,7 +778,7 @@ header_back_button.addEventListener("click", function() {
 
 
 // ============================================
-// NAVEGAÇÃO DAS TABS INFERIORES
+// NAVEGAÇÃO DAS TABS
 // ============================================
 const tabs = document.querySelectorAll(".tab")
 
@@ -758,7 +787,6 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
-        // 🔑 Ignora tab-rh (ela tem seu próprio listener no rh_tab_guard.js)
         if (target === "rh") return
         
         if (target === "home") {
@@ -768,7 +796,6 @@ tabs.forEach(function(tab) {
         } else if (target === "holiday") {
             window.location.href = "/pages/employees/holiday-day-off.html"
         }
-        // "point" já é a página atual
     })
 })
 
@@ -783,34 +810,25 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-    // Extrai o nome
     user_name = user.email.split("@")[0]
     user_name = user_name.charAt(0).toUpperCase() + user_name.slice(1)
     
-    // Atualiza saudação
     greeting_text.textContent = `${generate_greeting()}, ${user_name}!`
     full_date_text.textContent = generate_full_date()
     
-    // Atualiza avatar
     avatar.textContent = user_name.substring(0, 2).toUpperCase()
     
-    // Restaura os pontos do dia (localStorage)
     restore_clock_in_from_local_storage()
-    
-    // 🔑 NOVO: restaura o último status de localização (sem verificar GPS)
     restaurar_status_localizacao()
     
-    // Relógio
     update_clock()
     setInterval(update_clock, 1000)
     
-    // Atualiza tudo
     update_button()
     update_status()
     update_summary_status()
     update_balance()
     
-    // Atualiza a cada 30s
     setInterval(() => {
         update_button()
         update_status()

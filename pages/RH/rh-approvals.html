@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -10,24 +10,38 @@
 
 <body>
 
-    <header class="header">
-        <button class="header-back" id="header-back-button">‹</button>
-        <h1 class="header-title">Aprovações</h1>
-        <div class="header-badge empty" id="header-badge">0</div>
-    </header>
+<header class="header">
+    <button class="header-back" id="header-back-button">
+        <img src="/assets/icons/arrow_back_page.svg" alt="Voltar" class="header-back-icon" onerror="this.replaceWith('⬅️')">
+    </button>
+    <h1 class="header-title">Aprovações</h1>
+    <div class="header-badge empty" id="header-badge">0</div>
+</header>
 
     <main class="main-content">
 
         <div class="filters-container" id="filters-container">
-            <button class="filter-btn active" data-filter="pending">⏳ Pendentes</button>
-            <button class="filter-btn" data-filter="approved">✅ Aprovados</button>
-            <button class="filter-btn" data-filter="rejected">❌ Reprovados</button>
-            <button class="filter-btn" data-filter="all">📋 Todos</button>
+            <button class="filter-btn active" data-filter="pending">
+                <img src="/assets/icons/time_icon.svg" alt="" class="filter-icon" onerror="this.replaceWith('⏳')">
+                Pendentes
+            </button>
+            <button class="filter-btn" data-filter="approved">
+                <img src="/assets/icons/check_icon.svg" alt="" class="filter-icon" onerror="this.replaceWith('✅')">
+                Aprovados
+            </button>
+            <button class="filter-btn" data-filter="rejected">
+                <img src="/assets/icons/close_icon.svg" alt="" class="filter-icon" onerror="this.replaceWith('❌')">
+                Reprovados
+            </button>
+            <button class="filter-btn" data-filter="all">
+                <img src="/assets/icons/content_paste_icon.svg" alt="" class="filter-icon" onerror="this.replaceWith('📋')">
+                Todos
+            </button>
         </div>
-
         <div id="adjustments-container">
             <div class="empty-state">
-                <div class="empty-state-icon">⏳</div>
+                <div class="empty-state-icon"></div>
+                <img src="/assets/icons/time_icon.svg" alt="" class="filter-icon" onerror="this.replaceWith('⏳')">
                 <div class="empty-state-title">Carregando...</div>
             </div>
         </div>
@@ -35,25 +49,17 @@
     </main>
 
     <nav class="bottom-tabs">
+        <button class="tab" data-tab="home">
+            <img src="/assets/icons/home-button-icon.svg" alt="Home" class="tab-icon-img" onerror="this.replaceWith('🏠')">
+            <span class="tab-label">Home</span>
+        </button>
         <button class="tab" data-tab="dashboard">
-            <span class="tab-icon">📊</span>
+            <img src="/assets/icons/bar-chart-icon.svg" alt="Dashboard" class="tab-icon-img" onerror="this.replaceWith('📊')">
             <span class="tab-label">Dashboard</span>
         </button>
         <button class="tab active" data-tab="approvals">
-            <span class="tab-icon">✅</span>
+            <img src="/assets/icons/check_icon.svg" alt="Aprovações" class="tab-icon-img" onerror="this.replaceWith('✅')">
             <span class="tab-label">Aprovações</span>
-        </button>
-        <button class="tab" data-tab="employees">
-            <span class="tab-icon">👥</span>
-            <span class="tab-label">Funcionários</span>
-        </button>
-        <button class="tab" data-tab="settings">
-            <span class="tab-icon">⚙️</span>
-            <span class="tab-label">Config.</span>
-        </button>
-        <button class="tab" data-tab="back">
-            <span class="tab-icon">🏠</span>
-            <span class="tab-label">Voltar</span>
         </button>
     </nav>
 

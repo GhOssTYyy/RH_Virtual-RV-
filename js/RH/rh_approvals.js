@@ -3,7 +3,6 @@ import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import {
     collection,
     query,
-    where,
     orderBy,
     limit,
     getDocs,
@@ -11,7 +10,8 @@ import {
     getDoc,
     updateDoc,
     setDoc,
-    serverTimestamp
+    serverTimestamp,
+    where
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"
 
 
@@ -24,13 +24,53 @@ const emails_rh = [
 
 
 // ============================================
+// MAPA DE ÍCONES
+// ============================================
+// Cada ícone tem: emoji (fallback) e arquivo (imagem)
+// Se a imagem não carregar, o emoji aparece automaticamente
+
+const ICONES = {
+    // Status
+    pendente:     { emoji: "⏳", arquivo: "/assets/icons/time_icon.svg" },
+    aprovado:     { emoji: "✅", arquivo: "/assets/icons/check_icon.svg" },
+    reprovado:    { emoji: "❌", arquivo: "/assets/icons/close_icon.svg" },
+    
+    // Campos de horário
+    entrada:      { emoji: "⏰", arquivo: "/assets/icons/clock-in-button-icon.svg" },
+    almoço:       { emoji: "🍽️", arquivo: "/assets/icons/dining_icon.svg" },
+    volta:        { emoji: "🔄", arquivo: "/assets/icons/return_icon.svg" },
+    saida:        { emoji: "🏁", arquivo: "/assets/icons/exit_icon.svg" },
+    
+    // Labels
+    calendario:   { emoji: "📅", arquivo: "/assets/icons/calendar_icon.svg" },
+    categoria:    { emoji: "📋", arquivo: "/assets/icons/content_paste_icon.svg" },
+    motivo:       { emoji: "💬", arquivo: "/assets/icons/message_icon.svg" },
+    
+    // Navegação
+    voltar:       { emoji: "⬅️", arquivo: "/assets/icons/arrow-left.svg" },
+    dashboard:    { emoji: "📊", arquivo: "/assets/icons/bar-chart-icon.svg" },
+    home:         { emoji: "🏠", arquivo: "/assets/icons/home-button-icon.svg" }
+}
+
+
+// ============================================
+// HELPER — Gera o HTML do ícone
+// ============================================
+function icone(nome, classe = "icon-img") {
+    const item = ICONES[nome]
+    if (!item) return ""
+    
+    return `<img src="${item.arquivo}" alt="${item.emoji}" class="${classe}" onerror="this.replaceWith('${item.emoji}')">`
+}
+
+
+// ============================================
 // REFERÊNCIAS DO DOM
 // ============================================
 const header_back_button = document.getElementById("header-back-button")
 const header_badge = document.getElementById("header-badge")
 const filters_container = document.getElementById("filters-container")
 const adjustments_container = document.getElementById("adjustments-container")
-const logout_button = document.getElementById("logout-button")
 
 
 // ============================================
@@ -38,7 +78,7 @@ const logout_button = document.getElementById("logout-button")
 // ============================================
 let todos_ajustes = []
 let ajustes_filtrados = []
-let filtro_ativo = "pending"  // pending | approved | rejected | all
+let filtro_ativo = "pending"
 let admin_user = null
 
 
@@ -78,24 +118,6 @@ if (header_back_button) {
 
 
 // ============================================
-// LOGOUT
-// ============================================
-if (logout_button) {
-    logout_button.addEventListener("click", async function() {
-        const confirm_logout = confirm("Deseja realmente sair?")
-        if (!confirm_logout) return
-        
-        try {
-            await signOut(auth)
-            window.location.href = "/index.html"
-        } catch (error) {
-            alert("Erro ao sair. Tente novamente.")
-        }
-    })
-}
-
-
-// ============================================
 // INICIALIZAÇÃO
 // ============================================
 onAuthStateChanged(auth, async function(user) {
@@ -115,10 +137,7 @@ onAuthStateChanged(auth, async function(user) {
     admin_user = user
     console.log("✅ RH autenticado:", user.email)
     
-    // Configura filtros
     configurar_filtros()
-    
-    // Busca ajustes
     await buscar_ajustes()
 })
 
@@ -133,16 +152,10 @@ function configurar_filtros() {
     botoes.forEach(function(btn) {
         btn.addEventListener("click", function() {
             
-            // Remove active de todos
             botoes.forEach(b => b.classList.remove("active"))
-            
-            // Adiciona active no clicado
             btn.classList.add("active")
             
-            // Atualiza filtro ativo
             filtro_ativo = btn.dataset.filter
-            
-            // Re-renderiza
             aplicar_filtro()
         })
     })
@@ -156,7 +169,7 @@ async function buscar_ajustes() {
     
     adjustments_container.innerHTML = `
         <div class="empty-state">
-            <div class="empty-state-icon">⏳</div>
+            <div class="empty-state-icon">${icone("pendente", "empty-icon")}</div>
             <div class="empty-state-title">Carregando...</div>
         </div>
     `
@@ -182,17 +195,14 @@ async function buscar_ajustes() {
         
         console.log("📊 Ajustes carregados:", todos_ajustes.length)
         
-        // Atualiza badge
         atualizar_header_badge()
-        
-        // Aplica filtro
         aplicar_filtro()
         
     } catch (error) {
         console.log("❌ Erro:", error.code, error.message)
         adjustments_container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">❌</div>
+                <div class="empty-state-icon">${icone("reprovado", "empty-icon")}</div>
                 <div class="empty-state-title">Erro ao carregar</div>
                 <div class="empty-state-text">Tente novamente mais tarde</div>
             </div>
@@ -219,7 +229,7 @@ function aplicar_filtro() {
 
 
 // ============================================
-// ATUALIZA BADGE NO HEADER (pendentes)
+// ATUALIZA BADGE NO HEADER
 // ============================================
 function atualizar_header_badge() {
     
@@ -254,7 +264,6 @@ function formatar_tempo_relativo(timestamp) {
     
     if (!timestamp) return "—"
     
-    // Converte Timestamp do Firestore pra Date
     const data = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
     const agora = new Date()
     const diff_ms = agora - data
@@ -267,7 +276,6 @@ function formatar_tempo_relativo(timestamp) {
     if (diff_h < 24) return `há ${diff_h}h`
     if (diff_d < 7) return `há ${diff_d}d`
     
-    // Mais de 7 dias: mostra a data
     return data.toLocaleDateString("pt-BR")
 }
 
@@ -281,22 +289,22 @@ function renderizar_lista() {
         
         const mensagens = {
             pending: {
-                icon: "✅",
+                icone: "aprovado",
                 title: "Nenhum ajuste pendente",
                 text: "Todos os ajustes foram revisados"
             },
             approved: {
-                icon: "📭",
+                icone: "pendente",
                 title: "Nenhum ajuste aprovado",
                 text: "Nenhum ajuste foi aprovado ainda"
             },
             rejected: {
-                icon: "📭",
+                icone: "pendente",
                 title: "Nenhum ajuste reprovado",
                 text: "Nenhum ajuste foi reprovado ainda"
             },
             all: {
-                icon: "📭",
+                icone: "pendente",
                 title: "Nenhum ajuste encontrado",
                 text: "Nenhum ajuste foi solicitado ainda"
             }
@@ -306,7 +314,7 @@ function renderizar_lista() {
         
         adjustments_container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">${msg.icon}</div>
+                <div class="empty-state-icon">${icone(msg.icone, "empty-icon")}</div>
                 <div class="empty-state-title">${msg.title}</div>
                 <div class="empty-state-text">${msg.text}</div>
             </div>
@@ -331,64 +339,58 @@ function criar_card_ajuste(ajuste) {
     const card = document.createElement("div")
     card.className = `adjustment-card status-${ajuste.status}`
     
-    // Nome do funcionário (fallback)
+    // Nome do funcionário
     const nome = ajuste.employee_name || 
                  (ajuste.employee_email ? ajuste.employee_email.split("@")[0] : "N/A")
     
-    // Iniciais do avatar
     const iniciais = nome.substring(0, 2).toUpperCase()
     
-    // Label do campo
     const campo_label = CAMPOS_LABEL[ajuste.target_field] || ajuste.target_field
-    
-    // Label da categoria
     const categoria_label = CATEGORIAS_LABEL[ajuste.category] || ajuste.category
     
     // Status badge
     let status_badge_html = ""
     if (ajuste.status === "pending") {
-        status_badge_html = `<span class="status-badge status-pending">⏳ Pendente</span>`
+        status_badge_html = `<span class="status-badge status-pending">${icone("pendente", "badge-icon")} Pendente</span>`
     } else if (ajuste.status === "approved") {
-        status_badge_html = `<span class="status-badge status-approved">✅ Aprovado</span>`
+        status_badge_html = `<span class="status-badge status-approved">${icone("aprovado", "badge-icon")} Aprovado</span>`
     } else if (ajuste.status === "rejected") {
-        status_badge_html = `<span class="status-badge status-rejected">❌ Reprovado</span>`
+        status_badge_html = `<span class="status-badge status-rejected">${icone("reprovado", "badge-icon")} Reprovado</span>`
     }
     
-    // Valores (old → new)
+    // Valores
     let valores_html = ""
     if (ajuste.target_field === "all") {
-        // Ponto esquecido — mostra todos os horários
         const rv = ajuste.requested_value || {}
         valores_html = `
             <div class="adjustment-values">
                 <span style="font-size: 12px; color: #7A8BA3;">Ponto esquecido:</span>
             </div>
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">⏰</span>
+                <span class="adjustment-card-row-icon">${icone("entrada", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Entrada:</span>
                 <span class="adjustment-card-row-value">${rv.entrada || "—"}</span>
             </div>
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">🍽️</span>
+                <span class="adjustment-card-row-icon">${icone("almoço", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Almoço:</span>
                 <span class="adjustment-card-row-value">${rv.inicio_almoco || "—"}</span>
             </div>
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">🔄</span>
+                <span class="adjustment-card-row-icon">${icone("volta", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Volta:</span>
                 <span class="adjustment-card-row-value">${rv.fim_almoco || "—"}</span>
             </div>
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">🏁</span>
+                <span class="adjustment-card-row-icon">${icone("saida", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Saída:</span>
                 <span class="adjustment-card-row-value">${rv.saida || "—"}</span>
             </div>
         `
     } else {
-        // Ajuste simples
         valores_html = `
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">⏰</span>
+                <span class="adjustment-card-row-icon">${icone("entrada", "row-icon")}</span>
                 <span class="adjustment-card-row-label">${campo_label}:</span>
             </div>
             <div class="adjustment-values">
@@ -399,24 +401,23 @@ function criar_card_ajuste(ajuste) {
         `
     }
     
-    // Ações (só se pendente)
+    // Ações
     let acoes_html = ""
     if (ajuste.status === "pending") {
         acoes_html = `
             <div class="adjustment-card-actions">
                 <button class="action-btn action-btn-approve" data-action="approve" data-id="${ajuste.id}">
-                    ✅ Aprovar
+                    ${icone("aprovado", "action-icon")} Aprovar
                 </button>
                 <button class="action-btn action-btn-reject" data-action="reject" data-id="${ajuste.id}">
-                    ❌ Reprovar
+                    ${icone("reprovado", "action-icon")} Reprovar
                 </button>
             </div>
         `
     } else if (ajuste.review_notes) {
-        // Mostra observação do RH
         acoes_html = `
             <div class="adjustment-reason" style="border-left-color: ${ajuste.status === 'approved' ? '#22C55E' : '#EF4444'};">
-                <strong>📝 Observação do RH:</strong> ${ajuste.review_notes}
+                <strong>${icone("motivo", "row-icon")} Observação do RH:</strong> ${ajuste.review_notes}
             </div>
         `
     }
@@ -438,13 +439,13 @@ function criar_card_ajuste(ajuste) {
         
         <div class="adjustment-card-body">
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">📅</span>
+                <span class="adjustment-card-row-icon">${icone("calendario", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Dia:</span>
                 <span class="adjustment-card-row-value">${formatar_data(ajuste.target_date)}</span>
             </div>
             
             <div class="adjustment-card-row">
-                <span class="adjustment-card-row-icon">📋</span>
+                <span class="adjustment-card-row-icon">${icone("categoria", "row-icon")}</span>
                 <span class="adjustment-card-row-label">Tipo:</span>
                 <span class="adjustment-card-row-value">${categoria_label}</span>
             </div>
@@ -452,14 +453,14 @@ function criar_card_ajuste(ajuste) {
             ${valores_html}
             
             <div class="adjustment-reason">
-                <strong>💬 Motivo:</strong> ${ajuste.reason}
+                <strong>${icone("motivo", "row-icon")} Motivo:</strong> ${ajuste.reason}
             </div>
         </div>
         
         ${acoes_html}
     `
     
-    // Adiciona listeners aos botões
+    // Listeners dos botões
     const btn_approve = card.querySelector('[data-action="approve"]')
     const btn_reject = card.querySelector('[data-action="reject"]')
     
@@ -476,11 +477,10 @@ function criar_card_ajuste(ajuste) {
 
 
 // ============================================
-// ABRE O MODAL DE REVISÃO (aprovar/reprovar)
+// ABRE O MODAL DE REVISÃO
 // ============================================
 function abrir_modal_revisao(ajuste, novo_status) {
     
-    // Remove modal antigo se existir
     const antigo = document.getElementById("review-modal-overlay")
     if (antigo) antigo.remove()
     
@@ -489,9 +489,8 @@ function abrir_modal_revisao(ajuste, novo_status) {
     
     const acao_label = novo_status === "approved" ? "Aprovar" : "Reprovar"
     const confirm_class = novo_status === "approved" ? "confirm-approve" : "confirm-reject"
-    const confirm_icon = novo_status === "approved" ? "✅" : "❌"
+    const confirm_icone = novo_status === "approved" ? "aprovado" : "reprovado"
     
-    // Cria o modal
     const overlay = document.createElement("div")
     overlay.className = "review-modal-overlay active"
     overlay.id = "review-modal-overlay"
@@ -522,7 +521,7 @@ function abrir_modal_revisao(ajuste, novo_status) {
                     Cancelar
                 </button>
                 <button class="review-btn review-btn-confirm ${confirm_class}" id="review-confirm">
-                    ${confirm_icon} ${acao_label}
+                    ${icone(confirm_icone, "action-icon")} ${acao_label}
                 </button>
             </div>
         </div>
@@ -530,7 +529,6 @@ function abrir_modal_revisao(ajuste, novo_status) {
     
     document.body.appendChild(overlay)
     
-    // Fecha com ESC
     const handle_esc = (e) => {
         if (e.key === "Escape") {
             fechar_modal_revisao()
@@ -539,16 +537,13 @@ function abrir_modal_revisao(ajuste, novo_status) {
     }
     document.addEventListener("keydown", handle_esc)
     
-    // Cancelar
     const btn_cancel = overlay.querySelector("#review-cancel")
     btn_cancel.addEventListener("click", fechar_modal_revisao)
     
-    // Fecha ao clicar fora
     overlay.addEventListener("click", (e) => {
         if (e.target === overlay) fechar_modal_revisao()
     })
     
-    // Confirmar
     const btn_confirm = overlay.querySelector("#review-confirm")
     btn_confirm.addEventListener("click", async () => {
         
@@ -563,14 +558,14 @@ function abrir_modal_revisao(ajuste, novo_status) {
             fechar_modal_revisao()
         } else {
             btn_confirm.disabled = false
-            btn_confirm.textContent = `${confirm_icon} ${acao_label}`
+            btn_confirm.innerHTML = `${icone(confirm_icone, "action-icon")} ${acao_label}`
         }
     })
 }
 
 
 // ============================================
-// FECHA O MODAL DE REVISÃO
+// FECHA O MODAL
 // ============================================
 function fechar_modal_revisao() {
     const overlay = document.getElementById("review-modal-overlay")
@@ -579,7 +574,7 @@ function fechar_modal_revisao() {
 
 
 // ============================================
-// PROCESSA A REVISÃO (atualiza Firestore)
+// PROCESSA A REVISÃO
 // ============================================
 async function processar_revisao(ajuste, novo_status, notes) {
     
@@ -598,23 +593,23 @@ async function processar_revisao(ajuste, novo_status, notes) {
         
         console.log("✅ Ajuste atualizado")
         
-        // 2️⃣ Se aprovado, atualiza o registro de ponto original
+        // 2️⃣ Se aprovado, atualiza o registro de ponto
         if (novo_status === "approved") {
             await aplicar_ajuste_no_registro(ajuste)
         }
         
-        // 3️⃣ Feedback visual
+        // 3️⃣ Feedback
         const acao = novo_status === "approved" ? "aprovado" : "reprovado"
-        mostrar_banner(`✅ Ajuste ${acao} com sucesso!`, "success")
+        mostrar_banner(`Ajuste ${acao} com sucesso!`, novo_status === "approved" ? "success" : "error")
         
-        // 4️⃣ Recarrega a lista
+        // 4️⃣ Recarrega
         await buscar_ajustes()
         
         return true
         
     } catch (error) {
         console.log("❌ Erro ao processar:", error.code, error.message)
-        mostrar_banner("❌ Erro ao processar. Tente novamente.", "error")
+        mostrar_banner("Erro ao processar. Tente novamente.", "error")
         return false
     }
 }
@@ -625,14 +620,11 @@ async function processar_revisao(ajuste, novo_status, notes) {
 // ============================================
 async function aplicar_ajuste_no_registro(ajuste) {
     
-    // ID do doc original: "YYYY-MM-DD_uid"
     const doc_id = `${ajuste.target_date}_${ajuste.employee_id}`
     const registro_ref = doc(db, "Clock_in_registers_day", doc_id)
     
-    // Verifica se o doc existe
     const snapshot = await getDoc(registro_ref)
     
-    // Se não existe (ponto esquecido), cria o doc
     if (!snapshot.exists()) {
         
         console.log("📝 Criando doc novo (ponto esquecido)")
@@ -649,25 +641,22 @@ async function aplicar_ajuste_no_registro(ajuste) {
             fim_almoco: rv.fim_almoco || null,
             saida: rv.saida || null,
             
-            // Marca como ajustado
             adjusted: true,
             adjustment_id: ajuste.id,
             adjusted_by: admin_user.uid,
             adjusted_at: serverTimestamp()
         })
         
-        console.log("✅ Doc criado com sucesso")
+        console.log("✅ Doc criado")
         return
     }
     
-    // Se existe, atualiza o campo específico
     console.log("📝 Atualizando doc existente")
     
     const dados_atuais = snapshot.data()
     const campo = ajuste.target_field
     
     if (campo === "all") {
-        // Ponto esquecido — atualiza tudo
         const rv = ajuste.requested_value || {}
         
         await updateDoc(registro_ref, {
@@ -690,7 +679,6 @@ async function aplicar_ajuste_no_registro(ajuste) {
         })
         
     } else {
-        // Ajuste simples — só um campo
         const valor_original = dados_atuais[campo] || null
         
         const update_data = {
@@ -705,7 +693,7 @@ async function aplicar_ajuste_no_registro(ajuste) {
         await updateDoc(registro_ref, update_data)
     }
     
-    console.log("✅ Doc atualizado com sucesso")
+    console.log("✅ Doc atualizado")
 }
 
 
@@ -714,26 +702,23 @@ async function aplicar_ajuste_no_registro(ajuste) {
 // ============================================
 function mostrar_banner(texto, tipo = "success") {
     
-    // Remove banner antigo
     const antigo = document.querySelector(".feedback-banner")
     if (antigo) antigo.remove()
     
     const banner = document.createElement("div")
     banner.className = `feedback-banner ${tipo}`
     
-    const icone = tipo === "success" ? "✅" : "❌"
+    const icone_nome = tipo === "success" ? "aprovado" : "reprovado"
     
     banner.innerHTML = `
-        <span class="feedback-banner-icon">${icone}</span>
+        ${icone(icone_nome, "banner-icon")}
         <span>${texto}</span>
     `
     
     document.body.appendChild(banner)
     
-    // Anima entrada
     setTimeout(() => banner.classList.add("active"), 50)
     
-    // Remove depois de 4s
     setTimeout(() => {
         banner.classList.remove("active")
         setTimeout(() => banner.remove(), 400)
@@ -742,7 +727,7 @@ function mostrar_banner(texto, tipo = "success") {
 
 
 // ============================================
-// NAVEGAÇÃO DAS TABS (rodapé)
+// NAVEGAÇÃO DAS TABS
 // ============================================
 const tabs = document.querySelectorAll(".tab")
 
@@ -751,16 +736,12 @@ tabs.forEach(function(tab) {
         const target = tab.dataset.tab
         console.log("🚀 Tab clicada:", target)
         
-        if (target === "dashboard") {
+        if (target === "home") {
+            window.location.href = "/pages/employees/main-page.html"
+        } else if (target === "dashboard") {
             window.location.href = "/pages/RH/rh-dashboard.html"
         } else if (target === "approvals") {
             // Já estamos aqui
-        } else if (target === "employees") {
-            alert("Em breve: Funcionários")
-        } else if (target === "settings") {
-            alert("Em breve: Configurações")
-        } else if (target === "back") {
-            window.location.href = "/pages/employees/main-page.html"
         }
     })
 })

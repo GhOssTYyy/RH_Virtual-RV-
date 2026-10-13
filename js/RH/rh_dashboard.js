@@ -19,6 +19,35 @@ const emails_rh = [
 
 
 // ============================================
+// MAPA DE ÍCONES
+// ============================================
+const ICONES = {
+    // Status de localização
+    dentro:       { emoji: "✅", arquivo: "/assets/icons/check_icon.svg" },
+    fora:         { emoji: "⚠️", arquivo: "/assets/icons/warning_icon.svg" },
+    sem_gps:      { emoji: "❓", arquivo: "/assets/icons/help_icon.svg" },
+    impreciso:    { emoji: "📡", arquivo: "/assets/icons/signal_disconnected_icon.svg" },
+    sem_config:   { emoji: "⚙️", arquivo: "/assets/icons/settings_button_icon.svg" },
+    sem_info:     { emoji: "—", arquivo: "" },
+    
+    // Outros
+    local:        { emoji: "📍", arquivo: "/assets/icons/pin_icon.svg" },
+    exportar:     { emoji: "📥", arquivo: "/assets/icons/download_icon.svg" }
+}
+
+
+// ============================================
+// HELPER — Gera o HTML do ícone
+// ============================================
+function icone(nome, classe = "icon-img") {
+    const item = ICONES[nome]
+    if (!item || !item.arquivo) return item ? item.emoji : ""
+    
+    return `<img src="${item.arquivo}" alt="${item.emoji}" class="${classe}" onerror="this.replaceWith('${item.emoji}')">`
+}
+
+
+// ============================================
 // ELEMENTOS DO DOM
 // ============================================
 const logout_button = document.getElementById("logout-button")
@@ -39,7 +68,6 @@ const total_extras = document.getElementById("total-extras")
 // ============================================
 // REFERÊNCIAS — BOTTOM TABS DO RH
 // ============================================
-// Referências das bottom tabs do RH
 const rh_tabs = document.querySelectorAll(".tab")
 const tab_approvals_badge = document.getElementById("tab-approvals-badge")
 const header_back_button = document.getElementById("header-back-button")
@@ -69,27 +97,23 @@ onAuthStateChanged(auth, function(user) {
         return
     }
     
-console.log("✅ RH autenticado:", user.email)
-
-// 🔑 Seta de voltar no header
-if (header_back_button) {
-    header_back_button.addEventListener("click", function() {
-        window.location.href = "/pages/employees/main-page.html"
-    })
-}
-
-// 🔑 Configura as bottom tabs do RH
-configurar_tabs_rh()
-
-// 🔑 Carrega contador de ajustes pendentes
-carregar_contador_ajustes()
-
-buscar_todos_registros()
+    console.log("✅ RH autenticado:", user.email)
+    
+    // Seta de voltar
+    if (header_back_button) {
+        header_back_button.addEventListener("click", function() {
+            window.location.href = "/pages/employees/main-page.html"
+        })
+    }
+    
+    configurar_tabs_rh()
+    carregar_contador_ajustes()
+    buscar_todos_registros()
 })
 
 
 // ============================================
-// NAVEGAÇÃO DAS TABS DO RH
+// NAVEGAÇÃO DAS TABS
 // ============================================
 function configurar_tabs_rh() {
     
@@ -99,24 +123,20 @@ function configurar_tabs_rh() {
             
             console.log("🚀 Tab RH clicada:", target)
             
-        if (target === "dashboard") {
-            return
-        } else if (target === "approvals") {
-            window.location.href = "/pages/RH/rh-approvals.html"
-        } else if (target === "employees") {
-            alert("Em breve: Funcionários")
-        } else if (target === "settings") {
-            alert("Em breve: Configurações")
-        } else if (target === "back") {
-            window.location.href = "/pages/employees/main-page.html"
-        }
+            if (target === "home") {
+                window.location.href = "/pages/employees/main-page.html"
+            } else if (target === "dashboard") {
+                return
+            } else if (target === "approvals") {
+                window.location.href = "/pages/RH/rh-approvals.html"
+            }
         })
     })
 }
 
 
 // ============================================
-// CARREGA O CONTADOR DE AJUSTES PENDENTES
+// CONTADOR DE AJUSTES PENDENTES
 // ============================================
 async function carregar_contador_ajustes() {
     
@@ -229,7 +249,7 @@ function aplicar_filtros() {
 
 
 // ============================================
-// FORMATA DISTÂNCIA (metros → m ou km)
+// FORMATA DISTÂNCIA
 // ============================================
 function formatar_distancia(metros) {
     
@@ -247,7 +267,7 @@ function formatar_distancia(metros) {
 
 
 // ============================================
-// MONTA O BADGE DE LOCALIZAÇÃO
+// BADGE DE LOCALIZAÇÃO
 // ============================================
 function montar_badge_localizacao(registro) {
     
@@ -257,7 +277,7 @@ function montar_badge_localizacao(registro) {
     const lon = registro.longitude
     const accuracy = registro.accuracy
     
-    // Monta o tooltip (com coordenadas)
+    // Tooltip
     let tooltip = ""
     if (lat !== null && lat !== undefined && lon !== null && lon !== undefined) {
         tooltip = `📍 ${lat.toFixed(5)}, ${lon.toFixed(5)}`
@@ -266,36 +286,39 @@ function montar_badge_localizacao(registro) {
         tooltip = "Localização não registrada"
     }
     
-    // Sem registro de localização (registros antigos)
+    // Sem status
     if (!status) {
         return `<span class="badge badge-sem-info" title="Registro antigo (sem GPS)">—</span>`
     }
     
-    // Badge conforme o status
+    // Dentro
     if (status === "dentro") {
         const dist = formatar_distancia(distancia) || ""
-        return `<span class="badge badge-dentro" title="${tooltip}">✅ ${dist}</span>`
+        return `<span class="badge badge-dentro" title="${tooltip}">${icone("dentro", "badge-icon")} ${dist}</span>`
     }
     
+    // Fora
     if (status === "fora") {
         const dist = formatar_distancia(distancia) || ""
-        return `<span class="badge badge-fora" title="${tooltip}">⚠️ ${dist}</span>`
+        return `<span class="badge badge-fora" title="${tooltip}">${icone("fora", "badge-icon")} ${dist}</span>`
     }
     
+    // Sem GPS
     if (status === "sem_gps") {
-        return `<span class="badge badge-sem-gps" title="${tooltip}">❓ Sem GPS</span>`
+        return `<span class="badge badge-sem-gps" title="${tooltip}">${icone("sem_gps", "badge-icon")} Sem GPS</span>`
     }
     
+    // Impreciso
     if (status === "impreciso") {
         const dist = formatar_distancia(distancia) || ""
-        return `<span class="badge badge-impreciso" title="${tooltip}">📡 ${dist || "Impreciso"}</span>`
+        return `<span class="badge badge-impreciso" title="${tooltip}">${icone("impreciso", "badge-icon")} ${dist || "Impreciso"}</span>`
     }
     
+    // Sem config
     if (status === "sem_config") {
-        return `<span class="badge badge-sem-info" title="${tooltip}">⚙️ Sem config</span>`
+        return `<span class="badge badge-sem-info" title="${tooltip}">${icone("sem_config", "badge-icon")} Sem config</span>`
     }
     
-    // Fallback
     return `<span class="badge badge-sem-info" title="${tooltip}">—</span>`
 }
 
@@ -317,7 +340,6 @@ function renderizar_tabela() {
         
         const linha = document.createElement("tr")
         
-        // Formata extras
         let extra_text = "-"
         let extra_class = ""
         
@@ -331,24 +353,28 @@ function renderizar_tabela() {
             }
         }
         
-        // Nome do funcionário
         const nome = registro.employee_email 
             ? registro.employee_email.split("@")[0] 
             : "N/A"
         
-        // Badge de localização
         const badge_local = montar_badge_localizacao(registro)
         
-        // 🔑 Badge "ajustado" (se o registro foi ajustado)
+        // Badge "ajustado"
         let ajustado_badge = ""
         if (registro.adjusted) {
             ajustado_badge = `<span class="adjust-badge adjust-badge-approved" title="Este registro foi ajustado via solicitação aprovada">AJUSTADO</span>`
         }
         
+        // 🔑 NOVO: badge "atrasado"
+        let atrasado_badge = ""
+        if (registro.is_late) {
+            atrasado_badge = `<span class="late-badge" title="Entrada registrada após a tolerância de atraso">⚠️ ATRASADO</span>`
+        }
+        
         linha.innerHTML = `
             <td data-label="Funcionário">${nome}${ajustado_badge}</td>
             <td data-label="Data">${registro.date || "-"}</td>
-            <td data-label="Entrada">${registro.entrada || "-"}</td>
+            <td data-label="Entrada">${registro.entrada || "-"}${atrasado_badge}</td>
             <td data-label="Almoço">${registro.inicio_almoco || "-"}</td>
             <td data-label="Volta">${registro.fim_almoco || "-"}</td>
             <td data-label="Saída">${registro.saida || "-"}</td>
@@ -401,10 +427,8 @@ btn_exportar.addEventListener("click", function() {
         return
     }
     
-    // Cabeçalho do CSV (com coluna Local)
     let csv = "Funcionário,Data,Entrada,Almoço,Volta,Saída,Horas,Extras,Local,Distância,Latitude,Longitude,Ajustado\n"
     
-    // Dados
     registros_filtrados.forEach(function(r) {
         const nome = r.employee_email ? r.employee_email.split("@")[0] : "N/A"
         
@@ -420,7 +444,6 @@ btn_exportar.addEventListener("click", function() {
         csv += `${nome},${r.date || ""},${r.entrada || ""},${r.inicio_almoco || ""},${r.fim_almoco || ""},${r.saida || ""},${r.hours_worked || ""},${r.extra_hours || ""},${r.location_status || ""},${dist},${lat},${lon},${ajustado}\n`
     })
     
-    // Cria o arquivo e baixa
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
